@@ -6,6 +6,7 @@ Created on Wed Jun 12 14:55:09 2013
 """
 import matplotlib.pyplot as plt
 import numpy as np
+import conf
 
 def data_for_shot(day,shot):
     scopex = []
@@ -14,7 +15,7 @@ def data_for_shot(day,shot):
     chany = []
     for scopeNo in range(1,4):    
         for chan in range(1,5):
-            mydata = open("J:/SURE/sparkData_2013/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+            mydata = open(conf.dataDir+"/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
             plot = mydata.readlines()
             data = plot[5:]
             
@@ -37,7 +38,7 @@ def data_for_shot(day,shot):
         
 data = data_for_shot(22,0)
 
-
+#TODO: There is a lot of copy-pasting going on here.  Use a loop?
 plt.figure(1)
 plt.subplot(411)
 plt.plot(((data[0][0][0])),(data[1][0][0]))

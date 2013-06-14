@@ -7,13 +7,14 @@ Created on Wed Jun 12 11:09:29 2013
 
 import matplotlib.pyplot as plt
 import numpy as np
+import conf
 
 day = int(raw_input("Testing Day?"))
 scopeNo = int(raw_input("Oscilloscope Number?"))
 chan = int(raw_input("Channel Number?"))
 shot = int(raw_input("Shot Number?"))
 
-mydata = open("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+mydata = open(conf.dataDir+"/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
 x = mydata.readlines()
 data = x[5:]
 

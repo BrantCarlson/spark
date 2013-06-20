@@ -40,22 +40,27 @@ def splitit(data):
     return (xplot,yplot)
 (x,y) = splitit(data)
 
-s = np.array((spikex,spikey))
+index_count = 0
 
-spike_indices = []
-spike_indices = s.nonzero()
-times = s[spike_indices]
-
-def time_intervals(x):
+def time_intervals(x,y):
+    """takes two lists as arguments"""
     start = 0.0
     end = 0.0
-    start = times[x[0]]
-    for e in x:
-        if x[e+1] - x[e] > 0.00000005:
-            end = times[x[e]]
+    index_count = 0
+    for i in y:
+        index_count += 1
+        if i == 0.05:
+            start = x[index_count]
+            break
+    for i in y:
+        index_count += 1
+        if y[index_count] == 0 and y[index_count-1] == 0.05:
+            end = x[index_count-1]
+            break
+    print "Spike Duration: " + str(end - start) + " seconds."
     return start, end
     
-print time_intervals(spike_indices[1])
+print time_intervals(spikex, spikey)
 
 line = plt.plot(x,y,'b-')
 plt.ylabel("Amplitude")

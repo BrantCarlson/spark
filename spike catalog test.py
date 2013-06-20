@@ -13,8 +13,8 @@ scopeNo = 3
 chan = 2
 shot = 0
 
-mydata = open("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
-#mydata = open("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+#mydata = open("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+mydata = open("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
 
 x = mydata.readlines()
 data = x[5:]
@@ -42,7 +42,6 @@ def splitit(data):
 
 s = np.array((spikex,spikey))
 
-spike_indices = []
 spike_indices = s.nonzero()
 times = s[spike_indices]
 
@@ -55,7 +54,7 @@ def time_intervals(x):
             end = times[x[e]]
     return start, end
     
-print time_intervals(spike_indices[1])
+print time_intervals(spike_indices[0])
 
 line = plt.plot(x,y,'b-')
 plt.ylabel("Amplitude")

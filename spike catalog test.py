@@ -13,7 +13,8 @@ scopeNo = 3
 chan = 2
 shot = 0
 
-mydata = open("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+mydata = open("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+#mydata = open("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
 
 x = mydata.readlines()
 data = x[5:]
@@ -48,14 +49,13 @@ times = s[spike_indices]
 def time_intervals(x):
     start = 0.0
     end = 0.0
-    start = x[0]
+    start = times[x[0]]
     for e in x:
-
         if x[e+1] - x[e] > 0.00000005:
-            end = x[e]
+            end = times[x[e]]
     return start, end
     
-print time_intervals(times)
+print time_intervals(spike_indices[1])
 
 line = plt.plot(x,y,'b-')
 plt.ylabel("Amplitude")

@@ -17,7 +17,7 @@ def data_for_shot(day,shot):
     chany = []
     for scopeNo in range(1,4):    
         for chan in range(1,5):
-            mydata = open("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+            mydata = open("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
             plot = mydata.readlines()
             'Turns raw data into ~20000 strings of the form (-2.001115e-007,0.0956727)'
             'This data comes from the individual spark files'

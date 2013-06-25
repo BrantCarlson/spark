@@ -7,6 +7,7 @@ Created on Wed Jun 19 15:56:26 2013
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 day = 22
 scopeNo = 3
@@ -28,7 +29,7 @@ def splitit(data):
     while i < len(data):
         singlepoint = data[i].split(',')
         xplot == xplot.append(float(singlepoint[0]))
-        if float(singlepoint[1]) < -0.008:
+        if float(singlepoint[1]) <= -0.007:
             spikey == spikey.append(0.05)
             spikex == spikex.append(float(singlepoint[0]))
             yplot == yplot.append(float(singlepoint[1]))
@@ -43,35 +44,39 @@ def splitit(data):
 index_count = 0
 
 def time_intervals(x,y):
-    """takes two lists as arguments"""
+    #takes two lists as arguments
+    results = []
     start = 0.0
     end = 0.0
-    start_2 = 0.0
-    end_2 = 0.0
+    duration = 0.0
     index_count = 0
-    for i in y:
-        index_count += 1
-        if i == 0.05:
-            start = x[index_count]
-            break
-    for i in y:
-        index_count += 1
-        if y[index_count] == 0 and y[index_count-1] == 0.05:
-            end = x[index_count-1]
-            break
-    print "Spike Duration: " + str(end - start) + " seconds."
-    for i in y[index_count:]:
-        index_count += 1
-        if i == 0.05:
-            start_2 = x[index_count]
-            break
-    for i in y[index_count:]:
-        index_count += 1
-        if y[index_count] == 0 and y[index_count-1] == 0.05:
-            end_2 = x[index_count-1]
-            break
-    print "Second Spike Duration: " + str(end_2 - start_2) + " seconds."
-    return (start, end), (start_2, end_2)
+    #Defining variables
+    while index_count <= len(x) - 1:
+        for i in y[index_count:]:
+            index_count += 1
+            if i == 0.05 and y[index_count+1] == 0.05:
+                start = x[index_count]
+                break
+            #Sorting through the data to find the start of a spike
+        for i in y[index_count:]:
+            index_count += 1
+            if y[index_count] == 0.0 and y[index_count-1] == 0.05:
+                end = x[index_count-1]
+                break
+            #sorting through the data to find the end of a spike
+        duration = end - start
+        #Finding the duration of the spike
+        if duration > 3.0e-09 and start != 0:
+            results.append(start)
+            results.append(end)
+            results.append(duration)
+            print "Spike Duration: " + str(duration) + " seconds."
+            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
+            #Checks to see if the spike is a false-positive from noise
+        start = 0
+        end = 0
+        #resets start and end so the last spike isn't reported twice
+    return results
     
 print time_intervals(spikex, spikey)
 

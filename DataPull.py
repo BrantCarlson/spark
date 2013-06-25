@@ -13,7 +13,7 @@ scopeNo = 3
 chan = 2
 shot = 0
 
-mydata = open("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
+mydata = open("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r")
 x = mydata.readlines()
 data = x[5:]
 spikex = []
@@ -38,16 +38,16 @@ def splitit(data):
     return (xplot,yplot)
 (x,y) = splitit(data)
 
-j = np.array((spikex,spikey))
-print j
 
 line = plt.plot(x,y,'b-')
 plt.ylabel("Amplitude")
 plt.xlabel("Time")
 plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
 
+
 spike_finder = plt.plot(spikex,spikey,'r-')
 plt.ylabel("Amplitude")
 plt.xlabel("Time")
 plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
+plt.show()
 mydata.close()

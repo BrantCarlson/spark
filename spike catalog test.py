@@ -46,6 +46,8 @@ def time_intervals(x,y):
     """takes two lists as arguments"""
     start = 0.0
     end = 0.0
+    start_2 = 0.0
+    end_2 = 0.0
     index_count = 0
     for i in y:
         index_count += 1
@@ -58,7 +60,18 @@ def time_intervals(x,y):
             end = x[index_count-1]
             break
     print "Spike Duration: " + str(end - start) + " seconds."
-    return start, end
+    for i in y[index_count:]:
+        index_count += 1
+        if i == 0.05:
+            start_2 = x[index_count]
+            break
+    for i in y[index_count:]:
+        index_count += 1
+        if y[index_count] == 0 and y[index_count-1] == 0.05:
+            end_2 = x[index_count-1]
+            break
+    print "Second Spike Duration: " + str(end_2 - start_2) + " seconds."
+    return (start, end), (start_2, end_2)
     
 print time_intervals(spikex, spikey)
 

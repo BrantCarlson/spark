@@ -61,18 +61,24 @@ def plot(x,y):
     r = np.array(data)
     for j in range(3):
         i = 0
+        #plt.figure(j + 1)
+        plt.figure(j+1).canvas.set_window_title('Jan %d, Shot %05d, Oscilloscope ' % (x, y) + str(j+1))
+
         while i < 4:
-            plt.figure(j + 1)
-            figure(j+1).canvas.set_window_title('Jan %d, Shot %05d, Oscilloscope ' % (x, y) + str(j+1))
             plt.subplot(411 + (i))
             plt.plot(((r[0][j][i])),(r[1][j][i]))
             plt.ylabel("Amplitude")
             plt.xlabel("Time (microseconds)")
-            i += 1
-                    
-plot(22,0)
+            plt.savefig('%d %05d.png' % (x, y))
 
- 
+            i += 1
+        plt.clf()              
+
+b = 0
+while b < 200:
+    plot(23,b)
+    b += 1
+
 
 
 "Input the day and shot number into plot(x,y) to display graphs"

@@ -61,7 +61,7 @@ def plot(x,y):
     r = np.array(data)
     for j in range(3):
         i = 0
-        #plt.figure(j + 1)
+        plt.figure(j + 1)
         plt.figure(j+1).canvas.set_window_title('Jan %d, Shot %05d, Oscilloscope ' % (x, y) + str(j+1))
 
         while i < 4:
@@ -69,7 +69,7 @@ def plot(x,y):
             plt.plot(((r[0][j][i])),(r[1][j][i]))
             plt.ylabel("Amplitude")
             plt.xlabel("Time (microseconds)")
-            plt.savefig('%d %05d.png' % (x, y))
+            plt.savefig('%d %05d %d.png' % (x, y, (j+1)))
 
             i += 1
         plt.clf()              

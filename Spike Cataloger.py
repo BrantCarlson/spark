@@ -31,8 +31,9 @@ print y.iloc[5,1]
 
 def threshold(y):
     i = 0
+    smoothed = pd.rolling_mean(y.Ampl,25)
     while i < len(y['Ampl']):
-        if y.iloc[i,1] <= -0.007:
+        if y.iloc[i,1] <= smoothed.iloc[i] * 2:
             spikey == spikey.append(0.05)
             spikex == spikex.append(y.iloc[i,0])
         else:

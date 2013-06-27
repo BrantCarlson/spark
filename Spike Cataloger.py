@@ -25,8 +25,8 @@ def readData(filename):
         data = pd.read_csv(f) 
         return data
 
-#y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
-y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+#y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
 def threshold(y):
     i = 0
@@ -63,17 +63,17 @@ def time_intervals(x,y):
                 break
         for i in y[index_count:]:
             index_count += 1
-            if i == 0.0 and y[index_count-1] == 0.05:
+            if y[index_count] == 0.0 and y[index_count-1] == 0.05:
                 end = x[index_count-1]
                 break
         duration = end - start
         #Throws out any false-positives from noise
-        #if duration > 3.0e-9 and start != 0:
-        results.append(start)
-        results.append(end)
-        results.append(duration)
-        print "Spike Duration: " + str(duration) + " seconds."
-        print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
+        if duration > 3.0e-9 and start != 0:
+            results.append(start)
+            results.append(end)
+            results.append(duration)
+            print "Spike Duration: " + str(duration) + " seconds."
+            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
         #Resets start and end so as to not report the last spike twice
         start = 0
         end = 0

@@ -32,12 +32,12 @@ def threshold(y):
     smoothed = pd.rolling_mean(y.Ampl,25)
     deviation = y.Ampl.std()
     while i < len(y['Ampl']):
-        if abs(y.iloc[i,1]) > deviation.any():
+        if y.Ampl[i] < deviation.any() * (-1):
             spikey == spikey.append(0.05)
-            spikex == spikex.append(y.iloc[i,0])
+            spikex == spikex.append(y.Time[i])
         else:
             spikey == spikey.append(0.0)
-            spikex == spikex.append(y.iloc[i,0])
+            spikex == spikex.append(y.Time[i])
         i += 1
     return spikex, spikey
 
@@ -67,12 +67,12 @@ def time_intervals(x,y):
                 break
         duration = end - start
         #Throws out any false-positives from noise
-        if duration > 3.0e-9 and start != 0:
-            results.append(start)
-            results.append(end)
-            results.append(duration)
-            print "Spike Duration: " + str(duration) + " seconds."
-            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
+        #if duration > 3.0e-9 and start != 0:
+        results.append(start)
+        results.append(end)
+        results.append(duration)
+        print "Spike Duration: " + str(duration) + " seconds."
+        print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
         #Resets start and end so as to not report the last spike twice
         start = 0
         end = 0

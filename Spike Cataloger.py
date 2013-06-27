@@ -27,13 +27,12 @@ def readData(filename):
 
 y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
-print y.iloc[5,1]
-
 def threshold(y):
     i = 0
     smoothed = pd.rolling_mean(y.Ampl,25)
+    deviation = y.std()
     while i < len(y['Ampl']):
-        if y.iloc[i,1] <= smoothed.iloc[i] * 2:
+        if y.iloc[i,1] < deviation.any():
             spikey == spikey.append(0.05)
             spikex == spikex.append(y.iloc[i,0])
         else:
@@ -63,7 +62,7 @@ def time_intervals(x,y):
                 break
         for i in y[index_count:]:
             index_count += 1
-            if y[index_count] == 0.0 and y[index_count-1] == 0.05:
+            if i == 0.0 and y[index_count-1] == 0.05:
                 end = x[index_count-1]
                 break
         duration = end - start

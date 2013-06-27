@@ -30,9 +30,9 @@ y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive co
 def threshold(y):
     i = 0
     smoothed = pd.rolling_mean(y.Ampl,25)
-    deviation = y.std()
+    deviation = y.Ampl.std()
     while i < len(y['Ampl']):
-        if y.iloc[i,1] < deviation.any():
+        if abs(y.iloc[i,1]) > deviation.any():
             spikey == spikey.append(0.05)
             spikex == spikex.append(y.iloc[i,0])
         else:
@@ -67,7 +67,7 @@ def time_intervals(x,y):
                 break
         duration = end - start
         #Throws out any false-positives from noise
-        if duration > 3.0e-09 and start != 0:
+        if duration > 3.0e-9 and start != 0:
             results.append(start)
             results.append(end)
             results.append(duration)

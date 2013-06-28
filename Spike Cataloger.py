@@ -8,6 +8,7 @@ Created on Mon Jun 24 11:06:38 2013
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import conf
 
 day = 22
 scopeNo = 3
@@ -25,24 +26,17 @@ def readData(filename):
         data = pd.read_csv(f) 
         return data
 
-y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+y = readData(conf.dataDir+"/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
-def threshold(y):
-    i = 0
-    smoothed = pd.rolling_mean(y.Ampl,25)
-    deviation = y.Ampl.std()
-    while i < len(y['Ampl']):
-        if y.Ampl[i] < deviation.any() * (-1):
-            spikey == spikey.append(0.05)
-            spikex == spikex.append(y.Time[i])
-        else:
-            spikey == spikey.append(0.0)
-            spikex == spikex.append(y.Time[i])
-        i += 1
-    return spikex, spikey
-
-
+def threshold(y,sig=2,smoothPts=3):
+    """Find regions where the amplitude variable is above threshold away from the mean.
+       The threshold is defined in terms of the standard deviation (i.e. width) of the noise
+       by the significance (sig).  I.e. a spike is significant if the rolling mean of the data
+       (taken with the window smoothPts) is above (standard deviation)*sig/sqrt(smoothPts)."""
+    m = y.Ampl[:5000].mean()
+    s = np.sqrt(y.Ampl[:5000].var())
+    return pd.rolling_mean(y.Ampl-m,smoothPts) < -s*sig/sqrt(smoothPts)
 
 index_count = 0
 
@@ -79,17 +73,17 @@ def time_intervals(x,y):
         end = 0
     return results
     
-threshold(y)
-time_intervals(spikex,spikey)
+n_smooth = 100
+significance = 20
+spikey = threshold(y,significance,n_smooth)
+time_intervals(y.Time,spikey)
 
 plt.plot(y.Time,y.Ampl)
+plt.plot(pd.rolling_mean(y.Time,n_smooth),pd.rolling_mean(y.Ampl,n_smooth))
+plt.plot(y.Time,spikey/50.0,'r-')
 plt.ylabel("Amplitude")
 plt.xlabel("Time")
 plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
 
-plt.plot(spikex,spikey,'r-')
-plt.ylabel("Amplitude")
-plt.xlabel("Time")
-plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
 plt.show()
 

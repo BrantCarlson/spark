@@ -11,7 +11,7 @@ import pandas as pd
 
 day = 22
 scopeNo = 3
-chan = 2
+chan = 3
 shot = 0
 
 spikex = []
@@ -32,8 +32,9 @@ def threshold(y):
     i = 0
     smoothed = pd.rolling_mean(y.Ampl,25)
     deviation = y.Ampl.std()
+    print deviation
     while i < len(y['Ampl']):
-        if y.Ampl[i] < deviation.any() * (-1):
+        if smoothed[i] < deviation.any() * (-1):
             spikey == spikey.append(0.05)
             spikex == spikex.append(y.Time[i])
         else:
@@ -55,7 +56,7 @@ def time_intervals(x,y):
     duration = 0.0
     index_count = 0
     #Loops through indices and looks for beginnings and ends of spikes
-    while index_count < 10000:
+    while index_count < len(y) - 1:
         for i in y[index_count:]:
             index_count += 1
             if i == 0.05 and y[index_count+1] == 0.05:

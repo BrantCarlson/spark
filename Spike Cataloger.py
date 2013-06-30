@@ -11,7 +11,7 @@ import pandas as pd
 
 day = 22
 scopeNo = 3
-chan = 3
+chan = 2
 shot = 0
 
 spikex = []
@@ -47,7 +47,7 @@ def threshold(y):
 
 index_count = 0
 
-def time_intervals(x,y):
+def time_intervals(x,z):
     #takes two lists as arguments
     #Defining variables
     results = []
@@ -55,25 +55,29 @@ def time_intervals(x,y):
     end = 0.0
     duration = 0.0
     index_count = 0
+    peak = 0
     #Loops through indices and looks for beginnings and ends of spikes
-    while index_count < len(y) - 1:
-        for i in y[index_count:]:
+    while index_count < len(z) - 1:
+        for i in z[index_count:]:
             index_count += 1
-            if i == 0.05 and y[index_count+1] == 0.05:
+            if i == 0.05 and z[index_count+1] == 0.05:
                 start = x[index_count]
                 break
-        for i in y[index_count:]:
+        for i in z[index_count:]:
             index_count += 1
-            if y[index_count] == 0.0 and y[index_count-1] == 0.05:
+            if z[index_count] == 0.0 and z[index_count-1] == 0.05:
                 end = x[index_count-1]
                 break
         duration = end - start
+        peak = y.Ampl[start:end].min()
         #Throws out any false-positives from noise
         if duration > 3.0e-9 and start != 0:
             results.append(start)
             results.append(end)
+            results.append(peak)
             results.append(duration)
             print "Spike Duration: " + str(duration) + " seconds."
+            print "Peak: " + str(peak)
             print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
         #Resets start and end so as to not report the last spike twice
         start = 0

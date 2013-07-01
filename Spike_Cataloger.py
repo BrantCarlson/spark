@@ -32,16 +32,16 @@ def threshold(y):
     i = 0
     smoothed = pd.rolling_mean(y.Ampl,25)
     deviation = y.Ampl.std()
-    print deviation
-    while i < len(y['Ampl']):
-        if smoothed[i] < deviation.any() * (-1):
+    return y.Time, 0.05*(smoothed < -deviation)
+"""    while i < len(y['Ampl']):        
+        if smoothed[i] < -deviation:
             spikey == spikey.append(0.05)
             spikex == spikex.append(y.Time[i])
         else:
             spikey == spikey.append(0.0)
             spikex == spikex.append(y.Time[i])
         i += 1
-    return spikex, spikey
+    return spikex, spikey"""
 
 
 
@@ -55,21 +55,25 @@ def time_intervals(x,z):
     end = 0.0
     duration = 0.0
     index_count = 0
-    peak = 0
+    s_index = 0
+    e_index = 0
+    peak = 0.0
     #Loops through indices and looks for beginnings and ends of spikes
     while index_count < len(z) - 1:
         for i in z[index_count:]:
             index_count += 1
             if i == 0.05 and z[index_count+1] == 0.05:
                 start = x[index_count]
+                s_index = index_count
                 break
         for i in z[index_count:]:
             index_count += 1
             if z[index_count] == 0.0 and z[index_count-1] == 0.05:
                 end = x[index_count-1]
+                e_index = index_count
                 break
         duration = end - start
-        peak = y.Ampl[start:end].min()
+        peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
         if duration > 3.0e-9 and start != 0:
             results.append(start)
@@ -84,8 +88,8 @@ def time_intervals(x,z):
         end = 0
     return results
     
-threshold(y)
-time_intervals(spikex,spikey)
+spikex, spikey = threshold(y)
+print time_intervals(spikex,spikey)
 
 plt.plot(y.Time,y.Ampl)
 plt.ylabel("Amplitude")

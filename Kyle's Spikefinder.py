@@ -32,7 +32,7 @@ def findspikes(j):
     
     spike = pd.rolling_mean(rj,40)
     #plt.plot(spike)
-    if abs(peak_amp) > abs(pd.Series.mean(j['Ampl']) - 2 * pd.Series.std(j['Ampl'])):
+    while abs(peak_amp) > abs(pd.Series.mean(j['Ampl']) - 2 * pd.Series.std(j['Ampl'])):
         for i in range(peak_time_i-150,58,-1):
             front_der = (spike['Ampl'][i] - spike['Ampl'][i - 1]) / (spike['Time'][i] - spike['Time'][i - 1])
             a = 0        
@@ -53,12 +53,6 @@ def findspikes(j):
         print "Spike duration of " + str(end - start) + " seconds"
         print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
         j['Ampl'][a:b] = 0
-        return j
-    else: 
-        print "No discernible spike in data"
     
-count = 0
-while count < 4:
-    findspikes(j)
-    count += 1
+findspikes(j)
     

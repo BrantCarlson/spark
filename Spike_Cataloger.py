@@ -80,6 +80,10 @@ def time_intervals(x,z):
             results.append(end)
             results.append(peak)
             results.append(duration)
+            results.append(day)
+            results.append(shot)
+            results.append(scopeNo)
+            results.append(chan)
             print "Spike Duration: " + str(duration) + " seconds."
             print "Peak: " + str(peak)
             print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
@@ -87,9 +91,20 @@ def time_intervals(x,z):
         start = 0
         end = 0
     return results
-    
+
+def list_to_frame(r):
+    a = []
+    cols = []
+    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel']
+    num = 0
+    num = len(r) / 8
+    a = np.array(r).reshape(num, 8)
+    df = pd.DataFrame(data = a, columns = cols)
+    return df
+
 spikex, spikey = threshold(y)
-print time_intervals(spikex,spikey)
+results = time_intervals(spikex,spikey)
+print list_to_frame(results)
 
 plt.plot(y.Time,y.Ampl)
 plt.ylabel("Amplitude")

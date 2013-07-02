@@ -5,8 +5,8 @@ import conf
 
 day = 22
 scopeNo = 2
-chan = 3
-shot = 21
+chan = 2
+shot = 53
 
 def readData(filename):
     data = []
@@ -57,7 +57,7 @@ def time_intervals(x,z):
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
-        if duration > 3.0e-9 and start != 0:
+        if duration > 2.0e-9 and start != 0:
             results.append(start)
             results.append(end)
             results.append(peak)
@@ -74,7 +74,7 @@ def time_intervals(x,z):
 
 
 n_smooth = 20
-significance = 25
+significance = 12
 spikey = threshold(y,significance,n_smooth)
 time_intervals(y.Time,spikey)
 

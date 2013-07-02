@@ -72,6 +72,10 @@ def time_intervals(x,z):
                 end = x[index_count-1]
                 e_index = index_count
                 break
+            elif index_count >= len(z) - 5:
+                end = x[index_count-1]
+                e_index = index_count
+                break
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
@@ -94,9 +98,7 @@ def time_intervals(x,z):
 
 def list_to_frame(r):
     a = []
-    cols = []
     cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel']
-    num = 0
     num = len(r) / 8
     a = np.array(r).reshape(num, 8)
     df = pd.DataFrame(data = a, columns = cols)
@@ -104,7 +106,9 @@ def list_to_frame(r):
 
 spikex, spikey = threshold(y)
 results = time_intervals(spikex,spikey)
-print list_to_frame(results)
+spike_info = list_to_frame(results)
+
+print spike_info
 
 plt.plot(y.Time,y.Ampl)
 plt.ylabel("Amplitude")

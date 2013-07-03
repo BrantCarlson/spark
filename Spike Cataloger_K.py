@@ -6,7 +6,7 @@ import conf
 day = 22
 scopeNo = 2
 chan = 2
-shot = 53
+shot = 19
 
 def readData(filename):
     data = []
@@ -26,7 +26,6 @@ def threshold(y,sig=2,smoothPts=3):
     m = y.Ampl[:len(y)/4].mean()
     s = np.sqrt(y.Ampl[:len(y)/4].var())
     return pd.rolling_mean(y.Ampl-m,smoothPts) < -s*sig/np.sqrt(smoothPts)
-
 
 
 def time_intervals(x,z):
@@ -54,6 +53,10 @@ def time_intervals(x,z):
                 end = x[index_count-1]
                 e_index = index_count
                 break
+            elif index_count >= len(z)-2:
+                end = x[index_count-1]
+                e_index = index_count
+                break
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
@@ -73,7 +76,7 @@ def time_intervals(x,z):
 
 
 
-n_smooth = 20
+n_smooth = 25
 significance = 12
 spikey = threshold(y,significance,n_smooth)
 time_intervals(y.Time,spikey)

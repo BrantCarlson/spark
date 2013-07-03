@@ -8,6 +8,7 @@ Created on Mon Jun 24 11:06:38 2013
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import conf
 
 day = 22
 scopeNo = 3
@@ -25,7 +26,7 @@ def readData(filename):
         data = pd.read_csv(f) 
         return data
 
-y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive contents/sparkData_2013/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
 def threshold(y):

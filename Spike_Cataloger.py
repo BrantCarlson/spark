@@ -69,6 +69,8 @@ def time_intervals(x,z):
                 break
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
+        integral_a = si.trapz(y[s_index:e_index])
+        integral_b = np.sum(integral_a)
         if duration > 3.0e-9 and start != 0:
             #Checks the duration of the spike to throw out any false positives
             #that would come from noise.  If the spike is not a false positive
@@ -81,6 +83,7 @@ def time_intervals(x,z):
             results.append(shot)
             results.append(scopeNo)
             results.append(chan)
+            results.append(integral_b)
             print "Spike Duration: " + str(duration) + " seconds."
             print "Peak: " + str(peak)
             print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
@@ -91,9 +94,9 @@ def time_intervals(x,z):
 
 def list_to_frame(r):
     #Converts a list into a data frame
-    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel']
-    row_len = len(r) / 8
-    a = np.array(r).reshape(row_len, 8)
+    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel', 'Integral']
+    row_len = len(r) / 9
+    a = np.array(r).reshape(row_len, 9)
     df = pd.DataFrame(data = a, columns = cols)
     return df
 

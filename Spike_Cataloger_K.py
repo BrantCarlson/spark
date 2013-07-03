@@ -6,7 +6,7 @@ import conf
 day = 22
 scopeNo = 2
 chan = 3
-shot = 19
+shot = 10
 
 def readData(filename):
     data = []

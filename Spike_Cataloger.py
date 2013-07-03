@@ -12,7 +12,7 @@ import pandas as pd
 day = 22
 scopeNo = 3
 chan = 2
-shot = 0
+shot = 24
 
 spikex = []
 spikey = []
@@ -29,20 +29,9 @@ y = readData("C:/Users/Zach.Zach-PC/Documents/Carthage/Summer 2013/Flashdrive co
 #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
 def threshold(y):
-    i = 0
     smoothed = pd.rolling_mean(y.Ampl,25)
     deviation = y.Ampl.std()
     return y.Time, 0.05*(smoothed < -deviation)
-"""    while i < len(y['Ampl']):        
-        if smoothed[i] < -deviation:
-            spikey == spikey.append(0.05)
-            spikex == spikex.append(y.Time[i])
-        else:
-            spikey == spikey.append(0.0)
-            spikex == spikex.append(y.Time[i])
-        i += 1
-    return spikex, spikey"""
-
 
 
 index_count = 0
@@ -72,14 +61,17 @@ def time_intervals(x,z):
                 end = x[index_count-1]
                 e_index = index_count
                 break
-            elif index_count >= len(z) - 5:
+            elif index_count >= len(z) - 3:
+                #Breaks if no end has been found for a spike by the end of z
                 end = x[index_count-1]
                 e_index = index_count
                 break
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
-        #Throws out any false-positives from noise
         if duration > 3.0e-9 and start != 0:
+            #Checks the duration of the spike to throw out any false positives
+            #that would come from noise.  If the spike is not a false positive
+            #the data is appended to results and printed
             results.append(start)
             results.append(end)
             results.append(peak)
@@ -97,10 +89,10 @@ def time_intervals(x,z):
     return results
 
 def list_to_frame(r):
-    a = []
+    #Converts a list into a data frame
     cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel']
-    num = len(r) / 8
-    a = np.array(r).reshape(num, 8)
+    row_len = len(r) / 8
+    a = np.array(r).reshape(row_len, 8)
     df = pd.DataFrame(data = a, columns = cols)
     return df
 

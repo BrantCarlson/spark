@@ -2,11 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import conf
+import scipy.integrate as si
+
 
 day = 22
 scopeNo = 2
 chan = 3
-shot = 10
+shot = 19
 
 def readData(filename):
     data = []
@@ -60,6 +62,10 @@ def time_intervals(x,z):
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
+        
+        integral_a = si.trapz(y[s_index:e_index])
+        integral_b = np.sum(integral_a)
+        
         if duration > 2.5e-9 and start != 0:
             results.append(start)
             results.append(end)
@@ -69,6 +75,7 @@ def time_intervals(x,z):
             results.append(shot)
             results.append(scopeNo)
             results.append(chan)
+            results.append(integral_b)
             print "Spike Duration: " + str(duration) + " seconds."
             print "Peak: " + str(peak)
             print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
@@ -78,9 +85,9 @@ def time_intervals(x,z):
     return results
 
 def dataFrame(r):
-    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel']
-    num = len(r) / 8
-    a = np.array(r).reshape(num, 8)
+    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel', 'Integral']
+    num = len(r) / 9
+    a = np.array(r).reshape(num, 9)
     df = pd.DataFrame(data = a, columns = cols)
     return df
 

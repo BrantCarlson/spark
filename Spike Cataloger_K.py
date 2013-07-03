@@ -5,7 +5,7 @@ import conf
 
 day = 22
 scopeNo = 2
-chan = 2
+chan = 3
 shot = 19
 
 def readData(filename):
@@ -60,11 +60,15 @@ def time_intervals(x,z):
         duration = end - start
         peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
-        if duration > 2.0e-9 and start != 0:
+        if duration > 2.5e-9 and start != 0:
             results.append(start)
             results.append(end)
             results.append(peak)
             results.append(duration)
+            results.append(day)
+            results.append(shot)
+            results.append(scopeNo)
+            results.append(chan)
             print "Spike Duration: " + str(duration) + " seconds."
             print "Peak: " + str(peak)
             print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
@@ -73,14 +77,21 @@ def time_intervals(x,z):
         end = 0
     return results
 
+def dataFrame(r):
+    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel']
+    num = len(r) / 8
+    a = np.array(r).reshape(num, 8)
+    df = pd.DataFrame(data = a, columns = cols)
+    return df
 
 
 
 n_smooth = 25
 significance = 12
 spikey = threshold(y,significance,n_smooth)
-time_intervals(y.Time,spikey)
+results = time_intervals(y.Time,spikey)
 
+print dataFrame(results)
 
 plt.plot(y.Time,y.Ampl)
 plt.plot(pd.rolling_mean(y.Time,n_smooth),pd.rolling_mean(y.Ampl,n_smooth))

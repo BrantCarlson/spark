@@ -22,13 +22,15 @@ def readData(day,shot,scopeNo,chan):
     return x
 
 
-j = readData(22,0,3,2)
 
-def find(j):
+
+def find(day,shot,scopeNo,chan):
+    j = readData(day,shot,scopeNo,chan)
     thresh = pd.Series.mean(j.Ampl) - pd.Series.std(j.Ampl)
     rj = j.iloc[20:len(j)-20]  
     spike = pd.rolling_mean(rj,40)
-    count = 0
+    count = 1
+    frame = pd.DataFrame()
     
     while count < 100:
         
@@ -59,6 +61,12 @@ def find(j):
             print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
             j['Ampl'][a:b] = 0
             plt.plot(j)
+            sp = 'spike' + str(count)
+            df = {sp : pd.Series([peak_amp,peak_time,start,end,(end-start)], index = [sp], columns = ['amp','time','start','end','dur'])}
+            dF = pd.DataFrame(df)
+            frame = frame.append(dF)          
             count += 1
-        else: count = 100
-find(j)
+        else: 
+            return frame
+            count = 100
+print find(22,0,2,3)

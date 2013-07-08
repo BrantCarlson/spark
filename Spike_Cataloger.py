@@ -12,10 +12,18 @@ import conf
 import scipy.integrate as si
 import toolbox
 
-day = 22
+#day = 22
 #scopeNo = 3
 #chan = 2
 #shot = 0
+
+def readData(filename):
+    data = []
+    with open(filename,'r') as f:
+        for x in range(4):
+            f.readline()
+        data = pd.read_csv(f) 
+        return data
 
 spikex = []
 spikey = []
@@ -28,7 +36,8 @@ for day in range(22,27):
         for shot in range(0,150):
             for scopeNo in range(2,4):
                 for chan in range(1,5):
-                    y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    
+                    y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
                     spikex, spikey = y.Time, toolbox.threshold(y)
@@ -38,7 +47,41 @@ for day in range(22,27):
         for shot in range(0,200):
             for scopeNo in range(2,4):
                 for chan in range(1,5):
-                    y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    
+                    y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    
+                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    results = toolbox.time_intervals(spikex,spikey)
+                    final_results.append(results)
+    elif day == 24 or day == 25:
+        for shot in range(0,300):
+            for scopeNo in range(2,4):
+                for chan in range(1,5):
+                    
+                    y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    
+                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    results = toolbox.time_intervals(spikex,spikey)
+                    final_results.append(results)
+    elif day == 26:
+        for shot in range(0,6022):
+            for scopeNo in range(2,4):
+                if scopeNo == 2:
+                    chan = 3
+                    
+                    
+                    y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    
+                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    results = toolbox.time_intervals(spikex,spikey)
+                    final_results.append(results)
+                elif scopeNo == 3:
+                    chan = 1
+                    
+                    y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
                     spikex, spikey = y.Time, toolbox.threshold(y)

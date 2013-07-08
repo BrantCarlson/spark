@@ -24,11 +24,13 @@ def readData(filename):
 
 y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
+#Zack's version of threshold
 def threshold(y):
                 smoothed = pd.rolling_mean(y.Ampl,25)
                 deviation = y.Ampl.std()
                 return y.Time, 0.05*(smoothed < -deviation)
 
+#Zack's version of time_intervals
 def time_intervals(x,z):
                 #takes two lists as arguments
                 #Defining variables
@@ -84,6 +86,7 @@ def time_intervals(x,z):
                         end = 0
                     return results
 
+
 def list_to_frame(r):
     #Converts a list of lists into a data frame
     h = []
@@ -96,5 +99,81 @@ def list_to_frame(r):
     cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel', 'Integral']
     row_len = len(h) / 9
     a = np.array(h).reshape(row_len, 9)
+    df = pd.DataFrame(data = a, columns = cols)
+    return df
+    
+#Kevin's threshold
+def threshold_K(y,sig=2,smoothPts=3):
+    """Find regions where the amplitude variable is above threshold away from the mean.
+       The threshold is defined in terms of the standard deviation (i.e. width) of the noise
+       by the significance (sig).  I.e. a spike is significant if the rolling mean of the data
+       (taken with the window smoothPts) is above (standard deviation)*sig/sqrt(smoothPts)."""
+    m = y.Ampl[:len(y)/4].mean()
+    s = np.sqrt(y.Ampl[:len(y)/4].var())
+    return pd.rolling_mean(y.Ampl-m,smoothPts) < -s*sig/np.sqrt(smoothPts)
+    
+#Kevin's time_intervals function
+def time_intervals_K(x,z):
+    #takes two lists as arguments
+    #Defining variables
+    results = []
+    start = 0.0
+    end = 0.0
+    duration = 0.0
+    index_count = 0
+    s_index = 0
+    e_index = 0
+    peak = 0.0
+    #Loops through indices and looks for beginnings and ends of spikes
+    while index_count < len(z) - 1:
+        for i in z[index_count:]:
+            index_count += 1
+            if i == True and z[index_count+1] == True:
+                start = x[index_count]
+                s_index = index_count
+                break
+        for i in z[index_count:]:
+            index_count += 1
+            if z[index_count] == False and z[index_count-1] == True:
+                end = x[index_count-1]
+                e_index = index_count
+                break
+            elif index_count >= len(z)-2:
+                end = x[index_count-1]
+                e_index = index_count
+                break
+        duration = end - start
+        peak = y.Ampl[s_index:e_index].min()
+        #Throws out any false-positives from noise
+        
+        integral_a = si.trapz(y[s_index:e_index])
+        integral_b = np.sum(integral_a)
+        
+        if duration > 2.5e-9 and start != 0:
+            results.append(start)
+            results.append(end)
+            results.append(peak)
+            results.append(duration)
+            results.append(day)
+            results.append(shot)
+            results.append(scopeNo)
+            results.append(chan)
+            results.append(integral_b)
+            print "Spike Duration: " + str(duration) + " seconds."
+            print "Peak: " + str(peak)
+            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
+        #Resets start and end so as to not report the last spike twice
+        start = 0
+        end = 0
+    return results
+
+n_smooth = 25
+significance = 12
+
+#For turning a list of values into a dataframe
+def dataFrame(r):
+    cols = ['Start', 'End', 'Peak', 'Duration', 'Day', 'Shot', 'Scope', 'Channel', 'Integral']
+    num = len(r) / 9
+    a = np.array(r).reshape(num, 9)
     df = pd.DataFrame(data = a, columns = cols)
     return df

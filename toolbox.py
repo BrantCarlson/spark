@@ -7,6 +7,7 @@ Created on Mon Jul 08 12:34:36 2013
 import numpy as np
 import pandas as pd
 import scipy as si
+import matplotlib as plt
 import conf
 
 day = 22
@@ -28,7 +29,7 @@ y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo
 def threshold(y):
                 smoothed = pd.rolling_mean(y.Ampl,25)
                 deviation = y.Ampl.std()
-                return y.Time, 0.05*(smoothed < -deviation)
+                return 0.05*(smoothed < -deviation)
 
 #Zack's version of time_intervals
 def time_intervals(x,z):
@@ -103,7 +104,7 @@ def list_to_frame(r):
     return df
     
 #Kevin's threshold
-def threshold_K(y,sig=2,smoothPts=3):
+def threshold_Kevin(y,sig=2,smoothPts=3):
     """Find regions where the amplitude variable is above threshold away from the mean.
        The threshold is defined in terms of the standard deviation (i.e. width) of the noise
        by the significance (sig).  I.e. a spike is significant if the rolling mean of the data
@@ -113,7 +114,7 @@ def threshold_K(y,sig=2,smoothPts=3):
     return pd.rolling_mean(y.Ampl-m,smoothPts) < -s*sig/np.sqrt(smoothPts)
     
 #Kevin's time_intervals function
-def time_intervals_K(x,z):
+def time_intervals_Kevin(x,z):
     #takes two lists as arguments
     #Defining variables
     results = []
@@ -177,3 +178,53 @@ def dataFrame(r):
     a = np.array(r).reshape(num, 9)
     df = pd.DataFrame(data = a, columns = cols)
     return df
+    
+#Function from Kyle's Final Spikefinder
+def find(j):
+    thresh = pd.Series.mean(j.Ampl) - pd.Series.std(j.Ampl)
+    rj = j.iloc[20:len(j)-20]  
+    spike = pd.rolling_mean(rj,40)
+    count = 0
+    
+    while count < 100:
+        
+        peak_amp = pd.DataFrame.min(j)[1]   
+        peak_time_i = pd.DataFrame.idxmin(j)[1]
+        peak_time = j['Time'][peak_time_i]
+        
+        if peak_amp < thresh:
+            plt.plot(j)
+            for i in range(peak_time_i-150,58,-1):
+                front_der = (spike['Ampl'][i] - spike['Ampl'][i - 1]) / (spike['Time'][i] - spike['Time'][i - 1])
+                a = 0        
+                if front_der >= 0:
+                    start = spike['Time'][i]
+                    print "\nStarts at " + str(start)
+                    a = i
+                    break
+            for i in range(peak_time_i + 150,len(j),1):
+                end = 0        
+                back_der = ( (spike['Ampl'][i + 1] - spike['Ampl'][i]) / (spike['Time'][i + 1] - spike['Time'][i]) )
+                b = 0
+                if back_der <= 0:
+                    end = spike['Time'][i]
+                    print "Ends at " + str(end)
+                    b = i
+                    break  
+            print "Spike duration of " + str(end - start) + " seconds"
+            print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
+            j['Ampl'][a:b] = 0
+            count += 1
+        else: count = 100
+
+#Kyle's readData
+def readData_Kyle(day,shot,scopeNo,chan):
+
+    with open(conf.kdataDir + "/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r") as f:    
+        for i in range(4):        
+            f.readline() 
+            # read (and discard) the first 4 lines            
+        x = pd.read_csv(f) 
+            # then use Pandas' built-in comma-separated-variable function            
+            # using the with ... construct, f is automatically closed.
+    return x

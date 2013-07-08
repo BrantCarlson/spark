@@ -45,7 +45,7 @@ def find(day,shot,scopeNo,chan):
                 a = 0        
                 if front_der >= 0:
                     start = spike['Time'][i]
-                    print "\nStarts at " + str(start)
+                    #print "\nStarts at " + str(start)
                     a = i
                     break
             for i in range(peak_time_i + 150,len(j),1):
@@ -54,16 +54,16 @@ def find(day,shot,scopeNo,chan):
                 b = 0
                 if back_der <= 0:
                     end = spike['Time'][i]
-                    print "Ends at " + str(end)
+                    #print "Ends at " + str(end)
                     b = i
                     break
             intg = np.trapz(j.Ampl[a:b])
-            print "Spike duration of " + str(end - start) + " seconds"
-            print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"
-            print "Area under spike of " + str(intg) + " nWb"            
+            #print "Spike duration of " + str(end - start) + " seconds"
+            #print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"
+            #print "Area under spike of " + str(intg) + " nWb"            
             j['Ampl'][a:b] = 0
             plt.plot(j)
-            sp = 'sp' + str(count)
+            sp = "%dsh%03dsc%dch%d-sp%d" % (day,shot,scopeNo,chan,count)
             d = {
             'amp':[peak_amp],
             'area':[intg],
@@ -78,6 +78,14 @@ def find(day,shot,scopeNo,chan):
         else:
             return frame
             count = 100
-print find(22,0,2,3)
 
-chd = find(22,0,2,3)
+
+#chd = find(22,0,2,3)
+def findforchan(day,shot,scopeNo):
+    chframe = pd.DataFrame()
+    for chan in range(1,5):
+        spikes = find(day,shot,scopeNo,chan)
+        chframe = chframe.append(spikes)
+    return chframe
+print findforchan(22,0,2)
+        

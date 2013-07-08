@@ -139,7 +139,7 @@ for day in range(22,27):
 spike_info = toolbox.list_to_frame(final_results)
 
 print spike_info
-
+"""
 plt.plot(y.Time,y.Ampl)
 plt.ylabel("Amplitude")
 plt.xlabel("Time")
@@ -151,3 +151,4 @@ plt.xlabel("Time")
 plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
 plt.show()
 
+"""

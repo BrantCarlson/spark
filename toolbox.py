@@ -9,7 +9,32 @@ import pandas as pd
 import scipy as si
 import matplotlib as plt
 import conf
-
+"""
+for day in range(22,27):
+    if day == 22:
+        for shot in range(0,150):
+            for scopeNo in range(2,4):
+                for chan in range(1,5):
+                    asdf = 0
+    elif day == 23:
+        for shot in range(0,200):
+            for scopeNo in range(2,4):
+                for chan in range(1,5):
+                    asdf = 0
+    elif day == 24 or day == 25:
+        for shot in range(0,300):
+            for scopeNo in range(2,4):
+                for chan in range(1,5):
+                    asdf = 0
+    elif day == 26:
+        for shot in range(0,6022):
+            for scopeNo in range(2,4):
+                if scopeNo == 2:
+                    chan = 3
+                    
+                elif scopeNo == 3:
+                    chan = 1
+"""
 day = 22
 scopeNo = 3
 chan = 2
@@ -129,7 +154,7 @@ def time_intervals_Kevin(x,z):
     while index_count < len(z) - 1:
         for i in z[index_count:]:
             index_count += 1
-            if i == True and z[index_count+1] == True:
+            if i == False and z[index_count+1] == True:
                 start = x[index_count]
                 s_index = index_count
                 break

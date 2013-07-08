@@ -28,6 +28,7 @@ def find(j):
     thresh = pd.Series.mean(j.Ampl) - pd.Series.std(j.Ampl)
     rj = j.iloc[20:len(j)-20]  
     spike = pd.rolling_mean(rj,40)
+    count = 0
     
     while count < 10:
         
@@ -36,4 +37,25 @@ def find(j):
         peak_time = j['Time'][peak_time_i]
         
         if peak_amp < thresh:
-            
+            for i in range(peak_time_i-150,58,-1):
+                front_der = (spike['Ampl'][i] - spike['Ampl'][i - 1]) / (spike['Time'][i] - spike['Time'][i - 1])
+                a = 0        
+                if front_der >= 0:
+                    start = spike['Time'][i]
+                    print "\nStarts at " + str(start)
+                    a = i
+                    break
+            for i in range(peak_time_i + 150,len(j),1):
+                end = 0        
+                back_der = ( (spike['Ampl'][i + 1] - spike['Ampl'][i]) / (spike['Time'][i + 1] - spike['Time'][i]) )
+                b = 0
+                if back_der <= 0:
+                    end = spike['Time'][i]
+                    print "Ends at " + str(end)
+                    b = i
+                    break  
+            print "Spike duration of " + str(end - start) + " seconds"
+            print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
+            j['Ampl'][a:b] = 0
+            count += 1
+find(j)

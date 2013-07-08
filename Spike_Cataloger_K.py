@@ -6,8 +6,8 @@ import scipy.integrate as si
 
 
 day = 22
-scopeNo = 2
-chan = 3
+scopeNo = 3
+chan = 2
 shot = 19
 
 def readData(filename):
@@ -17,6 +17,7 @@ def readData(filename):
             f.readline()
         data = pd.read_csv(f)
         return data
+
 
 y = readData(conf.dataDir + "/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
@@ -42,7 +43,7 @@ def time_intervals(x,z):
     e_index = 0
     peak = 0.0
     #Loops through indices and looks for beginnings and ends of spikes
-    while index_count < len(z) - 1:
+    while index_count < len(z) - 2:
         for i in z[index_count:]:
             index_count += 1
             if i == True and z[index_count+1] == True:
@@ -51,11 +52,7 @@ def time_intervals(x,z):
                 break
         for i in z[index_count:]:
             index_count += 1
-            if z[index_count] == False and z[index_count-1] == True:
-                end = x[index_count-1]
-                e_index = index_count
-                break
-            elif index_count >= len(z)-2:
+            if (z[index_count] == False and z[index_count-1] == True) or index_count >= len(z)-2:
                 end = x[index_count-1]
                 e_index = index_count
                 break
@@ -76,9 +73,6 @@ def time_intervals(x,z):
             results.append(scopeNo)
             results.append(chan)
             results.append(integral_b)
-            print "Spike Duration: " + str(duration) + " seconds."
-            print "Peak: " + str(peak)
-            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
         #Resets start and end so as to not report the last spike twice
         start = 0
         end = 0
@@ -95,6 +89,9 @@ def dataFrame(r):
 
 n_smooth = 25
 significance = 12
+
+
+
 spikey = threshold(y,significance,n_smooth)
 results = time_intervals(y.Time,spikey)
 

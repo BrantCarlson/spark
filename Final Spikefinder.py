@@ -30,13 +30,14 @@ def find(j):
     spike = pd.rolling_mean(rj,40)
     count = 0
     
-    while count < 10:
+    while count < 100:
         
         peak_amp = pd.DataFrame.min(j)[1]   
         peak_time_i = pd.DataFrame.idxmin(j)[1]
         peak_time = j['Time'][peak_time_i]
         
         if peak_amp < thresh:
+            plt.plot(j)
             for i in range(peak_time_i-150,58,-1):
                 front_der = (spike['Ampl'][i] - spike['Ampl'][i - 1]) / (spike['Time'][i] - spike['Time'][i - 1])
                 a = 0        
@@ -58,4 +59,5 @@ def find(j):
             print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
             j['Ampl'][a:b] = 0
             count += 1
+        else: count = 100
 find(j)

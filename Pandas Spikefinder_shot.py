@@ -43,7 +43,7 @@ def find(day,shot,scopeNo,chan):
             for i in range(peak_time_i-150,58,-1):
                 front_der = (spike['Ampl'][i] - spike['Ampl'][i - 1]) / (spike['Time'][i] - spike['Time'][i - 1])
                 a = 0        
-                if front_der >= 0:
+                if any(front_der >= 0 or j.Ampl <= 0):
                     start = spike['Time'][i]
                     #print "\nStarts at " + str(start)
                     a = i
@@ -92,5 +92,6 @@ def findforall(day,shot):
             indv = find(day,shot,scopeNo,chan)
             chf = chf.append(indv)
     return chf
-r = findforall(22,0)
+
+r = findforall(22,1)
 print r

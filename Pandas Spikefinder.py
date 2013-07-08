@@ -78,6 +78,6 @@ def find(day,shot,scopeNo,chan):
         else:
             return frame
             count = 100
-print find(22,0,2,3)
+print find(22,1,2,3)
 
 chd = find(22,0,2,3)

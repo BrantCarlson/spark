@@ -22,7 +22,7 @@ def readData(day,shot,scopeNo,chan):
     return x
 
 
-j = readData(22,0,3,2)
+j = readData(22,1,2,2)
 def findspikes(j):
     plt.plot(j)
     rj = j.iloc[20:len(j)-20]

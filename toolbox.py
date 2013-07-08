@@ -154,13 +154,7 @@ def time_intervals_Kevin(x,z):
     while index_count < len(z) - 2:
         for i in z[index_count:]:
             index_count += 1
-<<<<<<< HEAD
-
             if i == True: #and z[index_count+1] == True:
-            
-=======
-            if i == True: #and z[index_count+1] == True:
->>>>>>> 8f673243c7490f6af00ac8eae714cf98cd085c78
                 start = x[index_count]
                 s_index = index_count
                 break

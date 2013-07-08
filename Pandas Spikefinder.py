@@ -62,9 +62,8 @@ def find(day,shot,scopeNo,chan):
             j['Ampl'][a:b] = 0
             plt.plot(j)
             sp = 'spike' + str(count)
-            df = {sp : pd.Series([peak_amp,peak_time,start,end,(end-start)], index = [sp], columns = ['amp','time','start','end','dur'])}
-            dF = pd.DataFrame(df)
-            frame = frame.append(dF)          
+            dF = pd.DataFrame([peak_amp,peak_time,start,end,(end-start)], index = ['amp','time','start','end','dur'], columns = [sp])
+            frame.append()    
             count += 1
         else: 
             return frame

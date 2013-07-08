@@ -12,7 +12,7 @@ import conf
 
 def readData(day,shot,scopeNo,chan):
 
-    with open(conf.dataDir + "/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r") as f:    
+    with open(conf.kdataDir + "/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot), "r") as f:    
         for i in range(4):        
             f.readline() 
             # read (and discard) the first 4 lines            
@@ -34,7 +34,7 @@ def findspikes(j):
     peak_time = j['Time'][peak_time_i]
     #plt.plot(spike)
     count = 0    
-    while count < 3:
+    while count < 10:
         plt.plot(j)
         peak_amp = pd.DataFrame.min(j)[1]
         print peak_amp, pd.Series.mean(j.Ampl), pd.Series.std(j.Ampl)

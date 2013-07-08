@@ -154,17 +154,13 @@ def time_intervals_Kevin(x,z):
     while index_count < len(z) - 2:
         for i in z[index_count:]:
             index_count += 1
-            if i == True: #and z[index_count+1] == True:
+            if i == True and z[index_count+1] == True:
                 start = x[index_count]
                 s_index = index_count
                 break
         for i in z[index_count:]:
             index_count += 1
-            if z[index_count] == False and z[index_count-1] == True:
-                end = x[index_count-1]
-                e_index = index_count
-                break
-            elif index_count >= len(z)-2:
+            if (z[index_count] == False and z[index_count-1] == True) or index_count >= len(z)-2:
                 end = x[index_count-1]
                 e_index = index_count
                 break
@@ -185,9 +181,6 @@ def time_intervals_Kevin(x,z):
             results.append(scopeNo)
             results.append(chan)
             results.append(integral_b)
-            """print "Spike Duration: " + str(duration) + " seconds."
-            print "Peak: " + str(peak)
-            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."   """
         #Resets start and end so as to not report the last spike twice
         start = 0
         end = 0

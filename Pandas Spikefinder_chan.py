@@ -32,7 +32,7 @@ def find(day,shot,scopeNo,chan):
     count = 1
     frame = pd.DataFrame()
     
-    while count < 100:
+    while count < 10:
         
         peak_amp = pd.DataFrame.min(j)[1]   
         peak_time_i = pd.DataFrame.idxmin(j)[1]
@@ -63,7 +63,7 @@ def find(day,shot,scopeNo,chan):
             #print "Area under spike of " + str(intg) + " nWb"            
             j['Ampl'][a:b] = 0
             plt.plot(j)
-            sp = "%dsh%03dsc%dch%d-sp%d" % (day,shot,scopeNo,chan,count)
+            sp = 'sp' + str(count)
             d = {
             'amp':[peak_amp],
             'area':[intg],
@@ -77,15 +77,16 @@ def find(day,shot,scopeNo,chan):
             count += 1
         else:
             return frame
-            count = 100
+            count = 10
 
 
 #chd = find(22,0,2,3)
 def findforchan(day,shot,scopeNo):
     chframe = pd.DataFrame()
-    for chan in range(1,5):
-        spikes = find(day,shot,scopeNo,chan)
-        chframe = chframe.append(spikes)
-    return chframe
-print findforchan(22,0,2)
-        
+    for chan in range(1,4):
+        indv = find(day,shot,scopeNo,chan)
+        ch = 'ch' + str(chan)
+        chdf = pd.DataFrame(indv,columns = ['Shot1'])
+        return chdf
+r = findforchan(22,0,2)
+print r

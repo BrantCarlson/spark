@@ -1,25 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jun 24 11:06:38 2013
+Created on Mon Jul 08 12:34:36 2013
 
 @author: Zach
 """
-
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import scipy as si
 import conf
-import scipy.integrate as si
-import toolbox
 
 day = 22
-#scopeNo = 3
-#chan = 2
-#shot = 0
-
-spikex = []
-spikey = []
-final_results = []
+scopeNo = 3
+chan = 2
+shot = 0
 
 def readData(filename):
     data = []
@@ -29,21 +22,14 @@ def readData(filename):
         data = pd.read_csv(f) 
         return data
 
-for shot in range(0,150):
-    for scopeNo in range(2,4):
-        for chan in range(1,5):
-            y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
-            #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
-            
-            def threshold(y):
+y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+
+def threshold(y):
                 smoothed = pd.rolling_mean(y.Ampl,25)
                 deviation = y.Ampl.std()
                 return y.Time, 0.05*(smoothed < -deviation)
-                
-                
-            index_count = 0
-                
-            def time_intervals(x,z):
+
+def time_intervals(x,z):
                 #takes two lists as arguments
                 #Defining variables
                 results = []
@@ -97,10 +83,7 @@ for shot in range(0,150):
                         start = 0
                         end = 0
                     return results
-            spikex, spikey = toolbox.threshold(y)
-            results = toolbox.time_intervals(spikex,spikey)
-            final_results.append(results)
-        
+
 def list_to_frame(r):
     #Converts a list of lists into a data frame
     h = []
@@ -115,20 +98,3 @@ def list_to_frame(r):
     a = np.array(h).reshape(row_len, 9)
     df = pd.DataFrame(data = a, columns = cols)
     return df
-        
-    
-spike_info = toolbox.list_to_frame(final_results)
-
-print spike_info
-
-plt.plot(y.Time,y.Ampl)
-plt.ylabel("Amplitude")
-plt.xlabel("Time")
-plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
-
-plt.plot(spikex,spikey,'r-')
-plt.ylabel("Amplitude")
-plt.xlabel("Time")
-plt.title("Scope " + str(scopeNo) +", Channel " +str(chan) + ", Shot " + str(shot) + " on Jan " + str(day))
-plt.show()
-

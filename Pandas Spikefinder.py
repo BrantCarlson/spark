@@ -56,16 +56,26 @@ def find(day,shot,scopeNo,chan):
                     end = spike['Time'][i]
                     print "Ends at " + str(end)
                     b = i
-                    break  
+                    break
+            intg = np.trapz(j.Ampl[a:b])
             print "Spike duration of " + str(end - start) + " seconds"
-            print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
+            print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"
+            print "Area under spike of " + str(intg) + " nWb"            
             j['Ampl'][a:b] = 0
             plt.plot(j)
             sp = 'spike' + str(count)
-            dF = pd.DataFrame([peak_amp,peak_time,start,end,(end-start)], index = ['amp','time','start','end','dur'], columns = [sp])
-            frame.append()    
+            d = {
+            'amp':[peak_amp],
+            'area':[intg],
+            'time':[peak_time],
+            'start':[start],
+            'end':[end],
+            'dur':[end-start]}
+            df = pd.DataFrame(d,index = [sp])
+            #dF = pd.DataFrame([peak_amp,peak_time,start,end,(end-start)], columns = ['amp','time','start','end','dur'])
+            frame = frame.append(df)
             count += 1
-        else: 
+        else:
             return frame
             count = 100
 print find(22,0,2,3)

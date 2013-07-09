@@ -48,7 +48,7 @@ def readData(filename):
         data = pd.read_csv(f) 
         return data
 
-y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
 #Zack's version of threshold
 def threshold(y):
@@ -69,16 +69,16 @@ def time_intervals(x,z):
                 e_index = 0
                 peak = 0.0
                 #Loops through indices and looks for beginnings and ends of spikes
-                while index_count < len(z) - 1:
+                while index_count < len(z) - 2:
                     for i in z[index_count:]:
                         index_count += 1
-                        if i == 0.05 and z[index_count+1] == 0.05:
-                            start = x[index_count]
+                        if i == 0.05 and z[index_count-1] == 0.05:
+                            start = x[index_count-1]
                             s_index = index_count
                             break
                     for i in z[index_count:]:
                         index_count += 1
-                        if z[index_count] == 0.0 and z[index_count-1] == 0.05:
+                        if i == 0.0 and z[index_count-1] == 0.05:
                             end = x[index_count-1]
                             e_index = index_count
                             break
@@ -107,7 +107,7 @@ def time_intervals(x,z):
                         print "Spike Duration: " + str(duration) + " seconds."
                         print "Peak: " + str(peak)
                         print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
-                    #Resets start and end so as to not report the last spike twice
+                        #Resets start and end so as to not report the last spike twice
                     start = 0
                     end = 0
                 return results

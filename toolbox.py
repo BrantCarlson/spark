@@ -107,10 +107,10 @@ def time_intervals(x,z):
                         print "Spike Duration: " + str(duration) + " seconds."
                         print "Peak: " + str(peak)
                         print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
-                        #Resets start and end so as to not report the last spike twice
-                        start = 0
-                        end = 0
-                    return results
+                    #Resets start and end so as to not report the last spike twice
+                    start = 0
+                    end = 0
+                return results
 
 
 def list_to_frame(r):

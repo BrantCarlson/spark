@@ -35,10 +35,6 @@ for day in range(22,27):
                 elif scopeNo == 3:
                     chan = 1
 """
-day = 22
-scopeNo = 3
-chan = 2
-shot = 0
 
 def readData(filename):
     data = []
@@ -48,7 +44,7 @@ def readData(filename):
         data = pd.read_csv(f) 
         return data
 
-y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+#y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
 #Zack's version of threshold
 def threshold(y, sig, smoothPts):
@@ -185,10 +181,10 @@ def time_intervals_Kevin(x,z):
         #Resets start and end so as to not report the last spike twice
         start = 0
         end = 0
-    return results
+        return results
 
-n_smooth = 25
-significance = 12
+#n_smooth = 25
+#significance = 12
 
 #For turning a list of values into a dataframe
 def dataFrame(r):

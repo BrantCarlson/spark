@@ -51,10 +51,10 @@ def readData(filename):
 y = readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
 
 #Zack's version of threshold
-def threshold(y):
-                smoothed = pd.rolling_mean(y.Ampl,25)
-                deviation = y.Ampl.std()
-                return 0.05*(smoothed < -deviation)
+def threshold(y, sig, smoothPts):
+    smoothed = pd.rolling_mean(y.Ampl, smoothPts)
+    deviation = y.Ampl.std()
+    return 0.05*(smoothed < (-deviation * sig))
 
 #Zack's version of time_intervals
 def time_intervals(x,z):

@@ -78,7 +78,7 @@ spikex = []
 spikey = []
 final_results = []
 n_smooth = 25
-significance = 12
+significance = 3
 
 
 for day in range(22,27):
@@ -90,7 +90,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
                     
@@ -102,7 +102,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
     elif day == 24 or day == 25:
@@ -113,9 +113,10 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
+                    """
     elif day == 26:
         for shot in range(0,6022):
             for scopeNo in range(2,4):
@@ -126,7 +127,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
                 elif scopeNo == 3:
@@ -135,10 +136,10 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y)
+                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
-    
+    """
 
 spike_info = toolbox.list_to_frame(final_results)
 

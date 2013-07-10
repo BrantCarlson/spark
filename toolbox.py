@@ -72,13 +72,13 @@ def time_intervals(x,z):
     while index_count < len(z) - 2:
         for i in z[index_count:]:
             index_count += 1
-            if i == 0.05 and z[index_count-1] == 0.05:
+            if i == True and z[index_count-1] == True:
                 start = x[index_count-1]
                 s_index = index_count
                 break
         for i in z[index_count:]:
             index_count += 1
-            if z[index_count-1] == 0.00 and z[index_count-2] == 0.05:
+            if z[index_count-1] == False and z[index_count-2] == True:
                 end = x[index_count-1]
                 e_index = index_count
                 break

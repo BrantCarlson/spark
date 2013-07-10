@@ -33,13 +33,13 @@ def time_intervals(x,z):
     while index_count < len(z) - 2:
         for i in z[index_count:]:
             index_count += 1
-            if i == 0.05 and z[index_count-1] == 0.05:
+            if i == True and z[index_count-1] == True:
                 start = x[index_count-1]
                 s_index = index_count
                 break
         for i in z[index_count:]:
             index_count += 1
-            if z[index_count-1] == 0.00 and z[index_count-2] == 0.05:
+            if z[index_count-1] == False and z[index_count-2] == True:
                 end = x[index_count-1]
                 e_index = index_count
                 break
@@ -78,7 +78,7 @@ spikex = []
 spikey = []
 final_results = []
 n_smooth = 25
-significance = 3
+significance = 12
 
 
 for day in range(22,27):
@@ -90,7 +90,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
+                    spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
                     
@@ -102,7 +102,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
+                    spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
     elif day == 24 or day == 25:
@@ -113,7 +113,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
+                    spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
                     """
@@ -127,7 +127,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
+                    spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
                 elif scopeNo == 3:
@@ -136,7 +136,7 @@ for day in range(22,27):
                     y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
-                    spikex, spikey = y.Time, toolbox.threshold(y, significance, n_smooth)
+                    spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
     """

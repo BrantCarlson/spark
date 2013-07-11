@@ -65,10 +65,10 @@ def time_intervals(x,z):
             results.append(scopeNo)
             results.append(chan)
             results.append(integral_b)
-            print "Spike Duration: " + str(duration) + " seconds."
-            print "Peak: " + str(peak)
-            print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
-            print str(day) , str(shot) , str(scopeNo) , str(chan)
+            #print "Spike Duration: " + str(duration) + " seconds."
+            #print "Peak: " + str(peak)
+            #print "Start: " + str(start) + " seconds.", "End: " + str(end) + " seconds."
+            #print str(day) , str(shot) , str(scopeNo) , str(chan)
             #Resets start and end so as to not report the last spike twice
             start = 0
             end = 0
@@ -87,36 +87,38 @@ for day in range(22,27):
             for scopeNo in range(2,4):
                 for chan in range(1,5):
                     
-                    y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
-                    #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    #y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    y = toolbox.readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
                     spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
-                    
+        print "Day 22 done"
     elif day == 23:
         for shot in range(0,200):
             for scopeNo in range(2,4):
                 for chan in range(1,5):
                     
-                    y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
-                    #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    #y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    y = toolbox.readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
                     spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
+        print "Day 23 done"
     elif day == 24 or day == 25:
         for shot in range(0,300):
             for scopeNo in range(2,4):
                 for chan in range(1,5):
                     
-                    y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
-                    #y = readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    #y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
+                    y = toolbox.readData("C:/Sparks/lex/2013JanVisit/sparkData/%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
                     
                     spikex, spikey = y.Time, toolbox.threshold_Kevin(y, significance, n_smooth)
                     results = time_intervals(spikex,spikey)
                     final_results.append(results)
-                    """
+        print "Day 24 done"
+"""
     elif day == 26:
         for shot in range(0,6022):
             for scopeNo in range(2,4):

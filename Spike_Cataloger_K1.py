@@ -66,10 +66,10 @@ def time_intervals_Kevin(x,z):
             results.append(scopeNo)
             results.append(chan)
             results.append(integral_b)
-        #Resets start and end so as to not report the last spike twice
-        start = 0
-        end = 0
-        return results
+            #Resets start and end so as to not report the last spike twice
+            start = 0
+            end = 0
+    return results
 
 
 for day in range(22,27):
@@ -83,7 +83,7 @@ for day in range(22,27):
                     spikex, spikey = y.Time, toolbox.threshold_Kevin(y,significance,n_smooth)
                     result = time_intervals_Kevin(spikex,spikey)
                     final_results += result
-                    print shot,scopeNo,chan,len(final_results)
+                    #print shot,scopeNo,chan,len(final_results)
         print "Day 22 done"
     elif day == 23:
         for shot in range(0,200):

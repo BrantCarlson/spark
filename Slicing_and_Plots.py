@@ -17,14 +17,27 @@ a.shot = np.array(map(int, a.Shot))
 
 ai = a.set_index(['Day', 'Scope', 'Channel', 'Shot'])
 
-sel = np.logical_and(a.Day == 24, a.Scope == 3)
-sc = a[a.Day == 24][a.Scope == 3]
+#sel = np.logical_and(a.Day == 24, a.Scope == 3)
+#sc = a[a.Day == 24][a.Scope == 3]
 ai = ai.Peak.ix[24].ix[3].groupby(level =['Shot', 'Channel']).min()
 aiu = ai.unstack(1)
 aiu = aiu.fillna(0)
 print aiu.head()
-
-
+count = 0
+e = 0
+f = 0
+while e < 4:
+    e += 1
+    while f < 4:
+        f += 1
+        if f > e:
+            count += 1
+            plt.figure(count)
+            plt.scatter(-aiu[f], -aiu[e])
+            plt.xlabel('Channel ' + str(f) + ' Amplitude')
+            plt.ylabel('Channel ' + str(e) + ' Amplitude')
+    f = 0
+            
 """
 #kp.ix[:,3,:,:]
 s = 2

@@ -19,7 +19,7 @@ ai = a.set_index(['Day', 'Scope', 'Channel', 'Shot'])
 
 sel = np.logical_and(a.Day == 24, a.Scope == 3)
 sc = a[a.Day == 24][a.Scope == 3]
-ai = ai.Peak.ix[22].groupby(level =['Shot', 'Channel']).min()
+ai = ai.Peak.ix[24].ix[3].groupby(level =['Shot', 'Channel']).min()
 aiu = ai.unstack(1)
 aiu = aiu.fillna(0)
 print aiu.head()

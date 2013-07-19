@@ -8,6 +8,8 @@ Created on Thu Jul 18 14:32:37 2013
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy import stats
+from matplotlib.lines import Line2D
 
 a = pd.load("C:/Program Files (x86)/pythonxy/a_programs/spike_info")
 b = pd.load("C:/Program Files (x86)/pythonxy/a_programs/spike_info_sig200")
@@ -15,29 +17,34 @@ z = pd.load('C:/Users/Zach.Zach-PC/Documents/GitHub/spark/SparkSpikeStuff')
 
 a.shot = np.array(map(int, a.Shot))
 
-ai = a.set_index(['Day', 'Scope', 'Channel', 'Shot'])
+d = a.set_index(['Day', 'Scope', 'Channel', 'Shot'])
 
 #sel = np.logical_and(a.Day == 24, a.Scope == 3)
 #sc = a[a.Day == 24][a.Scope == 3]
-ai = ai.Peak.ix[24].ix[3].groupby(level =['Shot', 'Channel']).min()
+ai = d.Peak.ix[23].ix[3].groupby(level =['Shot', 'Channel']).min()
 aiu = ai.unstack(1)
 aiu = aiu.fillna(0)
-print aiu.head()
+
+ci = d.Peak.ix[25].ix[3].groupby(level =['Shot', 'Channel']).min()
+ciu = ci.unstack(1)
+ciu = ciu.fillna(0)
+slope, intercept, r_value, p_value, error= stats.linregress(ciu[1][0:49],ciu[2][0:49])
 count = 0
-e = 0
-f = 0
-while e < 4:
-    e += 1
-    while f < 4:
-        f += 1
+for e in range(1,5):
+    for f in range(1,5):
         if f > e:
             count += 1
             plt.figure(count)
-            plt.scatter(-aiu[f], -aiu[e])
+            plt.scatter(-aiu[f][0:99], -aiu[e][0:99])
             plt.xlabel('Channel ' + str(f) + ' Amplitude')
             plt.ylabel('Channel ' + str(e) + ' Amplitude')
-    f = 0
             
+            slope, intercept, r_value, p_value, error= stats.linregress(ciu[f][0:49],ciu[e][0:49])
+            line = plt.lines.Line2D([0, slope],[0, slope])
+            plt.Axes.add_line(line)
+            #plt.savefig(str(f) + "_versus_" +str(e) + ".png")
+    f = 0
+#Need to add last two scopes to the loop!
 """
 #kp.ix[:,3,:,:]
 s = 2

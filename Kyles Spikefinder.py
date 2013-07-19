@@ -22,7 +22,7 @@ def readData(day,shot,scopeNo,chan):
     return x
 
 
-j = readData(22,0,3,2)
+j = readData(23,32,3,4)
 
 def findspikes(j):
 
@@ -32,10 +32,10 @@ def findspikes(j):
     spike = pd.rolling_mean(rj,40)
     peak_time_i = pd.DataFrame.idxmin(j)[1]
     peak_time = j['Time'][peak_time_i]
+    plt.plot(j)
     #plt.plot(spike)
     count = 0    
     while count < 10:
-        plt.plot(j)
         peak_amp = pd.DataFrame.min(j)[1]
         print peak_amp, pd.Series.mean(j.Ampl), pd.Series.std(j.Ampl)
         if peak_amp < (pd.Series.mean(j['Ampl']) - pd.Series.std(j['Ampl'])):
@@ -60,5 +60,6 @@ def findspikes(j):
             print "Spike peak at t=" + str(peak_time) + " and amplitude " + str(peak_amp) + " millivolts"     
             j['Ampl'][a:b] = 0
             count += 1
+            plt.plot(j)
         else: break
 findspikes(j)

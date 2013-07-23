@@ -36,6 +36,8 @@ for e in range(1,5):
         if f > e:
             count += 1
             fig = plt.figure(count)
+            #To plot data from radial shots instead of calibration shots,
+            #change ciu to aiu and change 0:50 to 0:100 in the plt.scatter function
             plt.scatter(-ciu[f][0:50], -ciu[e][0:50])
             plt.xlabel('Channel ' + str(f) + ' Amplitude')
             plt.ylabel('Channel ' + str(e) + ' Amplitude')

@@ -50,26 +50,26 @@ def find(day,shot,scopeNo,chan):
     j.Ampl[cut] = ave
     j.Ampl[len(j)-cut:] = ave
     
-    while thresh(j,2,5,6.7) == True:
+    while thresh(j,2,5,10) == True:
         
         peak_amp = pd.DataFrame.min(j)[1]   
         peak_time_i = pd.DataFrame.idxmin(j)[1]
         peak_time = j['Time'][peak_time_i]
         #plt.plot(j)
         
-        for i in range(peak_time_i-150,58,-1):
+        for i in range(peak_time_i-100,58,-1):
             front_der = (spike['Ampl'][i] - spike['Ampl'][i - 1]) / (spike['Time'][i] - spike['Time'][i - 1])
             a = 0        
-            if any(front_der >= 0 or j.Ampl <= 0):
+            if any(front_der > 0 or j.Ampl <= 0):
                 start = spike['Time'][i]
                 #print "\nStarts at " + str(start)
                 a = i
                 break
-        for i in range(peak_time_i + 150,len(j),1):
+        for i in range(peak_time_i + 100,len(j),1):
             end = 0        
             back_der = ( (spike['Ampl'][i + 1] - spike['Ampl'][i]) / (spike['Time'][i + 1] - spike['Time'][i]) )
             b = 0
-            if back_der <= 0:
+            if back_der < 0:
                 end = spike['Time'][i]
                 #print "Ends at " + str(end)
                 b = i
@@ -164,8 +164,8 @@ def findforall(day1,day2):
                         indv = find(day,shot,scopeNo,chan)
                         chf = chf.append(indv)
                         print day,shot,len(chf)
-            return chf
-        """if day == 26:
+            
+        if day == 26:
             for shot in range(6023):
                 for scopeNo in range(2,4):
                     if scopeNo == 2:
@@ -174,8 +174,8 @@ def findforall(day1,day2):
                         chan = 1
                     indv = find(day,shot,scopeNo,chan)
                     chf = chf.append(indv)
-                    print day,shot,len(chf)"""
+                    print day,shot,len(chf)
+            return chf
 
-
-z = findforall(22,27)
+z = findforall(26,27)
 print z

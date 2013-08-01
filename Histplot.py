@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jul 24 14:08:50 2013
+Created on Wed August 1 01:08:50 2013
 
 @author: Vladimir Kontar
 """
@@ -9,20 +9,47 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-cal = pd.load('C:/Users/Kyle Weber/Documents/GitHub/spark/AllData')#Loads spike data from day 26 gathered by Zack's spike finder
-plt.clf()
+d = pd.load('C:/Users/Kyle Weber/Documents/GitHub/spark/AllData')#Loads spike data from day 26 gathered by Vlad's spike finder
 
-intbg = (-cal.Integral[cal.Scope == 2][cal.Shot <= 3006])#integral of the background spikes in scope 2 channel 3
-intsr = (-cal.Integral[cal.Scope == 2][cal.Shot >3006])#integral of the Sr-90 spikes in scope 2 channel 3
+d.shot = map(int,d.shot)
 
-peakbg = (-cal.Peak[cal.Scope == 2][cal.Shot <= 3006])#amplitudes of spikes in background spikes in scope 2 channel 3
-peaksr = (-cal.Peak[cal.Scope == 2][cal.Shot >3006])#amplitudes of spikes in Sr-90 spikes in scope 2 channel 3
+bg2 = d[np.logical_and(d.shot<3007,d.osc==2)]
+sr2 = d[np.logical_and(d.shot>3006,d.osc==2)]
 
-intbg_2 = (-cal.Integral[cal.Scope == 3][cal.Shot > 3013])#integral of background spikes in scope 3 channel 1
-intsr_2 = (-cal.Integral[cal.Scope == 3][cal.Shot <= 3013])#integral of Sr-90 spikes in scope 3 channel 1
+bg3 = d[np.logical_and(d.shot<3013,d.osc==3)]
+sr3 = d[np.logical_and(d.shot>3012,d.osc==3)]
 
-peakbg_2 = (-cal.Peak[cal.Scope == 3][cal.Shot > 3013])#amplitudes of background spikes in scope 3 channel 1
-peaksr_2 = (-cal.Peak[cal.Scope == 3][cal.Shot <= 3013])#amplitudes of Sr-90 spikes in scope 3 channel 1
+intbg = bg2.area
+intsr = sr2.area
+
+peakbg = bg2.amp
+peaksr = sr2.amp
+
+intbg_2 = bg3.area
+intsr_2 = sr3.area
+
+peakbg_2 = bg3.amp
+peaksr_2 = sr3.amp
+
+
+
+
+
+
+
+
+
+"""intbg = (cal.area[cal.osc == 2][cal.shot <= 3006])#integral of the background spikes in scope 2 channel 3
+intsr = (cal.area[cal.osc == 2][cal.shot >3006])#integral of the Sr-90 spikes in scope 2 channel 3
+
+peakbg = (cal.amp[cal.osc == 2][cal.shot <= 3006])#amplitudes of spikes in background spikes in scope 2 channel 3
+peaksr = (cal.amp[cal.osc == 2][cal.shot >3006])#amplitudes of spikes in Sr-90 spikes in scope 2 channel 3
+
+intbg_2 = (cal.area[cal.osc == 3][cal.shot > 3013])#integral of background spikes in scope 3 channel 1
+intsr_2 = (cal.area[cal.osc == 3][cal.shot <= 3013])#integral of Sr-90 spikes in scope 3 channel 1
+
+peakbg_2 = (cal.amp[cal.osc == 3][cal.shot > 3013])#amplitudes of background spikes in scope 3 channel 1
+peaksr_2 = (cal.amp[cal.osc == 3][cal.shot <= 3013])#amplitudes of Sr-90 spikes in scope 3 channel 1"""
 
 def histogram(bg, bin_count, time, figure_num):
     #Function turns data into a normalized histogram

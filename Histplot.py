@@ -11,6 +11,7 @@ import pandas as pd
 
 d = pd.load('C:/Users/Kyle Weber/Documents/GitHub/spark/AllData')#Loads spike data from day 26 gathered by Vlad's spike finder
 
+<<<<<<< HEAD
 d.shot = map(int,d.shot)
 
 bg2 = d[np.logical_and(d.shot<3007,d.osc==2)]
@@ -41,15 +42,75 @@ peaksr_2 = sr3.amp
 
 """intbg = (cal.area[cal.osc == 2][cal.shot <= 3006])#integral of the background spikes in scope 2 channel 3
 intsr = (cal.area[cal.osc == 2][cal.shot >3006])#integral of the Sr-90 spikes in scope 2 channel 3
+=======
+osc2 = d.area[d.osc==2]
+osc3 = d[d.osc==3]
 
-peakbg = (cal.amp[cal.osc == 2][cal.shot <= 3006])#amplitudes of spikes in background spikes in scope 2 channel 3
-peaksr = (cal.amp[cal.osc == 2][cal.shot >3006])#amplitudes of spikes in Sr-90 spikes in scope 2 channel 3
+>>>>>>> Fuck this shit.
 
-intbg_2 = (cal.area[cal.osc == 3][cal.shot > 3013])#integral of background spikes in scope 3 channel 1
-intsr_2 = (cal.area[cal.osc == 3][cal.shot <= 3013])#integral of Sr-90 spikes in scope 3 channel 1
+print osc2
 
+
+<<<<<<< HEAD
 peakbg_2 = (cal.amp[cal.osc == 3][cal.shot > 3013])#amplitudes of background spikes in scope 3 channel 1
 peaksr_2 = (cal.amp[cal.osc == 3][cal.shot <= 3013])#amplitudes of Sr-90 spikes in scope 3 channel 1"""
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+intbg = cal.area[np.logical_and(cal.osc == 2,d.shot < 3007)]#integral of the background spikes in scope 2 channel 3
+intsr = cal.area[np.logical_and(cal.osc == 2,d.shot >3006)]#integral of the Sr-90 spikes in scope 2 channel 3
+
+peakbg = cal.amp[np.logical_and(cal.osc == 2,cal.shot < 3007)]#amplitudes of spikes in background spikes in scope 2 channel 3
+peaksr = cal.amp[np.logical_and(cal.osc == 2,cal.shot >3006)]#amplitudes of spikes in Sr-90 spikes in scope 2 channel 3
+
+intbg_2 = cal.area[np.logical_and(cal.osc == 3,cal.shot > 3013)]#integral of background spikes in scope 3 channel 1
+intsr_2 = cal.area[np.logical_and(cal.osc == 3,cal.shot <= 3013)]#integral of Sr-90 spikes in scope 3 channel 1
+
+peakbg_2 = cal.amp[np.logical_and(cal.osc == 3,cal.shot > 3013)]#amplitudes of background spikes in scope 3 channel 1
+peaksr_2 = cal.amp[np.logical_and(cal.osc == 3,cal.shot <= 3013)]#amplitudes of Sr-90 spikes in scope 3 channel 1
+>>>>>>> Fuck this shit.
 
 def histogram(bg, bin_count, time, figure_num):
     #Function turns data into a normalized histogram
@@ -88,7 +149,7 @@ tf = hist_intbg < hist_intsr
 sr_data = hist_intsr[tf] - hist_intbg[tf]
 sr_data = np.mean(sr_data)
 print "Average Difference in Scope 2: " + str(sr_data)
-
+"""
 
 
 

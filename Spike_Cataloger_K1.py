@@ -9,13 +9,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import conf
-import scipy.integrate as si
+import scipy.integrate as sp
 import toolbox
 
-#day = 22
-#scopeNo = 3
-#chan = 2
-#shot = 0
 
 spikex = []
 spikey = []
@@ -53,8 +49,8 @@ def time_intervals_Kevin(x,z):
         peak = y.Ampl[s_index:e_index].min()
         #Throws out any false-positives from noise
         
-        integral_a = si.trapz(y[s_index:e_index])
-        integral_b = np.sum(integral_a)
+        integral_a = sp.trapz(y[s_index:e_index],axis=0,dx=(y.Time[1]-y.Time[0]))
+        integral_b = integral_a[1]
         
         if duration > 2.5e-9 and start != 0:
             results.append(start)
@@ -74,7 +70,7 @@ def time_intervals_Kevin(x,z):
 
 for day in range(22,27):
     if day == 22:
-        for shot in range(0,10):
+        for shot in range(0,150):
             for scopeNo in range(2,4):
                 for chan in range(1,5):
                     #y = toolbox.readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scopeNo, chan, scopeNo, shot))
@@ -134,9 +130,9 @@ for day in range(22,27):
         print "Day 26 done"
 """
 
-spike_info = toolbox.dataFrame(final_results)
+DF = toolbox.dataFrame(final_results)
 
-print spike_info
+print DF
 """
 plt.plot(y.Time,y.Ampl)
 plt.ylabel("Amplitude")

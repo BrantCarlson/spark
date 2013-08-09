@@ -36,11 +36,11 @@ for e in range(1,5):
             plt.scatter(-ciu[f][0:150], -ciu[e][0:150]) #Creates a scatter plot of the two channels
             plt.xlabel('Scope 3 Channel ' + str(f) + ' (UB' + str(f) + ') Amplitude')
             plt.ylabel('Scope 3 Channel ' + str(e) + ' (UB' + str(e) + ') Amplitude')
-            plt.ylim(-0.05, 0.3)
+            plt.ylim(-0.05, 0.6)
             if f == 4:
-                plt.xlim(-0.005, 0.03)
+                plt.xlim(-0.005, 0.06)
             else:
-                plt.xlim(-0.05, 0.3)
+                plt.xlim(-0.05, 0.6)
             plt.title("Cross Calibration of UB" + str(f)+ " and UB" + str(e) + " on day 25")            
             
             slope, intercept, r_value, p_value, error= stats.linregress(-ciu[f][0:150],-ciu[e][0:150]) #Gives calibration statistics for each plot
@@ -85,7 +85,7 @@ print "---"
 print "X-axis: Scope 2 Channel " + str(3) + "  Y-axis: Scope 2 Channel " + str(4) 
 print "Slope: " + str(slope) + "  Intercept: " + str(intercept)
 print "r value: " + str(r_value) + "  p value: " + str(p_value)
-'''    
+   
 fig = plt.figure(14)
 plt.scatter(-ciu[1][0:150], -hiu[3][0:150]) #Creates a scatter plot of the two channels
 plt.xlabel('Scope 3 Channel ' + str(1) + ' (UB1) Amplitude')
@@ -107,7 +107,7 @@ print "---"
 print "X-axis: Scope 3 Channel " + str(1) + "  Y-axis: Scope 2 Channel " + str(3) 
 print "Slope: " + str(slope) + "  Intercept: " + str(intercept)
 print "r value: " + str(r_value) + "  p value: " + str(p_value)
-
+'''
 def dataFrame(r):
     cols = ['X-axis', 'Y-axis', 'Slope', 'Intercept', 'R-value', 'P-value']
     num = len(r) / 6

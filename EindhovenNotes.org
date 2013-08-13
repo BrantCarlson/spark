@@ -1,0 +1,2203 @@
+#+TITLE:     Notes from Eindhoven visit 2
+#+AUTHOR:    Brant Carlson
+#+EMAIL:     brant.carlson@ift.uib.no
+#+DATE:      2013-01-15 Tue
+#+DESCRIPTION: describes experiments done during TEA-IS visit from Feb 23 to March 4, 2012.
+#+PROPERTY: eval no-export
+#+OPTIONS: ^:{}
+
+* pre-visit discussions
+** sanity check experiments
+- calibrate with Sr-90, Cs-137
+- all detectors next to each other, same and different numbers of fibers
+-
+
+** how many fibers
+run some tests:
+- many fibers in one detector next to other detectors?
+- one fiber in each detector, all next to each other?
+ 
+** where to put detectors
+three geometries
+- along (z)
+- away from (r)
+- around (theta)
+
+* plan
+** initial setup (hopefully)
+- test with Cs-137, Sr-90 (look for response, both scintillator and from non-scintillating fiber, sanity check)
+
+** sanity checks
+- all detectors next to each other, same number of fibers per detector, spark  (look for equal response)
+- all detectors next to each other, different numbers of fibers per detector (including no scintillating fibers per detector), spark (look for lack of saturation)
+- all detectors next to each other, different attenuators (no scintillator up to Pb sheet).
+
+location: 80 cm from gnd, 60 cm from HV, plus or minus 10 cm.
+
+** experiments
+*** camera settings
+
+*** negative HV   
+**** r from HV direction (first)
+- 20 cm spacing, from 40 cm from HV to 120 cm from HV, 45 degrees (or so)
+- use to pick interesting radius (and angle from horizontal) for theta experiments
+- If there's a systematic variation, do 10 cm spacing, covering range of interest.
+- 100 per series, 
+- if time permits, try to find gap between streamers from point and from current probe shield and between streamers from point and main discharge channel.
+**** theta (cylindrical) direction
+- choose r for theta direction on basis of r direction.
+- cover overall about 90 degrees of theta, given radius should be ~20 cm separation between detectors.
+- some tests with narrower separation to make sure we're not missing fine structure.
+**** theta (spherical polar angle) direction from HV
+For better comparison with high-speed camera images
+- cover ~60 degrees from horizontal to near spark channel.
+**** z direction (not as interesting)
+- just for fun?
+- 150 sparks (2 series, 10 cm spacing and 20 cm spacing?)
+  
+*** if we have time
+- positive HV: some experiments with detectors near ground electrode, narrow spacing?
+- with paper to narrow volume occupied by streamers, make camera image interpretation easier?
+  
+** calibrations
+- calibrate with Cs-137, Sr-90 (actual calibration, take spectra with scope)
+
+* Sunday
+** notes from Pavlo's photos
+with two cameras
+- Main: two cameras, one photo just after the other, see things either moving backward or subsequent streamers, tend to branch as if a streamer was going toward HV.  Either branching moving back, or merging moving forward.
+- see dots left behind / reilluminated from earlier streamer channels?
+- plexiglass sheet experiments (HV -> surface -> along surface -> ground)
+- spiked belt on HV with -HV = no x-rays
+- with tube: tube (~4 cm ID) confines leader, get earlier leader development.  Also may get some luminosity from plastic itself.  get weird signals -- short pulses sometimes, light leaks sometimes, in every combination.  (shielding of detector by tube?)
+
+** homework
+- OM calculations of free electron velocity, free ion velocity, streamer velocity
+
+* Monday
+** detector construction
+- polishing fibers with same polishing stone we used last time, seems to give best results.
+- also using same alignment trick as before, using insulation to ensure good alignment between scintillating fiber and transfer fiber.
+- gluing them together this time, by putting a bit of epoxy on the sides of the unshielded end of the transfer fiber before inserting the extra insulator.  Inserting insulator pushes epoxy away from junction between fibers.  also putting a bit of epoxy on the scintillating fiber before pushing it into the insulator.
+
+/get no signal with PMTs from Sr-90/
+ND1 from last time still works.
+- fibers from ND1 and UB1 PMT doesn't work.
+- UB1 fibers and ND1 PMT works, so it's not the fibers.
+
+** first shots
+not saving data, just to check if new PMTs are sensitive enough.
+15 shots or so, ND1 got hit once, UB PMTs did nothing.
+on one shot, ND1 got hit a hard, UB1 a tiny pulse.
+
+** after lunch
+doublecheck gain of PMTs --> absolute max voltage = 1500 V, if we go to 1400 we get 10^6 gain.
+- tried at 1400 V, still didn't get anything from Sr-90.
+- shots more promising, out of maybe 10 shots, seeing same time structure, about 10x difference in signal amplitude between ND1 and UB1 energy between two, which is about expected given 10^6 gain vs 10^7 gain.
+Looks like we can use the UB PMTs after all.  yay!
+
+Moving forward, put together UB2, UB3.
+
+UB1 now has a light leak at PMT end, hard to fix.  We plan to paint to seal off remaining gaps, let dry overnight tonight.
+
+shots with ND1 and UB1 near gap, UB2, UB3 on ground near cabinet.
+
+2 shots, no light leak evident on UB2, UB3 detector end.
+
+moved UB2, UB3 to same location as ND1, UB1.
+
+sample data table
+
+| shot | hits                                   | notes                                                    |
+|------+----------------------------------------+----------------------------------------------------------|
+|    1 | UB1,2,3, ND1, LaBr1,2                  | nothing huge, UB2 (ch3 ond scope) maybe not hit as hard? |
+|    2 |                                        |                                                          |
+|    3 |                                        |                                                          |
+|    4 | UB1,2,3, ND1                           | again UB2 weakest of the UBs                             |
+|    5 | UB1? ND1?                              | very weak                                                |
+|    6 | UB1,2,3 and ND1 saturated, LaBr1,2 hit | everything hit hard                                      |
+|    7 | UB1,2, ND1.  LaBr1,2 very weak         | ch3 on the scope weakest                                 |
+|    8 | UB1,2,3, ND1                           | again ch3 on scope weakest                               |
+|    9 |                                        |                                                          |
+|   10 | UB1,2,3, ND1                           | ch3 weakest                                              |
+
+exchange fibers on UB2, UB3.
+
+| shot | hits       | notes                          |
+|------+------------+--------------------------------|
+|    1 | everything | ch1 weakest (ch1 now has UB3?) |
+|    2 | everthing  | ch1 weakest                    |
+
+- fibers labeled 2 must be checked
+- UB1 has light leak in PMT enclosure
+
+painted...
+didn't seem to help.
+
+** homework
+- think of ways to make UB1 light-tight.
+- think of ways to measure fiber quality
+
+* Tuesday
+Nikolai is here today.
+
+** fiber quality
+Just by visual inspection, fiber batch #2 was pretty shitty, only one of the fibers was working well.  We re-did those fibers, and checked the last 10 fibers (for UB4, UB5).  In each of those batches, one fiber was obviously much worse, so we re-did those as well.
+
+Also drilled holes in UB4, UB5.
+
+** light leak
+No luck fixing light leak.  Covered all parts of detector with black plastic sheet, tried shining light on, no noticable effect.  Tried multiple enclosures, added black tape to base, still no reduction.  Probably just PMT, will not use PMT.
+
+- fiber 1 --> UB1
+- fiber 3 --> UB2
+- fiber 2 --> UB3
+- fiber 4 --> UB4
+
+** wiring up
+- channel and UB PMT number is same
+- all UB PMTS connected with roughly equal length cable plus or minus 20 cm.
+- UB1 UB4 have longest cables
+  
+in initial testing, UB4 seems to have less noise.  pulses are smaller and less frequent, at least, but I'm not sure that's a problem.
+
+_changed labels around_ fiber 3 <--> fiber 2.  Now:
+
+- fiber 1 --> UB1 --> ch1
+- fiber 2 --> UB2 --> ch2
+- fiber 3 --> UB3 --> ch3
+- fiber 4 --> UB4 --> ch4
+
+pavlo has some trouble with HS2, p30cws1205.  
+
+** after lunch
+giving up on H2 for now, maybe PMT is broken or power supply is broken?
+- H3 = ND2 from last time
+but H3 wants negative HV, and our other negative HV power supply isn't working...?  wtf?  ok, giving up on that too, for now...  will run with just the 5 (UB1-4,H1).
+
+** shots
+with UB1-4, H1, LaBr1-2, cameras.
+
+- took some photos of setup (~3:00pm)
+- detector position: 84cm from gnd, 80 cm from HV, 60 cm from channel, 110 cm up.
+  
+| det       | vert floor | rgnd | rhv |
+|-----------+------------+------+-----|
+| UB1-4, H1 |        110 |   84 |  80 |
+
+
+- spark gap = 107 cm.
+- scope 1: V, Ignd, IHV, cam.
+- scope 2: D1, D2, H1, --.
+- scope 3: UB1-4 on (ch1-4).
+  
+| scope | ch1   | ch2   | ch3 | ch4 |
+|-------+-------+-------+-----+-----|
+|     1 | V     | Ignd  | IHV | cam |
+|     2 | LaBr1 | LaBr2 | H1  | --  |
+|     3 | UB1   | UB2   | UB3 | UB4 |
+
+
+#+ATTR_LaTeX: longtable
+| shot | hits             | notes                                       | comments                                          |
+|------+------------------+---------------------------------------------+---------------------------------------------------|
+|    0 | ALL              | UB4 weakly, 10 mV/div on UB1-4              |                                                   |
+|    1 | none             | 20 mV/div on UB1-4                          |                                                   |
+|    2 | none             |                                             |                                                   |
+|    3 | UB2              | weak                                        |                                                   |
+|    4 | UB1-3, LaBr1, H1 |                                             |                                                   |
+|    5 | UB1,2            | 20 mV/div on UB1-3, 10 mV/div UB4           | scope 3 file same as 10                           |
+|    6 | UB1-3, LaBr2, H1 | weak, possibly something in UB4             | scope 3 file same as 10                           |
+|    7 | UB1-4, LaBr1, H1 | strong                                      | scope 3 file same as 10                           |
+|    8 | UB1-3, H1        |                                             | scope 3 file same as 10                           |
+|    9 | all              | strong                                      | scope 3 file same as 10                           |
+|   10 | UB1-4, H1        | medium, very weak in 4                      |                                                   |
+|   11 | none             | 20 mV/div on UB1-3, 5 mV/div on UB4         |                                                   |
+|   12 | none             |                                             |                                                   |
+|   13 | none             |                                             |                                                   |
+|   14 | LaBr2            | UB3 questionable                            |                                                   |
+|   15 | UB1-4, H1        | double-hit in H1                            |                                                   |
+|   16 | UB1-3            | weak                                        |                                                   |
+|   17 | UB1-3, LaBr1     | double-hit in LaBr1                         |                                                   |
+|   18 | UB2              | double-hit?                                 |                                                   |
+|   19 | UB1-3, LaBr2, H1 | H1 double-hit                               | UBs ~75% hit rate, UB4 definitely least sensitive |
+|   20 | none             |                                             |                                                   |
+|   21 | ALL              | strong, UB2, H1 doublehit, laBr2 very small |                                                   |
+|   22 | UB2, H1          | strong UB2, H1, nothing UB1,3,4, LaBr1,2    |                                                   |
+|   23 | UB1-3            | small                                       |                                                   |
+|   24 | UB1-4, LaBr1,2   | decent                                      |                                                   |
+|   25 | none             |                                             |                                                   |
+|   26 | ALL              |                                             |                                                   |
+|   27 | none             | 50 mV/div on UB1-3, 5 mV/div UB4            |                                                   |
+|   28 | ALL              | still saturated                             |                                                   |
+|   29 | ALL              | double-hits UB1-4, LaBr2, H1                |                                                   |
+|   30 | none             |                                             |                                                   |
+|   31 | UB1?             | UB1?, H1 was 50 mV/div, now 100 mV/div      |                                                   |
+|   32 | none             |                                             |                                                   |
+|   33 | none             |                                             |                                                   |
+|   34 | none             |                                             |                                                   |
+|   35 | none             |                                             |                                                   |
+|   36 | UB1,UB2, H1      |                                             |                                                   |
+|   37 | none             |                                             |                                                   |
+|   38 | none             |                                             |                                                   |
+|   39 | UB1-4            | smallish in all                             |                                                   |
+|   40 | none             |                                             |                                                   |
+|   41 | UB1-4, H1        | double-hit in UB3, H1                       |                                                   |
+|   42 | ALL              | double-hit UB2-4, H1.                       |                                                   |
+|   43 | none             |                                             |                                                   |
+|   44 | ALL              | double-hit UB2                              |                                                   |
+|   45 | ALL              | all double                                  |                                                   |
+|   46 | none             |                                             |                                                   |
+|   47 | UB2-3, H1        | double UB2                                  |                                                   |
+|   48 | none             |                                             |                                                   |
+|   49 | UB1-4, H1        | H1 double                                   |                                                   |
+
+taped detector ends together, was fanning out before.  Now mostly just a plane, with face normal to direction to HV electrode.
+
+
+#+ATTR_LaTeX: longtable
+| shot | hits               | notes                                   | comments |
+|------+--------------------+-----------------------------------------+----------|
+|   50 | UB2,4, LaBr1       | very weak                               |          |
+|   51 | none               |                                         |          |
+|   52 | ALL                | saturated but for LaBr1,2               |          |
+|   53 | UB1-3, LaBr1,2, H1 | very weak, some questionable            |          |
+|   54 | all but LaBr2      | none saturated!                         |          |
+|   55 | all but LaBr2      | none saturated!                         |          |
+|   56 | ALL                | all saturated (not LaBrs)               |          |
+|   57 | UB1-3, LaBr1, H1   | weak                                    |          |
+|   58 | none               |                                         |          |
+|   59 | UB2                | UB2 only.  weird                        |          |
+|   60 | LaBr1 only         |                                         |          |
+|   61 | none               |                                         |          |
+|   62 | none               |                                         |          |
+|   63 | none               |                                         |          |
+|   64 | none               |                                         |          |
+|   65 | none               |                                         |          |
+|   66 | UB2, H1            | very weak                               |          |
+|   67 | UB1                | weak                                    |          |
+|   68 | UB1-4, H1          | weak                                    |          |
+|   69 | ALL                | double-hit LaBr1,2, UBs sat but not UB4 |          |
+|   70 | UB1                |                                         |          |
+|   71 | none               |                                         |          |
+|   72 | LaBr2              |                                         |          |
+|   73 | UB1-3, 4?          | weak                                    |          |
+|   74 | UB1-4, H1          | weak                                    |          |
+|   75 | none               |                                         |          |
+|   76 | UB1-4, LaBr1, H1   |                                         |          |
+|   77 | none               |                                         |          |
+|   78 | H1                 | UB2 if you squint hard                  |          |
+|   79 | none               |                                         |          |
+|   80 | none               |                                         |          |
+|   81 | none               |                                         |          |
+|   82 | H1                 |                                         |          |
+|   83 | ALL                | double LaBr2                            |          |
+|   84 | none               |                                         |          |
+|   85 | ALL                |                                         |          |
+|   86 | UB1-4, H1          | double H1                               |          |
+|   87 | none               |                                         |          |
+|   88 | none               |                                         |          |
+|   89 | UB1,3 H1           | weak, UB2?                              |          |
+|   90 | none               |                                         |          |
+|   91 | UB1-4, LaBr2       |                                         |          |
+|   92 | UB2,3, H1, LaBr2   |                                         |          |
+|   93 | none               |                                         |          |
+|   94 | UB1-4, H1, LaBr2   | weak                                    |          |
+|   95 | UB3, LaBr2         | weak                                    |          |
+|   96 | ALL                | nice                                    |          |
+|   97 | none               |                                         |          |
+|   98 | UB1-4, H1, LaBr2   | nice                                    |          |
+|   99 | ALL                | sat                                     |          |
+
+scope settings for last 50
+| scope | ch1               | ch2               | ch3              | ch4            |
+|-------+-------------------+-------------------+------------------+----------------|
+|     1 | V                 | Ignd              | IHV              | cam            |
+|     2 | LaBr1 (50 mV/div) | LaBr2 (50 mV/div) | H1  (100 mV/div) | --             |
+|     3 | UB1  (50 mV/div)  | UB2 (50 mV/div)   | UB3 (50 mV/div)  | UB4 (5 mV/div) |
+
+
+#+ATTR_LaTeX: longtable
+| shot | hits             | notes                     | comments                                    |
+|------+------------------+---------------------------+---------------------------------------------|
+|  100 | UB1-4, LaBr1, H1 | nice                      |                                             |
+|  101 | ALL              | all unsat                 |                                             |
+|  102 | ALL              | UB2 sat                   |                                             |
+|  103 | none             |                           |                                             |
+|  104 | ???              |                           | no photo here                               |
+|  105 | xxxxxxxxxxxxx    | xxxxxxx                   | second spark from 104, marx gen was left on |
+|  106 | none             |                           | back to normal                              |
+|  107 | UB2,3            | very weak                 |                                             |
+|  108 | ALL              | all sat                   |                                             |
+|  109 | UB1-4, LaBr2,H1  | double H1                 |                                             |
+|  110 | UB1-4, H1        | nice                      |                                             |
+|  111 | none             |                           |                                             |
+|  112 | UB2-4, H1        |                           |                                             |
+|  113 | none             |                           |                                             |
+|  114 | none             |                           |                                             |
+|  115 | UB2,3            | tiny                      |                                             |
+|  116 | UB1              | small                     |                                             |
+|  117 | ALL              | UB2, H1 sat, double LaBr2 |                                             |
+|  118 | none             |                           |                                             |
+|  119 | ALL              | all sat                   |                                             |
+|  120 | none             |                           |                                             |
+|  121 | none             |                           |                                             |
+|  122 | none             |                           |                                             |
+|  123 | UB1-4, H1        | double H1                 |                                             |
+|  124 | ALL              | all sat                   |                                             |
+|  125 | ALL              | nice                      |                                             |
+|  126 | UB1-3            | very small, squint?       |                                             |
+|  127 | ALL              | double in all but H1      |                                             |
+|  128 | none             |                           |                                             |
+|  129 | UB1-4, LaBr2, H1 | nice                      |                                             |
+|  130 | none             |                           |                                             |
+|  131 | none             |                           |                                             |
+|  132 | none             |                           |                                             |
+|  133 | ALL              | double H1                 |                                             |
+|  134 | none             |                           |                                             |
+|  135 | UB1-3, H1        | smallish                  |                                             |
+|  136 | ALL              | double UB1, H1.  nice     | beautiful photo                             |
+|  137 | none             |                           |                                             |
+|  138 | none             |                           |                                             |
+|  139 | UB1-4, LaBr1, H1 | multi-hit H1              |                                             |
+|  140 | none             |                           |                                             |
+|  141 | ALL              | double UB2, nice          |                                             |
+|  142 | ALL              | nice                      |                                             |
+|  143 | UB2, LaBr1       |                           |                                             |
+|  144 | none             |                           |                                             |
+|  145 | UB1,2            | small                     |                                             |
+|  146 | UB1, LaBr2       | small                     |                                             |
+|  147 | none             |                           |                                             |
+|  148 | none             |                           |                                             |
+|  149 | none             |                           |                                             |
+
+NOTE: H1 was not directly adjacent to UB4.  moved adjacent now, in case we make more calibration tomorrow.
+
+** calibration feasibility test
+UB1, UB2 next to each other, pull out hits, test.
+
+#+begin_src R :session s1 :results silent :exports none
+  calPair <- function(dc,sch1,sch2){
+    h <- dbGetQuery(dc,sprintf("select * from hit where (sch=%d or sch=%d) and shotID > 22031",sch1,sch2));
+    h2 <- ddply(h,.(shotID),function(d){data.frame(a1=max(0,-d$amp[d$sch==sch1]),a2=max(0,-d$amp[d$sch==sch2]))});
+    p <- ggplot(data=h2) + theme_bw();
+    p <- p + geom_point(aes(x=a1,y=a2));
+    p <- p + xlab(sprintf("sch %d",sch1));
+    p <- p + ylab(sprintf("sch %d",sch2));
+    print(p);
+  }
+#+end_src
+
+#+begin_src R :session s1 :results graphics :file ub1ub2.png :exports none
+calPair(dc,31,32);
+#+end_src
+
+#+RESULTS:
+[[file:ub1ub2.png]]
+
+sensitivity of UB1 about equal to UB2
+
+#+begin_src R :session s1 :results graphics :file ub2ub3.png :exports none
+  calPair(dc,32,33)
+#+end_src
+
+#+RESULTS:
+[[file:ub2ub3.png]]
+
+
+
+#+begin_src R :session s1 :results graphics :file ub3ub4.png :exports none
+  calPair(dc,33,34)
+#+end_src
+
+#+RESULTS:
+[[file:ub3ub4.png]]
+
+#+begin_src R :session s1 :results graphics :file ub3h1.png :exports none
+  calPair(dc,33,23)
+#+end_src
+
+#+RESULTS:
+[[file:ub3h1.png]]
+
+#+begin_src R :session s1 :results graphics :file labr12.png :exports none
+  calPair(dc,21,22)
+#+end_src
+
+#+RESULTS:
+[[file:labr12.png]]
+
+Actually seems to work.  Note that hit finder isn't working properly, and calPair just plots the biggest "hit" in each channel on each spark.  Fine, but not optimal,
+
+sensitivities compared:
+- UB1 about equal to UB2
+- UB2 about 2x more sensitive than UB3
+- UB3 about 3x more sensitive than UB4
+- H1 about 5x more sensitive than UB3
+  
+  
+* Wednesday
+calibration worked pretty well, therefore...
+** radial sparks
+- H3 next to H1 for calibration, other detectors along a line about 45 degrees from horizontal, roughly in plane of camera FoV.
+- UB4 closest to HV, then UB3, UB2, UB1, H1/H3
+  
+detector positions (all numbers in cm)
+| det   | rHV | rgnd | vert | rgap |
+|-------+-----+------+------+------|
+| UB4   |  40 |  100 |  146 |   39 |
+| UB3   |  60 |  104 |  140 |   59 |
+| UB2   |  80 |  104 |  128 |   74 |
+| UB1   | 100 |  109 |  117 |   93 |
+| H1/H3 | 120 |  116 |  106 |  110 |
+
+took photos (around 11am)
+
+scope settings:
+| det   | gain (mV/div) |
+| UB1   |            50 |
+| UB2   |            50 |
+| UB3   |            50 |
+| UB4   |             5 |
+| LaBr1 |            50 |
+| LaBr2 |            50 |
+| H1    |           100 |
+| H3    |            50 |
+  
+#+ATTR_LaTeX: longtable
+| shot | hits               | notes                           | comments                         |
+|------+--------------------+---------------------------------+----------------------------------|
+|    0 | UB1-4, LaBr1, H1   | UB4 hit hardest?                |                                  |
+|    1 | ALL                | all double                      |                                  |
+|    2 | none               |                                 |                                  |
+|    3 | UB3, H1            | small                           |                                  |
+|    4 | none               |                                 |                                  |
+|------+--------------------+---------------------------------+----------------------------------|
+|    5 | UB1-4, LaBr2, H1,3 | nice, shows expected pattern    | UB4 most intense                 |
+|    6 | ALL                | double in everything but H3     | UB1,2 most intense               |
+|    7 | UB1-4, LaBr1, H1,3 |                                 | UB1 most intense                 |
+|    8 | ALL                | double in everything            | UB2 most intense                 |
+|    9 | none               |                                 |                                  |
+|   10 | none?              | maybe UB4?                      | UB4?                             |
+|   11 | none               |                                 |                                  |
+|   12 | UB3                |                                 | UB3                              |
+|   13 | none               |                                 |                                  |
+|   14 | ALL                | sat all but H3                  | ???                              |
+|   15 | ALL                | UB1,H1 double                   | UB2 winner, H3 gain to 20 mV/div |
+|   16 | none               |                                 |                                  |
+|   17 | UB1-4              | small                           | UB2?                             |
+|   18 | UB4                |                                 | UB4                              |
+|   19 | UB2-4, LaBr2, H1,3 | nice                            | UB2                              |
+|   20 | none               |                                 |                                  |
+|   21 | UB1-3, H1          |                                 | UB3                              |
+|   22 | none               |                                 |                                  |
+|   23 | ALL                | double everythnig but LaBr1     | winner dep on which hit          |
+|   24 | ALL                | double h1                       | UB2?                             |
+|   25 | ALL                | H1 a bit late, double LaBr2     | UB2                              |
+|   26 | none               |                                 |                                  |
+|   27 | UB1-4, H1,3        |                                 | UB2                              |
+|   28 | UB3?               | very weak                       |                                  |
+|   29 | none               |                                 |                                  |
+|   30 | ALL                | double LaBr1, H1                | UB2                              |
+|   31 | ALL                | double in LaBr1,2               | UB2, strong in UB4               |
+|   32 | UB4                |                                 |                                  |
+|   33 | LaBr1              | very weak                       |                                  |
+|   34 | UB1-4, LaBr2, H1   |                                 | UB2                              |
+|   35 | none               |                                 |                                  |
+|   36 | UB1-4, LaBr1,2     |                                 | UB2                              |
+|   37 | none               |                                 |                                  |
+|   38 | UB2,3              | small                           | UB3?                             |
+|   39 | none               |                                 |                                  |
+|   40 | LaBr2              |                                 |                                  |
+|   41 | UB4?               |                                 | UB4?                             |
+|   42 | UB1-4, Labr2       | double UB1                      | UB2                              |
+|   43 | ALL                | double ALL                      | UB2                              |
+|   44 | ALL                |                                 | UB4                              |
+|   45 | none               |                                 |                                  |
+|   46 | none               |                                 |                                  |
+|   47 | UB1-4, LaBr2, H1   |                                 | UB4                              |
+|   48 | none               |                                 |                                  |
+|   49 | UB1                |                                 | UB1                              |
+|------+--------------------+---------------------------------+----------------------------------|
+|      |                    | take a break                    |                                  |
+|------+--------------------+---------------------------------+----------------------------------|
+|   50 | none               | UB4 late?                       |                                  |
+|   51 | UB1-4, H1          | possible late in H3?            | UB3                              |
+|   52 | ALL                | all sat but LaBr1, H3           | ???                              |
+|   53 | none               |                                 |                                  |
+|   54 | none               |                                 |                                  |
+|   55 | ALL                | double all but H1, multi in UB4 | UB4                              |
+|   56 | ALL                | double all, all sat             | UB4                              |
+|   57 | none               |                                 |                                  |
+|   58 | none               |                                 |                                  |
+|   59 | UB1-4, LaBr1,2, H1 |                                 | UB2                              |
+|   60 | none               |                                 |                                  |
+|   61 | UB4                | saturated                       | UB4                              |
+|   62 | none               |                                 |                                  |
+|   63 | ALL                | sat all                         | UB4                              |
+|   64 | ALL                | double all, sat all in second   | UB4                              |
+|   65 | none               |                                 |                                  |
+|   66 | none               |                                 |                                  |
+|   67 | none               |                                 |                                  |
+|   68 | none               |                                 |                                  |
+|   69 | none               |                                 |                                  |
+|   70 | UB1-4, LaBr2, H1   | double UB4, triple UB2          | ?                                |
+|   71 | ALL                |                                 | ?                                |
+|   72 | UB4                |                                 | UB4                              |
+|   73 | none               |                                 |                                  |
+|   74 | none               |                                 |                                  |
+|   75 | none               |                                 |                                  |
+|   76 | none               |                                 |                                  |
+|   77 | UB1-4, LaBr1,2     | sat UB4, double UB2-4           | UB4  (lost count?)               |
+|   78 | ALL                | sat many                        | UB1  (lost count?)               |
+|   79 | none               |                                 | (lost count?)                    |
+|   80 | none               |                                 | (lost count?)                    |
+|   81 | UB1                |                                 | UB1                              |
+|   82 | UB1,3,4, LaBr2, H1 |                                 | UB1                              |
+|   83 | none               |                                 |                                  |
+|   84 | UB1-3, H1          |                                 | UB2                              |
+|   85 | UB1-4              |                                 | UB4                              |
+|   86 | none               |                                 |                                  |
+|   87 | UB1-4, Labr1, H1   |                                 | UB2                              |
+|   88 | UB2,3              |                                 |                                  |
+|   89 | UB2,3, LaBr1, H3   |                                 | UB3                              |
+|   90 | UB1-4, LaBr1       |                                 |                                  |
+|   91 | UB1-4, LaBr1,2     | double UB1,2                    |                                  |
+|   92 | UB1-4, LaBr1,2, H1 |                                 | UB4                              |
+|   93 | none               |                                 |                                  |
+|   94 | none               |                                 |                                  |
+|   95 | UB1-4, H3          |                                 | ?                                |
+|   96 | ALL                | sat ALL                         | UB4                              |
+|   97 | ALL                | double everything but H1,3      | UB2                              |
+|   98 | UB1-4, LaBr1, H3   | double UB3,4,                   | UB2                              |
+|   99 | none               |                                 |                                  |
+
+... luncbreak
+
+** quick cal of H1 vs H3?
+
+#+begin_src R :session s1 :results graphics :file h1h3.png :exports none
+  calPair(dc,23,24)
+#+end_src
+
+#+RESULTS:
+[[file:h1h3.png]]
+
+not so functional.  hm.  Also need to fix database.
+
+** azimuthal angle shots
+
+| det | rHV | rgnd | vert |
+|-----+-----+------+------+
+| H3  |  84 |  107 |  125 |
+| H1  |  84 |  106 |  125 |
+| UB1 |  84 |  106 |  125 |
+| UB2 |  84 |  106 |  125 |
+| UB3 |  84 |  108 |  126 |
+| UB4 |  84 |  110 |  127 |
+separation between all detectors is 20 cm.  Detectors are in order in the above table, starting with the one closest to the Marx generator.
+
+(do the calculations, radius from gap is about 77 cm, so 20 cm separation implies an angular separation of ~15 degrees.)
+
+took some photos (~3:20pm).
+
+gap length: 107 cm
+   
+#+ATTR_LaTeX: longtable
+| shot | hits                  | notes                 | comments                                |
+|------+-----------------------+-----------------------+-----------------------------------------|
+|  100 | none                  |                       | possible light leak in UB1?             |
+|  101 | ALL                   | sat UBs               | possible light leak in UB1?             |
+|  102 | none                  |                       | light leak again, squeezed tape a bit   |
+|  103 | none                  |                       | didn't help.  it's a small leak, though |
+|  104 | none                  |                       |                                         |
+|  105 | UB2-4, H1             |                       |                                         |
+|  106 | LaBr1,2               |                       |                                         |
+|  107 | none                  |                       |                                         |
+|  108 | none                  |                       |                                         |
+|  109 | none                  |                       |                                         |
+|  110 | LaBr1,2               |                       |                                         |
+|  111 | none                  |                       |                                         |
+|  112 | none                  |                       |                                         |
+|  113 | UB1-3, H1,3           |                       |                                         |
+|  114 | ALL                   |                       |                                         |
+|  115 | none                  |                       |                                         |
+|  116 | LaBr2, H3             |                       |                                         |
+|  117 | UB1,2, H1, LaBr1,2    | H3?                   |                                         |
+|  118 | UB1-3, H3, LaBr1,2    | H1?                   |                                         |
+|  119 | none                  |                       |                                         |
+|  120 | none                  |                       |                                         |
+|  121 | UB1                   |                       |                                         |
+|  122 | none                  |                       |                                         |
+|  123 | UB1-3, H1, LaBr1      |                       |                                         |
+|  124 | none                  |                       |                                         |
+|  125 | none                  |                       |                                         |
+|  126 | UB2, H3, LaBr2        |                       |                                         |
+|  127 | UB1,2                 | different times       |                                         |
+|  128 | none                  |                       |                                         |
+|  129 | LaBr2                 |                       |                                         |
+|  130 | none                  |                       |                                         |
+|  131 | none                  |                       |                                         |
+|  132 | UB1-4, LaBr2          |                       |                                         |
+|  133 | UB1-3, LaBr1,2, H1,H3 |                       |                                         |
+|  134 | none                  |                       |                                         |
+|  135 | none                  |                       |                                         |
+|  136 | none                  |                       |                                         |
+|  137 | none                  |                       |                                         |
+|  138 | UB2-4, LaBr1          | LaBr2?                |                                         |
+|  139 | none                  |                       |                                         |
+|  140 | ALL                   | all sat               |                                         |
+|  141 | UB3?, LaBr2?          |                       |                                         |
+|  142 | ALL                   | many sat              |                                         |
+|  143 | none                  |                       |                                         |
+|  144 | UB1-4, LaBr1,2        | double LaBr1          |                                         |
+|  145 | UB1, LaBr2            |                       |                                         |
+|  146 | none                  |                       |                                         |
+|  147 | UB1                   |                       |                                         |
+|  148 | UB1,2, H1             |                       |                                         |
+|  149 | none                  |                       |                                         |
+|------+-----------------------+-----------------------+-----------------------------------------|
+|  150 | UB1                   |                       |                                         |
+|  151 | UB1-4, H1, LaBr1,2    | double LaBr2          |                                         |
+|  152 | none                  |                       |                                         |
+|  153 | none                  |                       |                                         |
+|  154 | H1,H3                 |                       |                                         |
+|  155 | ALL                   |                       |                                         |
+|  156 | ALL                   |                       |                                         |
+|  157 | UB1-4, LaBr1,2        | double in LaBr        |                                         |
+|  158 | UB2,3, LaBr2          |                       |                                         |
+|  159 | ALL                   |                       |                                         |
+|  160 | none                  |                       |                                         |
+|  161 | UB1-4, LaBr1,2, H1    |                       |                                         |
+|  162 | ALL                   |                       |                                         |
+|  163 | UB2-4, LaBr1,2        |                       |                                         |
+|  164 | none                  |                       |                                         |
+|  165 | none                  |                       |                                         |
+|  166 | UB2-4, H3             | H1?                   |                                         |
+|  167 | UB1-3, H1             |                       |                                         |
+|  168 | none                  |                       |                                         |
+|  169 | UB1-3, LaBr2, H1,2    |                       |                                         |
+|  170 | UB1-4, H1, LaBr1,2    |                       |                                         |
+|  171 | LaBr1                 |                       |                                         |
+|  172 | UB1-4, LaBr1, H1,3    |                       |                                         |
+|  173 | UB1, LaBr1,2          |                       |                                         |
+|  174 | UB2                   |                       |                                         |
+|  175 | UB3,4                 |                       |                                         |
+|  176 | ALL                   |                       | spatial structure?                      |
+|  177 | UB2,4, H1             |                       |                                         |
+|  178 | UB2, H1               | UB1?                  |                                         |
+|  179 | none                  |                       |                                         |
+|  180 | UB4, LaBr2            | UB4 late              |                                         |
+|  181 | ALL                   | all sat except for H3 |                                         |
+|  182 | none                  |                       |                                         |
+|  183 | none                  |                       |                                         |
+|  184 | none                  |                       |                                         |
+|  185 | none                  |                       |                                         |
+|  186 | UB1-3, H1             |                       |                                         |
+|  187 | ALL                   | many sat              |                                         |
+|  188 | ALL                   | many sat              |                                         |
+|  189 | UB3,4                 |                       |                                         |
+|  190 | UB1-4, LaBr1,2, H1    |                       |                                         |
+|  191 | UB2, H1               |                       |                                         |
+|  192 | UB1, H1,H3, LaBr2     |                       |                                         |
+|  193 | UB1-4, H1             |                       | spatial structure?                      |
+|  194 | UB1-4, LaBr2          |                       |                                         |
+|  195 | ALL                   | many sat              |                                         |
+|  196 | none                  |                       |                                         |
+|  197 | none                  |                       |                                         |
+|  198 | ALL                   | many sat              | spatial structure                       |
+|  199 | UB1-3, LaBr2, H1      | small                 |                                         |
+
+repositioned detectors to cover full 180 degrees (~50 cm separating detectors).
+
+** homework
+- fix this file, organize code
+- fix database, bring up to data with detector positions and everything
+- look into correlation tests with more than 2 variables
+- look into run length frequency tests
+  
+* Thursday
+  
+** broader azimuth
+detector positions with broader spacing.  hope for less 
+
+(all distances in cm)
+| det | rHV | rgnd | vert floor |
+|-----+-----+------+------------|
+| H3  |  92 |  107 |        124 |
+| UB1 |  80 |  102 |        126 |
+| H1  |  79 |  105 |        131 |
+| UB2 |  80 |  106 |        130 |
+| UB3 |  84 |  108 |        128 |
+| UB4 |  88 |  111 |        129 |
+
+detectors in order in table, starting with one closest to marx generator.
+
+spacing ~50 cm between detectors
+
+took some photos (~9:52am)
+  
+#+ATTR_LaTeX: longtable
+| shot | hits                 | notes                                    |          comments |
+|------+----------------------+------------------------------------------+-------------------|
+|    0 | UB3,4                | H3 late, noisy                           |               100 |
+|    1 | UB2-4, LaBr1,2       |                                          |               100 |
+|    2 | UB2-4, H1, LaBr2     |                                          |               100 |
+|    3 | none                 |                                          |                74 |
+|    4 | none                 |                                          |                60 |
+|    5 | UB1, H1, LaBr2       |                                          |                66 |
+|    6 | ALL                  | double UB1,2, H1, LaBr2                  |                71 |
+|    7 | none                 |                                          |              62.5 |
+|    8 | UB1, H3              |                                          |                66 |
+|    9 | ALL                  | double UB1,2                             |                70 |
+|   10 | none                 |                                          |              63.6 |
+|   11 | ALL                  | double all (but H3?), spatial structure? |              66.6 |
+|   12 | ALL                  | double many                              |              69.2 |
+|   13 | UB1, H3, LaBr2       |                                          |              71.4 |
+|   14 | none                 |                                          |              66.6 |
+|   15 | UB1-4, LaBr1, H1     |                                          |      11/16  68.75 |
+|   16 | UB1                  |                                          |              70.5 |
+|   17 | ALL                  |                                          |                72 |
+|   18 | none                 |                                          |              68.4 |
+|   19 | UB1, H3              |                                          |      14/20     70 |
+|   20 | H3                   | UB1?                                     |              71.4 |
+|   21 | UB1                  |                                          |              72.7 |
+|   22 | UB1,2, H1,3, LaBr2   |                                          |                74 |
+|   23 | none                 |                                          |              70.8 |
+|   24 | none                 |                                          |                68 |
+|   25 | UB1,3, H3            |                                          |              69.2 |
+|   26 | UB2,3 LaBr           |                                          |              70.3 |
+|   27 | UB1, H1,3            |                                          |              71.4 |
+|   28 | UB1                  |                                          |              72.4 |
+|   29 | UB2, H1              |                                          | 22/30        73.3 |
+|   30 | none                 |                                          |                   |
+|   31 | UB1,3,4, H3          |                                          |                   |
+|   32 | UB3,4                |                                          |              72.7 |
+|   33 | UB1-3, H1, LaBr1     |                                          |              73.5 |
+|   34 | UB1,H3               |                                          |              74.2 |
+|   35 | H3                   |                                          |               75% |
+|   36 | none                 |                                          |                73 |
+|   37 | UB1,2                |                                          |              73.6 |
+|   38 | UB1, UB2             |                                          |              74.3 |
+|   39 | UB1, H1,3            |                                          |   30/40        75 |
+|   40 | UB2, H3              |                                          |                   |
+|   41 | UB4                  |                                          |                   |
+|   42 | UB2,3                | different timing                         |                   |
+|   43 | LaBr2                |                                          |                   |
+|   44 | UB2, H1, LaBr1       |                                          |                   |
+|   45 | UB2-4, LaBr1,2       |                                          |                   |
+|   46 | UB2-4, H1, LaBr1,2   |                                          |                   |
+|   47 | UB1-4, H1, LaBr1,2   | time structure                           |                   |
+|   48 | UB2-4, H1, LaBr1,2   |                                          |                   |
+|   49 | UB1,2, H1, LaBr1     |                                          |         39/50  78 |
+|------+----------------------+------------------------------------------+-------------------|
+|      |                      | break                                    |                   |
+|------+----------------------+------------------------------------------+-------------------|
+|   50 | none                 |                                          |                   |
+|   51 | none                 |                                          |                   |
+|   52 | UB3,4                |                                          |                   |
+|   53 | UB1, H1, H3          |                                          |                   |
+|   54 | UB4                  |                                          |               3/5 |
+|   55 | none                 |                                          |                   |
+|   56 | UB1-4                |                                          |                   |
+|   57 | UB1, H1,H3           |                                          |                   |
+|   58 | ALL                  | time structure                           |                   |
+|   59 | UB3                  |                                          |              7/10 |
+|   60 | none                 |                                          |                   |
+|   61 | UB2                  |                                          |                   |
+|   62 | UB3                  |                                          |                   |
+|   63 | UB3,4, H3            |                                          |                   |
+|   64 | ALL                  |                                          |             11/15 |
+|   65 | UB1,2                |                                          |                   |
+|   66 | none                 |                                          |                   |
+|   67 | UB1, H3              |                                          |                   |
+|   68 | none                 |                                          |                   |
+|   69 | ALL                  | time structure                           |             14/20 |
+|   70 | UB1-3                | UB4? time structure                      |                   |
+|   71 | UB1-3, H1,3, LaBr1,2 |                                          |                   |
+|   72 | none                 |                                          |                   |
+|   73 | UB1-4, H1, LaBr1,2   | double pulses                            |                   |
+|   74 | UB1                  |                                          |             18/25 |
+|   75 | UB1,2, H3            | time structure                           |                   |
+|   76 | H3                   |                                          |                   |
+|   77 | UB1, H1              |                                          |                   |
+|   78 | UB1-4, H1, LaBr1,2   | time structure                           |                   |
+|   79 | none                 |                                          |             22/30 |
+|   80 | UB2-4                |                                          |                   |
+|   81 | UB3-4                |                                          |                   |
+|   82 | UB1, H3              |                                          |                   |
+|   83 | UB1-3, H1,3, LaBr2   |                                          |                   |
+|   84 | UB1-3, H1,3, LaBr1,2 |                                          |             27/35 |
+|   85 | none                 |                                          |                   |
+|   86 | UB2-4, H1, LaBr1,2   |                                          |                   |
+|   87 | UB2-4                |                                          |                   |
+|   88 | UB1-3, H3            | time structure                           |                   |
+|   89 | UB1-4, LaBr1,2, H1   | time structure                           |             31/40 |
+|   90 | none                 |                                          |                   |
+|   91 | UB1,4, H3, LaBr1     |                                          |                   |
+|   92 | none                 |                                          |                   |
+|   93 | none                 |                                          |                   |
+|   94 | UB1,2, H1,3          |                                          |             33/45 |
+|   95 | UB1-3, LaBr1,2 H1,3  |                                          |                   |
+|   96 | none                 |                                          |                   |
+|   97 | ALL                  | time structure                           |                   |
+|   98 | UB3                  |                                          |                   |
+|   99 | ALL                  | time structure                           |        37/50  74% |
+
+76% overall.
+
+** broader azimuthal angle, lower down
+lowered detector assembly.
+
+   detector positions
+| det | vert floor | rHV | rgnd |
+|-----+------------+-----+------|
+| H3  |         92 |  97 |   78 |
+| UB1 |         96 |  92 |   77 |
+| H1  |         98 |  90 |   80 |
+| UB2 |         99 |  90 |   80 |
+| UB3 |        101 |  90 |   86 |
+| UB4 |         97 |  88 |   81 |
+
+still separated by 50 cm.
+
+#+ATTR_LaTeX: longtable
+| shot | hits                   | notes                | comments |
+|------+------------------------+----------------------+----------|
+|  100 | ALL                    | double all, sat many |          |
+|  101 | ALL                    | two pulses           |          |
+|  102 | none                   |                      |          |
+|  103 | none                   |                      |          |
+|  104 | none                   |                      | 2/5      |
+|------+------------------------+----------------------+----------|
+|  105 | UB1, H3, LaBr2         |                      |          |
+|  106 | none                   |                      |          |
+|  107 | UB1,3,4, H1, LaBr2     |                      |          |
+|  108 | LaBr2                  |                      |          |
+|  109 | ALL                    | two pulses           | 5/10     |
+|------+------------------------+----------------------+----------|
+|  110 | UB1,2,4, LaBr1,2, H1,2 |                      |          |
+|  111 | none                   |                      |          |
+|  112 | none                   |                      |          |
+|  113 | UB1-3, H1              |                      |          |
+|  114 | UB1, H1,3              |                      | 8/15     |
+|------+------------------------+----------------------+----------|
+|  115 | UB3,4                  |                      |          |
+|  116 | UB3,4                  |                      |          |
+|  117 | none                   |                      |          |
+|  118 | UB2-4, LaBr2           |                      |          |
+|  119 | none                   |                      | 11/20    |
+|------+------------------------+----------------------+----------|
+|  120 | ALL                    | three pulses         |          |
+|  121 | none                   |                      |          |
+|  122 | none                   |                      |          |
+|  123 | UB2, LaBr1             |                      |          |
+|  124 | ALL                    | two pulses           | 14/25    |
+|------+------------------------+----------------------+----------|
+|  125 | ALL                    |                      |          |
+|  126 | none                   |                      |          |
+|  127 | UB3                    |                      |          |
+|  128 | UB1-4, H1, LaBr1,2     | two pulses           |          |
+|  129 | none                   |                      | 17/30    |
+|------+------------------------+----------------------+----------|
+|  130 | UB1, H1,3              |                      |          |
+|  131 | UB1-3, LaBr1,2 H1,3    |                      |          |
+|  132 | none                   |                      |          |
+|  133 | ALL                    |                      |          |
+|  134 | UB1, H1,3, LaBr1,2     |                      | 21/35    |
+|------+------------------------+----------------------+----------|
+|  135 | UB1,2 H1, LaBr2        |                      |          |
+|  136 | UB1                    |                      |          |
+|  137 | ALL                    | two pulses           |          |
+|  138 | none                   |                      |          |
+|  139 | UB1,2, H1,3            |                      | 25/40    |
+|------+------------------------+----------------------+----------|
+|  140 | UB3,4, H1,H3, LaBr2    | two pulses           |          |
+|  141 | UB1-3, LaBr1,2         |                      |          |
+|  142 | none                   |                      |          |
+|  143 | ALL                    | small                |          |
+|  144 | none                   |                      | 28/45    |
+|------+------------------------+----------------------+----------|
+|  145 | UB1-3, H1, LaBr1,2     |                      |          |
+|  146 | none                   |                      |          |
+|  147 | ALL                    |                      |          |
+|  148 | UB2-4, LaBr2           |                      |          |
+|  149 | ALL                    |                      | 32/50    |
+|------+------------------------+----------------------+----------|
+|      |                        | break                |          |
+|------+------------------------+----------------------+----------|
+|  150 | UB2                    |                      |          |
+|  151 | ALL                    |                      |          |
+|  152 | UB2, LaBr2             |                      |          |
+|  153 | UB1-4, H1, LaBr1,2     |                      |          |
+|  154 | UB1-4, H1, LaBr1,2     |                      | 5/5      |
+|------+------------------------+----------------------+----------|
+|  155 | none                   |                      |          |
+|  156 | ALL                    | three pulses         |          |
+|  157 | Ub2-4                  |                      |          |
+|  158 | UB1                    |                      |          |
+|  159 | none                   | 12:37                | 8/10     |
+|------+------------------------+----------------------+----------|
+|  160 | UB1-4, H1,3            |                      |          |
+|  161 | none                   |                      |          |
+|  162 | none                   |                      |          |
+|  163 | ALL                    |                      |          |
+|  164 | UB1, H3                |                      | 11/15    |
+|------+------------------------+----------------------+----------|
+|  165 | none                   |                      |          |
+|  166 | ALL                    | three pulses         |          |
+|  167 | UB1, H3                |                      |          |
+|  168 | UB1-4, LaBr1,2, H3     | two pulses           |          |
+|  169 | ALL                    | two pulses           | 15/20    |
+|------+------------------------+----------------------+----------|
+|  170 | UB2                    |                      |          |
+|  171 | none                   |                      |          |
+|  172 | none                   |                      |          |
+|  173 | H3                     |                      |          |
+|  174 | none                   | 12:45                | 17/25    |
+|------+------------------------+----------------------+----------|
+|  175 | ALL                    |                      |          |
+|  176 | none                   |                      |          |
+|  177 | UB3-4                  |                      |          |
+|  178 | H3                     |                      |          |
+|  179 | UB1,2 LaBr1,2, H1,3    |                      | 21/30    |
+|------+------------------------+----------------------+----------|
+|  180 | none                   | 12:50                |          |
+|  181 | UB1-4, LaBr1,2         |                      |          |
+|  182 | Ub1-4                  | 3 pulses             |          |
+|  183 | UB1                    |                      |          |
+|  184 | UB1-4, LaBr2, H3       | 3 pulses             | 25/35    |
+|------+------------------------+----------------------+----------|
+|  185 | H3, LaBr1              | 12:53                |          |
+|  186 | UB2-4                  | whack!               |          |
+|  187 | none                   |                      |          |
+|  188 | UB1-4, LaBr1,2 H1      | two pulses           |          |
+|  189 | UB3                    |                      | 30/40    |
+|------+------------------------+----------------------+----------|
+|  190 | UB2-4, LaBr2           |                      |          |
+|  191 | none                   |                      |          |
+|  192 | ALL                    | two pulses           |          |
+|  193 | UB3-4                  |                      |          |
+|  194 | none                   |                      | 33/45    |
+|------+------------------------+----------------------+----------|
+|  195 | UB2-4, LaBr1,2 H3      |                      |          |
+|  196 | none                   |                      |          |
+|  197 | none                   |                      |          |
+|  198 | ALL                    | two pulses           |          |
+|  199 | UB1,3,4, LaBr1,2 H1,3  | 13:01                | 36/50    |
+|------+------------------------+----------------------+----------|
+
+68/100 this batch
+
+** polar angle
+   
+detector positions:
+| det | vert floor | rHV | rgnd |
+|-----+------------+-----+------|
+| UB1 |        149 | 76  | 121  |
+| UB2 |        136 | 77  | 109  |
+| UB3 |        121 | 79  | 96   |
+| UB4 |        108 | 84  | 84   |
+| H1  |         94 | 86  | 70   |
+| H3  |         86 | 88  | 59   |
+
+detectors in order from top to bottom
+
+| det     | vert floor | horiz from gnd electrode |
+|---------+------------+--------------------------|
+| labr1/2 |        110 |                      206 |
+   
+ground electrode height: 55 cm.
+
+#+ATTR_LaTeX: longtable
+| shot | hits                 | notes      | comments |
+|------+----------------------+------------+----------|
+|  200 | none                 |            |          |
+|  201 | H1, LaBr2            | H1 late    |          |
+|  202 | UB1-4, H1, LaBr1     |            |          |
+|  203 | UB2,3 H1             |            |          |
+|  204 | UB1-3, H1            |            | 4/5      |
+|------+----------------------+------------+----------|
+|  205 | ALL                  |            |          |
+|  206 | none                 |            |          |
+|  207 | UB2,4                |            |          |
+|  208 | UB1-4, H3, LaBr1     |            |          |
+|  209 | ALL                  |            | 8/10     |
+|------+----------------------+------------+----------|
+|  210 | none                 |            |          |
+|  211 | LaBr2, H1            |            |          |
+|  212 | none                 |            |          |
+|  213 | none                 |            |          |
+|  214 | UB1-4, LaBr1, H1,3   |            | 10/15    |
+|------+----------------------+------------+----------|
+|  215 | none                 |            |          |
+|  216 | none                 |            |          |
+|  217 | none                 |            |          |
+|  218 | none                 |            |          |
+|  219 | none                 |            | 10/20    |
+|------+----------------------+------------+----------|
+|  220 | none                 |            |          |
+|  221 | UB2, H1, LaBr1       |            |          |
+|  222 | ALL                  |            |          |
+|  223 | none                 |            |          |
+|  224 | LaBr1                | UB2?       | 13/25    |
+|------+----------------------+------------+----------|
+|  225 | none                 |            |          |
+|  226 | ALL                  | two pulses |          |
+|  227 | UB1-4, H1, LaBr1     | two pulses |          |
+|  228 | UB1-4, H1            | two pulses |          |
+|  229 | LaBr2                |            | 17/30    |
+|------+----------------------+------------+----------|
+|  230 | H1                   |            |          |
+|  231 | UB2                  |            |          |
+|  232 | LaBr2                |            |          |
+|  233 | UB2, LaBr2           |            |          |
+|  234 | UB2,3, H1            | two pulses | 22/35    |
+|------+----------------------+------------+----------|
+|  235 | UB1-3, LaBr2         | two pulses |          |
+|  236 | none                 |            |          |
+|  237 | none                 |            |          |
+|  238 | UB1                  |            |          |
+|  239 | UB3                  |            | 25/40    |
+|------+----------------------+------------+----------|
+|  240 | UB1-4, H1            |            |          |
+|  241 | ALL                  |            |          |
+|  242 | UB2                  |            |          |
+|  243 | UB1                  | UB4?       |          |
+|  244 | none                 |            | 29/45    |
+|------+----------------------+------------+----------|
+|  245 | UB1-4, H1            |            |          |
+|  246 | UB2,3                |            |          |
+|  247 | UB1-4, H1, LaBr1,2   |            |          |
+|  248 | none                 |            |          |
+|  249 | UB2,4, H1            |            | 33/50    |
+|------+----------------------+------------+----------|
+|      |                      |            |          |
+|------+----------------------+------------+----------|
+|  250 | UB1-4, LaBr1, H1     |            |          |
+|  251 | none                 |            |          |
+|  252 | UB1-4, H1            |            |          |
+|  253 | none                 |            |          |
+|  254 | none                 |            | 2/5      |
+|------+----------------------+------------+----------|
+|  255 | UB2                  |            |          |
+|  256 | UB1, LaBr2           |            |          |
+|  257 | UB1-4, LaBr1,2, H1   |            |          |
+|  258 | UB1-3, LaBr1,2, H1,3 |            |          |
+|  259 | UB2-4, H1            |            | 7/10     |
+|------+----------------------+------------+----------|
+|  260 | none                 |            |          |
+|  261 | UB2, H1              |            |          |
+|  262 | UB1-4, H1, LaBr2     | two pulses |          |
+|  263 | ALL                  |            |          |
+|  264 | none                 |            | 10/15    |
+|------+----------------------+------------+----------|
+|  265 | UB2                  | very small |          |
+|  266 | ALL                  |            |          |
+|  267 | ALL                  |            |          |
+|  268 | none                 |            |          |
+|  269 | ALL                  |            | 14/20    |
+|------+----------------------+------------+----------|
+|  270 | ALL                  |            |          |
+|  271 | none                 |            |          |
+|  272 | UB1-4, H1, LaBr1,2   |            |          |
+|  273 | ALL                  | two pulses |          |
+|  274 | UB1                  |            | 18/25    |
+|------+----------------------+------------+----------|
+|  275 | none                 |            |          |
+|  276 | UB2                  |            |          |
+|  277 | UB1-3, H1            |            |          |
+|  278 | UB1,2 LaBr2          |            |          |
+|  279 | none                 |            | 21/30    |
+|------+----------------------+------------+----------|
+|  280 | ALL                  |            |          |
+|  281 | UB1-4, H1            |            |          |
+|  282 | UB2-4, H1,3 LaBr2    |            |          |
+|  283 | H1                   |            |          |
+|  284 | none                 |            | 25/35    |
+|------+----------------------+------------+----------|
+|  285 | none                 |            |          |
+|  286 | UB1-4, LaBr1,2, H1   |            |          |
+|  287 | none                 |            |          |
+|  288 | H1, LaBr1,2          |            |          |
+|  289 | UB1-4, H1            |            | 28/40    |
+|------+----------------------+------------+----------|
+|  290 | none                 |            |          |
+|  291 | UB2, H1, LaBr1       |            |          |
+|  292 | UB2, LaBr2           |            |          |
+|  293 | none                 |            |          |
+|  294 | UB2                  |            | 31/45    |
+|------+----------------------+------------+----------|
+|  295 | UB2, H1              |            |          |
+|  296 | none                 |            |          |
+|  297 | ALL                  |            |          |
+|  298 | UB1-4                |            |          |
+|  299 | none                 |            | 34/50    |
+|------+----------------------+------------+----------|
+
+overall 67/100.
+
+* Friday
+plan:
+- re-calibrate (50 shots, all detectors unshielded, same location as on tuesday)
+- attenuators (100 shots, same location as on tuesday).  detector order: UB1, UB2(shielded), H1(shielded?), H3, UB3(shielded), UB4.
+** re-calibration shots
+   
+#+ATTR_LaTeX: longtable
+| shot | hits                | notes      | comments |
+|------+---------------------+------------+----------|
+|    0 | UB1-4, LaBr2        |            |          |
+|    1 | UB1-4, LaBr2        |            |          |
+|    2 | none                |            |          |
+|    3 | none                |            |          |
+|    4 | UB1-4, H1,H3, LaBr1 |            | 3/5      |
+|------+---------------------+------------+----------|
+|    5 | UB3                 |            |          |
+|    6 | LaBr2               |            |          |
+|    7 | UB1-4, H1, LaBr1,2  |            |          |
+|    8 | LaBr2               |            |          |
+|    9 | none                |            | 7/10     |
+|------+---------------------+------------+----------|
+|   10 | none                |            |          |
+|   11 | H1                  |            |          |
+|   12 | none                |            |          |
+|   13 | none                |            |          |
+|   14 | UB1-4, H1,H3        |            | 9/15     |
+|------+---------------------+------------+----------|
+|   15 | UB1-4, H1           |            |          |
+|   16 | none                |            |          |
+|   17 | UB1-4, H1,3, LaBr2  |            |          |
+|   18 | none                |            |          |
+|   19 | ALL                 |            | 12/20    |
+|------+---------------------+------------+----------|
+|   20 | UB2,3               |            |          |
+|   21 | UB1-4               |            |          |
+|   22 | UB1-4               |            |          |
+|   23 | UB1-4, H1           |            |          |
+|   24 | none                |            | 16/25    |
+|------+---------------------+------------+----------|
+|   25 | none                |            |          |
+|   26 | none                |            |          |
+|   27 | none                |            |          |
+|   28 | UB1-4               |            |          |
+|   29 | ALL                 |            | 18/30    |
+|------+---------------------+------------+----------|
+|   30 | UB2, H1, LaBr2      |            |          |
+|   31 | none                |            |          |
+|   32 | UB2,3, LaBr2        | small      |          |
+|   33 | UB1-4, H1           | two pulses |          |
+|   34 | UB1-4, H1, LaBr2    |            | 22/35    |
+|------+---------------------+------------+----------|
+|   35 | ALL                 |            |          |
+|   36 | none                |            |          |
+|   37 | ALL                 | sat all    |          |
+|   38 | UB4                 |            |          |
+|   39 | ALL                 | sat all    | 26/40    |
+|------+---------------------+------------+----------|
+|   40 | none                |            |          |
+|   41 | UB1,2, H1, LaBr1,2  |            |          |
+|   42 | UB2, H1, LaBr2      |            |          |
+|   43 | LaBr2               |            |          |
+|   44 | UB1-4, H1           |            | 30/45    |
+|------+---------------------+------------+----------|
+|   45 | H1                  |            |          |
+|   46 | UB1                 |            |          |
+|   47 | UB1-4, H1, LaBr1    |            |          |
+|   48 | none                |            |          |
+|   49 | UB2,3               |            | 34/50    |
+|------+---------------------+------------+----------|
+
+
+** attenuators
+
+positions (same as above)
+   
+| det | vert floor | rgnd | rhv |
+|-----+------------+------+-----|
+| all | 112        | 88   | 80  |
+
+detectors in order from marx generator side: UB1, UB2(small atten), UB3(medium atten), H1(large atten), H3, UB4
+ 
+thickness
+| attenuator | thickness                                        |
+|------------+--------------------------------------------------|
+| thin       | 1.45 +/- 0.05 mm                                 |
+| medium     | 3.45 +/- 0.05 mm                                 |
+| thick      | 2.45 +/- 0.05 mm (red) + 3.40 +/- 0.05 mm (grey) |
+|            | --> 5.95 +/- 0.07 mm                             |
+
+#+ATTR_LaTeX: longtable
+| shot | hits                   | notes                               | comments |
+|------+------------------------+-------------------------------------+----------|
+|   50 | none                   |                                     |          |
+|   51 | UB1                    |                                     |          |
+|   52 | UB1,4, LaBr2           |                                     |          |
+|   53 | none                   |                                     |          |
+|   54 | ALL                    |                                     | 3/5      |
+|------+------------------------+-------------------------------------+----------|
+|   55 | UB1                    |                                     |          |
+|   56 | none                   |                                     |          |
+|   57 | none                   |                                     |          |
+|   58 | UB1                    |                                     |          |
+|   59 | ALL                    | shielded detectors small!           | 6/10     |
+|------+------------------------+-------------------------------------+----------|
+|   60 | none                   |                                     |          |
+|   61 | none                   |                                     |          |
+|   62 | none                   |                                     |          |
+|   63 | UB1                    |                                     |          |
+|   64 | UB1,4, LaBr1           | nice!                               | 8/15     |
+|------+------------------------+-------------------------------------+----------|
+|   65 | LaBr2                  |                                     |          |
+|   66 | none                   |                                     |          |
+|   67 | UB1?                   |                                     |          |
+|   68 | none                   |                                     |          |
+|   69 | UB1,4, LaBr1           |                                     | 11/20    |
+|------+------------------------+-------------------------------------+----------|
+|   70 | ALL                    | shielded detectors small            |          |
+|   71 | none                   |                                     |          |
+|   72 | none                   |                                     |          |
+|   73 | none                   |                                     |          |
+|   74 | none                   |                                     | 12/25    |
+|------+------------------------+-------------------------------------+----------|
+|   75 | none                   |                                     |          |
+|   76 | ALL                    | sat all                             |          |
+|   77 | UB1                    |                                     |          |
+|   78 | none                   |                                     |          |
+|   79 | UB1,3,4, LabBr1, H1,3  |                                     | 15/30    |
+|------+------------------------+-------------------------------------+----------|
+|   80 | UB1-4, LaBr1,2, H1     |                                     |          |
+|   81 | none                   |                                     |          |
+|   82 | UB1,4, H3              | nice!                               |          |
+|   83 | none                   |                                     |          |
+|   84 | UB1,3,4, LaBr1,2, H1,3 |                                     | 18/35    |
+|------+------------------------+-------------------------------------+----------|
+|   85 | none                   |                                     |          |
+|   86 | none                   |                                     |          |
+|   87 | UB1-4, LaBr1,2, H3     | hm...                               |          |
+|   88 | none                   |                                     |          |
+|   89 | none                   |                                     | 19/40    |
+|------+------------------------+-------------------------------------+----------|
+|   90 | UB1                    |                                     |          |
+|   91 | UB1,4                  |                                     |          |
+|   92 | none                   |                                     |          |
+|   93 | none                   |                                     |          |
+|   94 | UB1                    |                                     | 22/45    |
+|------+------------------------+-------------------------------------+----------|
+|   95 | UB1-4, LaBr2, H1,3     | atten detectors small               |          |
+|   96 | none                   |                                     |          |
+|   97 |                        | off by one here?                    |          |
+|   98 | UB1-4, H3, LaBr1,2     | atten detectors small               |          |
+|   99 | UB1,4, H1,3, LaBr1,2   |                                     | 25/50?   |
+|------+------------------------+-------------------------------------+----------|
+|      |                        |                                     |          |
+|------+------------------------+-------------------------------------+----------|
+|  100 | UB1,4, H3, LaBr1       | UB2?                                |          |
+|  101 | UB1, LaBr2             |                                     |          |
+|  102 | UB1, LaBr1             |                                     |          |
+|  103 | none                   |                                     |          |
+|  104 | ALL                    | all sat                             | 4/5      |
+|------+------------------------+-------------------------------------+----------|
+|  105 | UB1,3, H3              | time structure?                     |          |
+|  106 | none                   |                                     |          |
+|  107 | UB1,4, H3              |                                     |          |
+|  108 | UB1                    |                                     |          |
+|  109 | ALL                    | atten detectors small               | 8/10     |
+|------+------------------------+-------------------------------------+----------|
+|  110 | UB1,4, LaBr2           |                                     |          |
+|  111 | none                   |                                     |          |
+|  112 | none                   |                                     |          |
+|  113 | none                   |                                     |          |
+|  114 | LaBr1                  |                                     | 10/15    |
+|------+------------------------+-------------------------------------+----------|
+|  115 | none                   |                                     |          |
+|  116 | none                   |                                     |          |
+|  117 | none                   |                                     |          |
+|  118 | UB1,2,4, H3, LaBr1,2   | H2 weak                             |          |
+|  119 | UB1,4                  |                                     | 12/20    |
+|------+------------------------+-------------------------------------+----------|
+|  120 | UB1                    |                                     |          |
+|  121 | ALL                    | small in atten, sat everything else |          |
+|  122 | UB1,4, H3              |                                     |          |
+|  123 | none                   |                                     |          |
+|  124 | UB1,3,4, H1, LaBr1,2   |                                     | 16/25    |
+|------+------------------------+-------------------------------------+----------|
+|  125 | LaBr1                  |                                     |          |
+|  126 | none                   |                                     |          |
+|  127 | ALL                    | small in atten                      |          |
+|  128 | LaBr1                  |                                     |          |
+|  129 | ALL                    | small in atten                      | 20/30    |
+|------+------------------------+-------------------------------------+----------|
+|  130 | UB1,4, H3, LaBr1,2     |                                     |          |
+|  131 | ALL                    | small in atten                      |          |
+|  132 | UB1,4, LaBr2           |                                     |          |
+|  133 | UB1,4, LaBr1           |                                     |          |
+|  134 | none                   |                                     | 24/35    |
+|------+------------------------+-------------------------------------+----------|
+|  135 | none                   |                                     |          |
+|  136 | UB1-4, LaBr1,2, H3     | small in atten                      |          |
+|  137 | none                   |                                     |          |
+|  138 | H3                     |                                     |          |
+|  139 |                        | off by one?                         | 26/40    |
+|------+------------------------+-------------------------------------+----------|
+|  140 | ALL                    | small in atten                      |          |
+|  141 | none                   |                                     |          |
+|  142 | none                   |                                     |          |
+|  143 | UB1-4, H3, LaBr1,2     | weak in all but LaBrs?              |          |
+|  144 | UB1, H3                | ?                                   |          |
+|------+------------------------+-------------------------------------+----------|
+|  145 | UB1,4?                 | UB4 got smacked, and a bit late     |          |
+|  146 | UB3                    |                                     |          |
+|  147 | none                   |                                     |          |
+|  148 | none                   |                                     |          |
+|  149 | none                   |                                     | 31/50    |
+
+** second set of attenuator experiments
+- thin attenuator (was on UB2) made longer
+- medium attenuator (was on UB3) made thinner (now heat-shrink, (1.80 +/- 0.05 mm)/4 = 0.45 +/- 0.03 mm)
+- thick attenuator (was on H1) made complete, shielding transfer fibers with garden hose (2.8-3 mm thickness)
+
+| det | vert floor | rgnd | rhv |
+|-----+------------+------+-----|
+| all | 115        | 92   | 87  |
+   
+detectors in order from marx generator side: UB1, UB2(small atten), UB3(medium atten), H1(large atten), H3, UB4
+- UB2: heat shrink (0.45 mm)
+- UB3: thin PVC (1.45 mm)
+- H1: thick PVC (5.95 mm)
+- UB1 (left end), H3, UB4 (right end) not attenuated.
+
+   
+#+ATTR_LaTeX: longtable
+| shot | hits               | notes                      | comments |
+|------+--------------------+----------------------------+----------|
+|  150 | LaBr1              |                            |          |
+|  151 | ALL                | UB3<UB2                    |          |
+|  152 | UB1,4, LaBr1       |                            |          |
+|  153 | UB1,2, laBr2       |                            |          |
+|  154 | UB1-4, H3, LaBr1,2 |                            | 5/5      |
+|------+--------------------+----------------------------+----------|
+|  155 | none               |                            |          |
+|  156 | UB1                |                            |          |
+|  157 | none               |                            |          |
+|  158 | UB1,2,4            |                            |          |
+|  159 | none               |                            | 7/10     |
+|------+--------------------+----------------------------+----------|
+|  160 | UB1-4, H3, LaBr1,2 | no H1?!                    |          |
+|  161 | UB2                |                            |          |
+|  162 | none               |                            |          |
+|  163 | UB1-4, H3, LaBr1,2 |                            |          |
+|  164 | UB1,2,4, LaBr2     |                            | 11/15    |
+|------+--------------------+----------------------------+----------|
+|  165 | UB1,2              |                            |          |
+|  166 | LaBr2              |                            |          |
+|  167 | UB1-4, LaBr1,2, H3 |                            |          |
+|  168 | none               |                            |          |
+|  169 | UB1,2,4, H3, LaBr2 |                            | 15/20    |
+|------+--------------------+----------------------------+----------|
+|  170 | UB1,2,4, H3, LaBr1 |                            |          |
+|  171 | ALL but H1         | yay                        |          |
+|  172 | ALL but H1         |                            |          |
+|  173 | none               |                            |          |
+|  174 | none               |                            | 18/25    |
+|------+--------------------+----------------------------+----------|
+|  175 | UB1,4, LaBr1       |                            |          |
+|  176 | UB1                |                            |          |
+|  177 | none               |                            |          |
+|  178 | UB1, LaBr2         |                            |          |
+|  179 | none               |                            | 21/30    |
+|------+--------------------+----------------------------+----------|
+|  180 | LaBr1              |                            |          |
+|  181 | none               |                            |          |
+|  182 | LaBr2              |                            |          |
+|  183 | UB1, LaBr1         |                            |          |
+|  184 | UB1-4, LaBr1,2, H1 | H1 hit!!!                  | 25/35    |
+|------+--------------------+----------------------------+----------|
+|  185 | UB1,2,4, H3        |                            |          |
+|  186 | UB1-4, LaBr1, H3   |                            |          |
+|  187 | UB2,3, LaBr1       | weird                      |          |
+|  188 | none               |                            |          |
+|  189 | ALL                | all sat but H1             | 29/40    |
+|------+--------------------+----------------------------+----------|
+|  190 | H1                 | smack!                     |          |
+|  191 | UB1,2              |                            |          |
+|  192 | none               |                            |          |
+|  193 | none               |                            |          |
+|  194 | UB1,2              |                            | 32/45    |
+|------+--------------------+----------------------------+----------|
+|  195 | UB1,2,4            |                            |          |
+|  196 | none               |                            |          |
+|  197 | none               |                            |          |
+|  198 | UB1,2,4, LaBr1,2   |                            |          |
+|  199 | none               |                            | 34/45    |
+|------+--------------------+----------------------------+----------|
+|      |                    | break                      |          |
+|------+--------------------+----------------------------+----------|
+|  200 | none               |                            |          |
+|  201 | none               |                            |          |
+|  202 | none               |                            |          |
+|  203 | UB1,2,4, H3, LaBr1 |                            |          |
+|  204 | none               |                            | 1/5      |
+|------+--------------------+----------------------------+----------|
+|  205 | UB2                |                            |          |
+|  206 | UB1,2, LaBr1,2     |                            |          |
+|  207 | xxxx               | second fire (ears ringing) |          |
+|  208 | none               |                            |          |
+|  209 | LaBr2              |                            | 4/9      |
+|------+--------------------+----------------------------+----------|
+|  210 | UB1,2,4, LaBr1     |                            |          |
+|  211 | none               |                            |          |
+|  212 | UB1,2,4, H3, LaBr1 |                            |          |
+|  213 | none               |                            |          |
+|  214 | LaBr2              |                            | 7/14     |
+|------+--------------------+----------------------------+----------|
+|  215 | UB4                |                            |          |
+|  216 | UB1-4, H3, LaBr1,2 | weakish. hmm.              |          |
+|  217 | LaBr2              | UB2?                       |          |
+|  218 | none               |                            |          |
+|  219 | UB1-4, LaBr1,2     |                            | 11/19    |
+|------+--------------------+----------------------------+----------|
+|  220 | UB1,2,4, LaBr2     |                            |          |
+|  221 | ALL but H1         | yay                        |          |
+|  222 | none               |                            |          |
+|  223 | none               |                            |          |
+|  224 | UB1-4              |                            | 14/24    |
+|------+--------------------+----------------------------+----------|
+|  225 | LaBr2              |                            |          |
+|  226 | UB1                |                            |          |
+|  227 | none               |                            |          |
+|  228 | UB1, H3            |                            |          |
+|  229 | UB1,4              |                            | 18/29    |
+|------+--------------------+----------------------------+----------|
+|  230 | UB1                |                            |          |
+|  231 | UB1,2, laBr1       |                            |          |
+|  232 | none               |                            |          |
+|  233 | none               |                            |          |
+|  234 | none               |                            | 20/34    |
+|------+--------------------+----------------------------+----------|
+|  235 | none               |                            |          |
+|  236 | UB1, LaBr2         |                            |          |
+|  237 | ALL                | small in H1                |          |
+|  238 | UB1-4, LaBr1,2     |                            |          |
+|  239 | none               | UB4?                       | 23/39    |
+|------+--------------------+----------------------------+----------|
+|  240 | none               |                            |          |
+|  241 | none               |                            |          |
+|  242 | none               |                            |          |
+|  243 | UB1-4, LaBr1       |                            |          |
+|  244 | none               |                            | 24/44    |
+|------+--------------------+----------------------------+----------|
+|  245 | none               |                            |          |
+|  246 | none               |                            |          |
+|  247 | UB1,2,4            |                            |          |
+|  248 | UB1-4, LaBr1       |                            |          |
+|  249 | ALL                | small in H1... ::sigh::    |          |
+|------+--------------------+----------------------------+----------|
+
+** garden hose test
+- UB1 unshielded
+- UB2 unshielded but with garden hose
+- UB3 shielded as before (1.5 mm) no hose
+- H1 unshielded, with hose
+- H3 unshielded no hose
+- UB4 unshielded no hose
+  
+#+ATTR_LaTeX: longtable
+| shot | hits                   | notes            | comments |
+|------+------------------------+------------------+----------|
+|  250 | ALL                    | yay!             |          |
+|  251 | none                   |                  |          |
+|  252 | UB2, H1                |                  |          |
+|  253 | none                   |                  |          |
+|  254 | none                   |                  | 2/5      |
+|------+------------------------+------------------+----------|
+|  255 | none                   |                  |          |
+|  256 | UB3,4, H1, LaBr1       |                  |          |
+|  257 | none                   |                  |          |
+|  258 | none                   |                  |          |
+|  259 | UB1,2,4, H1, LaBr2     |                  | 4/10     |
+|------+------------------------+------------------+----------|
+|  260 | none                   |                  |          |
+|  261 | UB1,2,4, H1            |                  |          |
+|  262 | UB1,2, H1,3            |                  |          |
+|  263 | UB1,2 LaBr1            |                  |          |
+|  264 | ALL                    | sat all(! good!) | 8/15     |
+|------+------------------------+------------------+----------|
+|  265 | ALL                    | none sat!        |          |
+|  266 | UB1,2,4, H1            |                  |          |
+|  267 | UB1-4, LaBr2, H1,3     |                  |          |
+|  268 | UB2                    |                  |          |
+|  269 | none                   |                  | 12/20    |
+|------+------------------------+------------------+----------|
+|  270 | UB1,2,4, LaBr1,2, H1,3 |                  |          |
+|  271 | UB2                    |                  |          |
+|  272 | UB1,2,4, LaBr1, H1     |                  |          |
+|  273 | UB1-4, LaBr2, H1       |                  |          |
+|  274 | UB1,2,4, H1,3          |                  | 17/25    |
+|------+------------------------+------------------+----------|
+|  275 | none                   |                  |          |
+|  276 | none                   |                  |          |
+|  277 | ALL                    | small in UB3     |          |
+|  278 | UB1,2,4, LaBr1,2, H1   |                  |          |
+|  279 | UB1,2, H1              |                  | 20/30    |
+|------+------------------------+------------------+----------|
+|  280 | UB2, LaBr1,2 H1        |                  |          |
+|  281 | UB1-4, H1              |                  |          |
+|  282 | UB1,2,4, LaBr1,2 H1,3  |                  |          |
+|  283 | H1                     |                  |          |
+|  284 | ALL                    |                  | 25/35    |
+|------+------------------------+------------------+----------|
+|  285 | none                   |                  |          |
+|  286 | none                   |                  |          |
+|  287 | UB2, H1                |                  |          |
+|  288 | none                   |                  |          |
+|  289 | none                   |                  | 26/40    |
+|------+------------------------+------------------+----------|
+|  290 | ALL                    | tiny in UB3      |          |
+|  291 | ALL                    | none sat         |          |
+|  292 | none                   |                  |          |
+|  293 | UB1,2,4, LaBr1,2, H1   |                  |          |
+|  294 | ALL                    |                  | 30/45    |
+|------+------------------------+------------------+----------|
+|  295 | none                   |                  |          |
+|  296 | none                   |                  |          |
+|  297 | UB1,2,4, LaBr1,2, H1,3 |                  |          |
+|  298 | UB1,2,4, LaBr1,2, H1,3 |                  |          |
+|  299 | UB1,2,4, H3            |                  | 33/50    |
+
+- looks really good.  garden hose doesn't really have an effect.  UB1,2 signals very similar.
+
+* Saturday
+** calibration
+*** UB1 with source
+- no source: -21 mV trig level, mean dtrig after 1000 trigs = 33.5 ms.
+- with source: -21 mV trig level, mean dtrig after 1000 trigs = 34.1 ms.
+- with source: -21 mV trig level, mean 
+
+| trig level | ntrig | mean dtrig | condition  | comments                                                |
+|------------+-------+------------+------------+---------------------------------------------------------|
+| -21 mV     |  1000 |       33.5 | background |                                                         |
+| -21 mV     |  5000 |       34.5 | Sr-90      |                                                         |
+| -21 mV     |  5000 |       34.5 | background |                                                         |
+| -10 mV     |  5000 |       20.4 | background | had to change scale to 20 mV/div to get decent triggers |
+| -10 mV     |  5000 |       18.0 | Sr-90      | DIFFERENT! we have a calibration!                       |
+
+**** spectra
+- -7 mV trigger level, files on osc3 triggers through 3013 are with Sr-90. (trig 1: 16:09:55, trig 3013: 16:12:53 --> 178s) (note trig 0 wasn't part of a continuous autosave sequence)
+- -7 mV trigger level, files on osc3 triggers 3014 through 6021 are background. (trig 3014: 16:13:40, trig 6021: 16:16:52 --> 3m12s --> 192s)
+  
+*** H1 with source
+- -49 mV trigger level, files on osc2 triggers through 3006 are background. (trig 0 - trig 3006 --> 563s)
+- -49 mV trigger level, files on osc2 triggers 3007 through 6043 are Sr-90. (trig 3007 - trig 6033 --> 296s)
+
+** delays/calibration for measurements
+| sch | reading | mult by | 1 equals | delay (us)                 |
+|-----+---------+---------+----------+----------------------------|
+|  11 | voltage |    0.08 | 1 MV     | 0.0519                     |
+|  12 | Ignd    |     0.8 | 500 A    | 0.0336                     |
+|  13 | IHV     |     9.8 | 500 A    | 0.220                      |
+|  14 | cam     |       1 | TTL      | 0.0463                     |
+|  21 | LaBr1   |   13.90 | 1 MeV    | 0.053 + 30 ns (see below)  |
+|  22 | LaBr2   |     9.6 | 1 MeV    | 0.053 + 30 ns (see below)  |
+|  23 | H1      |     ??? | ???      | 0.0645 + 30 ns (see below) |
+|  24 | H3      |     ??? | ???      | 0.0505 + 30 ns (see below) |
+|  31 | UB1     |         |          | X                          |
+|  32 | UB2     |         |          | X                          |
+|  33 | UB3     |         |          | X                          |
+|  34 | UB4     |         |          | X                          |
+   
+- add 40 ns to scope 3 to get it to line up with scope 1.
+- add 30 ns to scope 2 to get it to line up with scope 1.
+- X = 1.5 m of cable + [PMT electron transit time] + 3 m of fiber + 40 ns (scope delay).
+
+** calibration analysis 
+#+begin_src R :session s1 :results silent :exports none
+  readSpectTrigFile <- function(fn){
+    print(fn);
+    f <- file(fn);
+    open(f);
+    readLines(f,n=4);
+    a <- read.csv(f);
+    close(f);
+    -min(a$Ampl);
+  }
+  
+  readSpectDir <- function(dir){
+    mapply(readSpectTrigFile,list.files(dir,full.names=TRUE));
+  }
+  
+  runMe <- function(){
+    ub1 <- data.frame(amp=readSpectDir("sparkData/26_01_2013_osc3"));
+    ub1$type <- "";
+    ub1$type[1:3014] <- "Sr-90";
+    ub1$type[3015:6022] <- "bkgd";
+  
+    h1 <- data.frame(amp=readSpectDir("sparkData/26_01_2013_osc2"));
+    h1$type <- "";
+    h1$type[1:3007] <- "bkgd";
+    h1$type[3008:6044] <- "Sr-90";
+  
+    list(ub1=ub1,h1=h1);
+  }
+  
+  makeHists <- function(a){
+    makeHist <- function(df,dtbg,dtsr,bks){
+      bg <- hist(subset(df,df$type=="bkgd")$amp,breaks=bks);
+      ci <- mapply(function(n){poisson.test(n)$conf.int},bg$counts);
+      bg <- data.frame(amp=bg$mids,ctrt=bg$counts/dtbg/diff(bg$breaks),ctrtmin=ci[1,]/dtbg/diff(bg$breaks),ctrtmax=ci[2,]/dtbg/diff(bg$breaks),type="bkgd");
+      sr90 <- hist(subset(df,df$type=="Sr-90")$amp,breaks=bks);
+      ci <- mapply(function(n){poisson.test(n)$conf.int},sr90$counts);
+      sr90 <- data.frame(amp=sr90$mids,ctrt=sr90$counts/dtsr/diff(sr90$breaks),ctrtmin=ci[1,]/dtsr/diff(sr90$breaks),ctrtmax=ci[2,]/dtsr/diff(sr90$breaks),type="Sr-90");
+      h <- rbind(bg,sr90);
+    }
+    list(ub1h=makeHist(a$ub1,192,178,seq(0.007,0.08,length.out=100)),h1h=makeHist(a$h1,563,296,seq(0.049,0.8,length.out=100)));
+  }
+  
+#+end_src
+   
+*** plots
+setup code (takes a while to read all the triggers).
+#+begin_src R :session s1 :results silent :exports none
+a <- runMe();
+#+end_src
+
+#+begin_src R :session s1 :results silent :exports none
+b <- makeHists(a);
+#+end_src
+
+**** H1 spectrum comparison
+
+#+begin_src R :session s1 :results graphics :file h1calspec.png :exports none
+  p <- ggplot(data=b$h1)+theme_bw() +geom_line(aes(x=amp,y=ctrt,col=type)) +geom_ribbon(aes(x=amp,ymin=ctrtmin,ymax=ctrtmax,fill=type,alpha=0.5)) +scale_y_log10(limits=c(0.1,300)) +xlim(0.05,0.3);
+  print(p);
+#+end_src
+
+#+RESULTS:
+[[file:h1calspec.png]]
+
+Spectra (Sr-90 vs background) start deviating around 150 mV. Since the highest beta energy we expect from the Sr-90 source is ~2 MeV and that we'll never get more than about 1.5 MeV deposited due to energy losses from source to scintillator, let's say 150 mV is equal to about 1.5 MeV.
+
+**** UB1 spectrum comparison
+
+#+begin_src R :session s1 :results graphics :file ub1calspec.png :exports none
+  p <- ggplot(data=b$ub1)+theme_bw()+geom_line(aes(x=amp,y=ctrt,col=type))+geom_ribbon(aes(x=amp,ymin=ctrtmin,ymax=ctrtmax,fill=type,alpha=0.5))+xlim(0.005,0.03)+ylim(0.10,3500)
+  print(p);
+#+end_src
+
+#+RESULTS:
+[[file:ub1calspec.png]]
+
+Spectra (Sr-90 vs background) start deviating around 12.5 mV.  Since the highest beta energy we expect from the Sr-90 source is ~2 MeV, and that we'll never get more than about 1.5 MeV deposited due to energy losses from source to scintillator, let's say 12.5 mV is equal to about 1.5 MeV.
+     
+*** timestamp checks:
+  
+#+begin_src R :session s1 :results silent :exports none
+  timestampSOD <- function(fn){
+    print(fn);
+    f <- file(fn);
+    open(f);
+    a <- readLines(f,n=4);
+    close(f);
+    x <- mapply(as.real,strsplit(strsplit(strsplit(a[4],",")[[1]][2]," ")[[1]][2],":"));
+    x[1]*3600+x[2]*60+x[3]
+  }
+  
+  readSpectDirSODs <- function(dir){
+    mapply(timestampSOD,list.files(dir,full.names=TRUE));
+  }
+  
+#+end_src
+
+Notes: file timestamps aren't always what I think they are.  The numbers above (used to calculate count rates per bin for the calibration plots) are on basis of these timestamp checks.
+
+* calibration
+** Sr-90 decay info
+- Sr-90 :: beta decay, Q-value 546 keV, gives Y-90.
+- Y-90 :: beta decay, Q-value 2280 keV, gives Zr-90 (stable).
+
+* R analysis code
+#+begin_src R :session s1 :results silent :exports none
+  # note makeDB.py code to use sqlite db.
+  
+  library(ggplot2);
+  source("~/R/colormaps.r");
+  library(RSQLite);
+  library(modeest);
+  library(caTools);
+  library(gridExtra);
+  library(plyr);
+  library(ascii);
+  library(boot);
+  
+  
+  library(gplots);
+  
+  plotAllData <- function(dc,shotID){
+    #a <- calibrate(dc,getSpark(dc,shotID));
+    a <- getCalSpark(dc,shotID);
+    a <- subset(a,!a$sch==14 & !a$sch==24); # throw out camera trigger and scope 2 ch4 (not connected)
+    a$scopeLab <- ifelse(floor(a$sch/10)==1,"scope 1",ifelse(floor(a$sch/10)==2,"scope 2","scope 3"));
+    a$calAmp[a$sch==11] <- a$calAmp[a$sch==11]/max(a$calAmp[a$sch==11]);
+    a$calAmp[a$sch==12] <- a$calAmp[a$sch==12]/max(a$calAmp[a$sch==12]);
+    a$calAmp[a$sch==13] <- a$calAmp[a$sch==13]/max(a$calAmp[a$sch==13]);
+    p <- ggplot(data=a);
+    p <- p + geom_line(aes(x=calTime,y=calAmp,group=type,colour=type));
+    #p <- p + scale_color_manual(values=colorBlindPalette,name="");
+    p <- p + facet_wrap(.(scopeLab),ncol=1,scale="free_y");
+    p <- p + theme_bw();
+    p <- p + opts(title=sprintf("shot %d",shotID));
+    p <- p + xlab("Time (microsec)");
+    p <- p + ylab("signal (arbitrary units)");
+    print(p);
+  }
+  
+  plotDetData <- function(dc,shotID,plotHits=TRUE){
+    a <- getSupercalSpark(dc,shotID);
+    levs <- (sort(levels(factor(a$type))));
+    a$type <- ordered(a$type,levels=levs);
+    if(nrow(a)==0){
+      return("no data?");
+    }
+    hits <- getHits(dc,shotID);
+    hits$type <- ordered(hits$type,levels=levs);
+    #a <- subset(a,a$scope=="2");
+    p <- ggplot(data=a);
+    p <- p + geom_line(aes(x=calTime,y=calAmp,group=shotID),alpha=1/(1+log(length(shotID))));
+    p <- p + facet_wrap(.(type),ncol=1,scale="free_y");
+    if(nrow(hits)>0 && plotHits){
+      p <- p + geom_point(data=hits,aes(x=calTime,y=calAmp),color='red');
+    }
+    p <- p + theme_bw();
+    p <- p + opts(title=sprintf("shot %d%s",shotID[1],ifelse(length(shotID)>1,"...","")));
+    p <- p + xlab("Time (microsec)");
+    p <- p + ylab("Approximate energy (MeV)");
+    print(p);
+  }
+  
+  hardcopy <- function(dc,shotID){
+    print(shotID);
+    #pdf(sprintf("plots/all_%05d.pdf",shotID),width=6,height=10);
+    #plotAllData(dc,shotID);
+    #dev.off();
+    #pdf(sprintf("plots/det_%05d.pdf",shotID),width=6,height=6);
+    #plotDetData(dc,shotID);
+    #dev.off();
+    png(sprintf("sparkData/plots/all_%05d.png",shotID),width=800,height=1200);
+    plotAllData(dc,shotID);
+    dev.off();
+    png(sprintf("sparkData/plots/det_%05d.png",shotID),width=800,height=800);
+    plotDetData(dc,shotID);
+    dev.off();
+    shotID;
+  }
+  
+  allHardCopies <- function(dc){
+    shots <- dbGetQuery(dc,"select * from shot");
+    for(id in shots$shotID){
+      hardcopy(dc,id);
+    }
+  }
+  
+  getDataConnection <- function(fn){
+    dbConnect(SQLite(),fn);
+  }
+  # use dbGetQuery(con,"select * from ..."); for commands that return values
+  # and dbSendQuery(con,"delete from ..."); for other commands
+  
+  # uncalibrated detector and spark data.
+  getSpark <- function(dc,shotID){
+    #idMatchStr <- paste("(",paste(sprintf("shotID=%d",shotID),collapse=" or "),")");
+    idMatchStr <- paste("shotID in (",paste(shotID,collapse=","),")");
+    dbGetQuery(dc,sprintf("select * from signal where %s",idMatchStr));
+  }
+  
+  # calibrated detector and spark data.
+  getCalSpark <- function(dc,shotID){
+    idMatchStr <- paste("signal.shotID in (",paste(shotID,collapse=","),")");
+    a <- dbGetQuery(dc,sprintf("select * from signal,xcal,calInfo where %s and xcal.shotID=signal.shotID and xcal.calID=calInfo.calID and signal.sch=xcal.sch",idMatchStr));
+    a$calAmp <- a$amp*a$mult;
+    a$calTime <- a$time*1.0e6 - a$delay;
+    a$type <- sprintf("sch%d",a$sch);
+    a;
+  }
+  
+  # calibrated detector data only.
+  getSupercalSpark <- function(dc,shotID){
+    idMatchStr <- paste("signal.shotID in (",paste(shotID,collapse=","),")");
+    a <- dbGetQuery(dc,sprintf("select * from signal,xcal,calInfo,xnfo,detInfo where %s and xcal.shotID=signal.shotID and xcal.calID=calInfo.calID and signal.sch=xcal.sch and signal.shotID=xnfo.shotID and xnfo.infoID=detInfo.infoID and detInfo.sch=signal.sch",idMatchStr));
+    a$calAmp <- a$amp*a$mult;
+    a$calTime <- a$time*1.0e6 - a$delay;
+    a;
+  }
+  
+  getHits <- function(dc,shotID){
+    idMatchStr <- paste("(",paste(sprintf("hit.shotID=%d",shotID),collapse=" or "),")");
+    h <- dbGetQuery(dc,sprintf("select * from hit,xcal,calInfo,xnfo,detInfo where %s and hit.shotID=xcal.shotID and hit.sch=xcal.sch and xcal.calID=calInfo.calID and xnfo.shotID=hit.shotID and xnfo.infoID=detInfo.infoID and detInfo.sch=hit.sch",idMatchStr));
+    h$calAmp <- h$amp*h$mult;
+    h$calTime <- h$time*1.0e6-h$delay;
+    h;
+  }
+  
+  getAllHits <- function(dc,inclAttens=FALSE){
+    if(inclAttens){
+      h <- dbGetQuery(dc,"select * from calInfo,xcal,hit,xnfo,detInfo where xcal.calID=calInfo.calID and hit.shotID=xcal.shotID and hit.sch=xcal.sch and hit.shotID=xnfo.shotID and xnfo.infoID=detInfo.infoID and detInfo.sch=hit.sch")
+    }else{
+      h <- dbGetQuery(dc,"select * from calInfo,xcal,hit,xnfo,detInfo where xcal.calID=calInfo.calID and hit.shotID=xcal.shotID and hit.sch=xcal.sch and hit.shotID=xnfo.shotID and xnfo.infoID=detInfo.infoID and detInfo.sch=hit.sch and detInfo.atten IS NULL")
+    }
+    h$calTime <- h$time*1.0e6-h$delay;
+    h$calAmp <- h$amp*h$mult;
+    h;
+  }
+  
+  allHitsTimeDistribPlot <- function(dc){
+    h <- getAllHits(dc);
+    h <- subset(h,h$type != "NoND2" & h$type != "PBS" & h$type != "F1");
+    h$class <- "sig>0";
+    f <- function(thr){
+      h2 <- subset(h,-h$sig>thr);
+      h2$class <- sprintf("sig>%.0f",thr);
+      h2;
+    };
+    h <- rbind(h,f(5),f(10),f(20));
+    h$class <- ordered(h$class,c("sig>0","sig>5","sig>10","sig>20"));
+  
+    p <- ggplot(data=h) + theme_bw();
+    #p <- p + geom_histogram(aes(x=calTime,y=..density..,fill=type),binwidth=0.02,position="identity",alpha=0.3);
+    p <- p + geom_line(aes(x=calTime,y=..count..,color=class),stat='bin',binwidth=0.02) + facet_wrap(.(type),ncol=2);
+    p <- p + ylab("hits/(0.02 microsec)") + xlab("time (microseconds)");
+    p <- p + scale_color_manual(values=colorBlindPalette,name="");
+    print(p);
+  }
+  
+  
+  stats <- function(s){
+    satThr <- c(-0.175,-0.28,-0.28,-0.75);
+  
+    if(nrow(s)==0){
+      return(data.frame(nshot=c(),y=c(),ymin=c(),ymax=c(),meastype=c()));
+    }
+  
+    n <- ddply(s,.(type,atten),
+               function(d){
+                 nsh <- length(unique(d$shotID));
+                 nreg<-length(unique(d$shotID[!is.na(d$calTime)]));
+                 nht <- sum(!is.na(d$calTime));
+                 ci <- binomCI(nreg,nsh);
+                 preg <- data.frame(nshot=nsh, nreg=nreg, nht=nht, y=nreg/nsh, ymin=ci[,1], ymax=ci[,2], meastype="P(reg)");
+  
+                 nhit <- sum(!is.na(d$calTime));
+                 ci <- poissonCI(nhit)/nsh;
+                 hits <- data.frame(nshot=nsh, nreg=nreg, nht=nht, y=nhit/nsh, ymin=ci[,1], ymax=ci[,2], meastype="hits/shot");
+  
+                 #enps <- sum(d$calAmp,na.rm=TRUE)/nsh;
+                 shotEns <- daply(d,.(shotID),function(x){sum(x$calAmp,na.rm=TRUE)});
+                 #print(shotEns);
+                 enps <- median(shotEns[shotEns>0]);
+                 ci <- poissonCI(nhit)/nhit*enps;
+                 enpsd <- data.frame(nshot=nsh, nreg=nreg, nht=nht, y=enps, ymin=ci[,1], ymax=ci[,2], meastype="median energy/shot");
+  
+                 enph <- median(d$calAmp,na.rm=TRUE);
+                 sig <- sqrt(var(d$calAmp,na.rm=TRUE));
+                 ci <- enph+c(-sig,sig)/sqrt(nhit);
+                 enphd <- data.frame(nshot=nsh, nreg=nreg, nht=nht, y=enph, ymin=ci[1], ymax=ci[2], meastype="median energy/hit");
+  
+                 #ts <- d$calTime[!is.na(d$calTime)];
+                 #td <- data.frame(nshot=1,y=ts,ymin=ts,ymax=ts,meastype="hit time");
+                 tm <- median(d$calTime,na.rm=TRUE);
+                 ci <- quantile(d$calTime,c(0.2,0.8),na.rm=TRUE);
+                 td <- data.frame(nshot=nsh,nreg=nreg, nht=nht, y=tm,ymin=ci[1],ymax=ci[2],meastype="hit time (us)");
+  
+                 rbind(preg,hits,enpsd,enphd,td);
+               });
+    n;
+  }
+  
+  
+  #assumes gnd electrode is 60 cm up
+  posWRTgnd <- function(z,rgnd,rhv){
+    k <- 99; # gnd <--> HV distance
+    z1 <- z-60;
+    x1 <- rgnd*cos(asin((z1)/rgnd));
+    x2 <- rhv*cos(asin((159-z)/rhv));
+    thcc <- acos((rhv**2-rgnd**2-k**2)/(-2*rgnd*k));
+    x3 <- rgnd*sin(thcc);
+    z2 <- rgnd*cos(thcc);
+  
+    mx <- matrix(c(x1,x2,x3),ncol=3);
+    mz <- matrix(c(z1,z1,z2),ncol=3);
+    data.frame(xx=apply(mx,1,mean),zz=apply(mz,1,mean));
+  }
+  
+  
+  printShotTable <- function(dc){
+    h <- dbGetQuery(dc,"select * from hit,xcal,calInfo,xnfo,detInfo where hit.shotID=xcal.shotID and xcal.calID=calInfo.calID and xcal.sch=hit.sch and hit.shotID=xnfo.shotID and xnfo.infoID=detInfo.infoID and detInfo.sch=hit.sch")
+    s <- dbGetQuery(dc,"select * from shot,xnfo,detInfo,xcal,calInfo where shot.shotID=xcal.shotID and xcal.calID=calInfo.calID and shot.shotID=xnfo.shotID and xnfo.infoID=detInfo.infoID and detInfo.sch=xcal.sch");
+    h$calAmp <- h$amp*h$mult;  h$calTime <- h$time*1.0e6-h$delay;
+    h <- subset(h,h$calTime<0.75 & h$calTime>0.25 & -h$sig>7);
+  
+    abbrev <- function(type){
+      abbrs <- list(ND1="N1",ND2="N2",F1="F1",PBS="PB",LaBr2="L2",LaBr1="L1",NoND2="X2");
+      unlist(abbrs[type]);
+    }
+  
+    attenStr <- function(d){
+      paste(abbrev(d$type),d$atten,sep=':',collapse=" ");
+    }
+  
+    hstr <- function(d){
+      paste(abbrev(unique(d$type)),collapse=" ");
+    }
+  
+    hct <- ddply(h,.(shotID),function(d){
+                 data.frame(rgnd=d$rgnd[1],
+                            hstr=hstr(d),
+                            rhv=d$rhv[1])});
+    sct <- ddply(s,.(shotID),function(d){
+                 sel <- d$type=="ND1" | d$type=="ND2" | d$type=="F1";
+                 sela <- !is.na(d$atten);
+                 data.frame(atten=attenStr(subset(d,sela)),
+                            polarity=d$pol[1],
+                            astr=hstr(d),
+                            rgnd=ifelse(any(sel),sprintf("%d",d$rgnd[sel][1]),""),
+                            rhv=ifelse(any(sel),sprintf("%d",d$rhv[sel][1]),""))});
+  
+    x <- join(sct,hct,by="shotID",type="left");
+    x <- data.frame(shotID=x$shotID,pol=x$polarity,rgnd=x$rgnd,rhv=x$rhv,avail=x$astr,atten=x$atten,hit=x$hstr);
+    x$shotID <- sprintf("%d",x$shotID);
+    x$hit <- ifelse(is.na(x$hit),"",sprintf("%s",x$hit));
+    x;
+  }
+  
+  myHist2d <- function(x,y,xbreaks,ybreaks){
+    idx.x <- cut(x,xbreaks,include.lowest=TRUE);
+    idx.y <- cut(y,ybreaks,include.lowest=TRUE);
+    m <- tapply(x,list(idx.x,idx.y),length);
+    m[is.na(m)] <- 0;
+    m;
+  }
+  
+#+end_src
+  
+  
+* analysis
+** todo list
+*** calibration
+- [ ] proper fit of peaks in calibration sparks
+- [ ] removal of outliers in detector comparison plots
+- [ ] line fits to remaining data, calibration coefficients
+
+*** data handling
+- [ ] proper robust peak fitting
+- [ ] way to handle saturated peaks
+- [ ] plots of all events, with peak fits
+
+*** fiber detector spatial correlation analysis
+- [ ] 3d position calculations from database detector positions
+- [ ] pairwise correlation calculations (pearson correlation?)
+- [ ] multi-point correlation calculations?
+    
+*** LaBr correlation analysis
+
+** calibration
+   
+#+begin_src R :session s1 :results silent :exports none
+  calPair <- function(dc,sch1,sch2){
+    h <- dbGetQuery(dc,sprintf("select * from hit where (sch=%d or sch=%d) and shotID > 22031",sch1,sch2));
+    h2 <- ddply(h,.(shotID),function(d){data.frame(a1=max(0,-d$amp[d$sch==sch1]),a2=max(0,-d$amp[d$sch==sch2]))});
+    p <- ggplot(data=h2) + theme_bw();
+    p <- p + geom_point(aes(x=a1,y=a2));
+    p <- p + xlab(sprintf("sch %d",sch1));
+    p <- p + ylab(sprintf("sch %d",sch2));
+    print(p);
+  }
+  
+#+end_src
+
+** plot generator
+#+begin_src R :session s1 :results silent :exports none
+  allHardCopies(dc);
+#+end_src
+
+   
+** hit finder
+   
+#+begin_src R :session s1 :results silent :exports none
+  # log-normal distribution with saturation
+  fitGoal <- function(x, amp, i0, mu, sig, satVal=-0.459){
+    ans <- ifelse((x-i0)<=0, 0, -amp/((x-i0)*sig)*exp(-(log(x-i0)-mu)**2/(2*sig**2)));
+    ifelse(ans < satVal, satVal, ans);
+  }
+  
+  # line to half-line
+  lToHL <- function(min,scale){
+    function(x){
+      ifelse(x<0,min+scale*exp(x/scale),min+scale+x);
+    }
+  }
+  # inverse of lToHL
+  hlToL <- function(min,scale){
+    function(x){
+      ifelse(x<min+scale,scale*log((x-min)/scale),x-min-scale);
+    }
+  }
+  
+  rotate <- function(x,n){
+    c(tail(x,-n),head(x,n))
+  }
+  shiftLeftPadZero <- function(x,n){
+    c(tail(x,-n),rep(0,n))
+  }
+  
+  identifyFitPulses <- function(a,thr,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=2000, satVal=-0.459, doFit=TRUE, progressPlots=FALSE){
+    x <- a$time; y <- a$amp;
+    if(any(y<=satVal)){
+      print("saturation detected, lengthening fit interval!");
+      pulseFitLength <- pulseFitLength*2.5;
+    }
+  
+    preHitTMax <- 4.0e-7;
+    sig <- mad(y[x<preHitTMax]); # median absolute deviation
+    if(sig==0){
+      sig <- sqrt(var(y[x<preHitTMax]));
+    }
+    qs <- quantile(y,c(0.1,0.9)); #10th, 90th %iles
+    mn <- mean(y[y>=qs[1] & y<=qs[2]]); #trim data set, take mean
+    z <- (y-mn)/sig; # offset by trimmed mean, divide by sig.
+    satVal <- (satVal-mn)/sig;
+  
+    #z2 = second rescaled signal
+    z2 <- shiftLeftPadZero(filter(filt,z),filtshift);
+    
+    hits <- data.frame(time=c(),sig=c(),amp=c(), mu=c(),sigma=c());
+  
+    if(doFit){
+      muScaler <- lToHL(1.0,5);
+      invMuScaler <- hlToL(1.0,5);
+      sigScaler <- lToHL(0.5,5);
+      invSigScaler <- hlToL(0.5,5);
+      ampScaler <- lToHL(0,10);
+      invAmpScaler <- hlToL(0,10);
+  
+      fit <- rep(0,length(z));
+      
+      while(any(z2 < -thr)){
+        r <- rle(as.vector(z2 < -thr)); # run-length encode boolean (above-threshold-ness)
+        runEnds <- cumsum(r$lengths); # indices that refer to ends of runs.
+        runStarts <- c(1,runEnds[-length(runEnds)]); # indices that refer to start of runs
+  
+  
+        sel <- max(1,runStarts[r$values][1]-floor(pulseFitLength/5)):min(length(z),runStarts[r$values][1]+pulseFitLength);
+        sumsq <- function(pars){
+          amp <- ampScaler(pars[1]); i0 <- pars[2]; mu <- muScaler(pars[3]); sig <- sigScaler(pars[4]);
+          sum((fitGoal(seq(z),amp,i0,mu,sig,satVal)[sel]-(z[sel]-fit[sel]))**2)
+        }
+        
+        ans <- nlm(sumsq,c(invAmpScaler(thr*10),runStarts[r$values][1],invMuScaler(5.43),invSigScaler(5)),stepmax=c(10000,100,4,4),iterlim=3000)$estimate;
+        print(c(ampScaler(ans[1]),ans[2],muScaler(ans[3]),sigScaler(ans[4])));
+  
+        result <- fitGoal(seq(z2),ampScaler(ans[1]),ans[2],muScaler(ans[3]),sigScaler(ans[4]), satVal);
+        
+        startpt <- exp(qnorm(0.001)*sigScaler(ans[4])+muScaler(ans[3]))+ans[2];
+        
+        if(progressPlots){
+          plot(z,type='l',xlim=range(sel));
+          lines(fit,col='blue',lwd=3);
+          lines(z-fit,col='grey',lwd=2);
+          lines(z2,col='cyan',lwd=2);
+          lines(z2 < -thr,col='darkgreen',lwd=2);
+          lines(result,col='red',lwd=2);
+          abline(v=startpt,col='red');
+          abline(h=min(result),col='red');
+          abline(v=range(sel),col='blue');
+          abline(h=-thr,col='green',lwd=2);
+          Sys.sleep(5);
+        }
+  
+        hits <- rbind(hits,data.frame(time=a$t[floor(startpt)][1], sig=-min(result),amp=min(result)*sig+mn,mu=muScaler(ans[3]),sigma=sigScaler(ans[4])));
+  
+        fit <- fit + result;
+        
+        z2 <- shiftLeftPadZero(filter(filt,z-fit),filtshift);
+      }
+      
+      plot(x,z,type='l',xlab="time (sec)",ylab="sigma");
+      lines(x,fit,col='blue',lwd=3);
+      lines(x,z2,col='darkgreen',lwd=2);
+      abline(h=-thr,col='red',lwd=2);
+      if(nrow(hits)>0){
+        points(hits$t,-hits$sig,pch=15,col='red');
+      }
+    }else{
+      if(any(z2 < -thr)){
+        r <- rle(as.vector(z2 < -thr)); # run-length encode boolean (above-threshold-ness)
+        runEnds <- cumsum(r$lengths); # indices that refer to ends of runs.
+        runStarts <- c(1,runEnds[-length(runEnds)]); # indices that refer to start of runs
+        
+        findRunMax <- function(i,j){
+          min(z2[i:j]);
+        }
+  
+        runMaxs <- mapply(function(i,j){min(z2[i:j])},runStarts[r$values],runEnds[r$values]);
+  
+        hits <- rbind(hits,data.frame(time=x[runStarts[r$values]], sig=-runMaxs,amp=runMaxs*sig+mn,mu=0,sigma=0));
+      }
+      plot(x,z,type='l',xlab="time (sec)",ylab="sigma");
+      lines(x,z2,col='darkgreen',lwd=2);
+      abline(h=-thr,col='red',lwd=2);
+      if(nrow(hits)>0){
+        points(hits$t,-hits$sig,pch=15,col='red');
+      }
+    }
+  
+    hits;
+  }
+  
+  # deletes old hits first.
+  addHitsAuto <- function(dc,shotID,interactivePlots=FALSE){
+  
+    a <- getSpark(dc,shotID);
+    if(nrow(a)==0) return();
+  
+    dbSendQuery(dc,paste("DELETE FROM hit WHERE shotID =",shotID,";"));
+  
+    addhit <- function(x,sch){
+      dbSendQuery(dc,paste("INSERT INTO hit VALUES (",shotID,",",sch,",",x[1],",",x[3],",",x[2],",","'autoGaus');"));
+    }
+    maybeAddHits <- function(a,schin,...){
+      print(schin);
+      as <- subset(a,a$sch==schin);
+      if(nrow(as)>0){
+        if(!interactivePlots){
+          png(sprintf("sparkData/fitPlots/fit%05d_%d.png",shotID,schin),width=1024,height=768);
+        }
+        p <- identifyFitPulses(as,...,progressPlots=interactivePlots);
+        if(!interactivePlots){
+          dev.off();
+        }
+        if(nrow(p)>0){
+          apply(p,1,addhit,sch=schin);
+        }
+        nrow(p);
+      }else{
+        0;
+      }
+    }
+  
+    #x <- identifyFitPulses(as,3,filt=cheby2(3,10,0.01),filtshift=30,pulseFitLength=600)
+    nhit <- sum(maybeAddHits(a,21,3,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=500,doFit=TRUE,satVal=-0.3955),
+                maybeAddHits(a,22,3,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=500,doFit=TRUE,satVal=-0.3805),
+                maybeAddHits(a,23,2,filt=cheby2(3,10,0.05),filtshift=10,doFit=FALSE),
+                maybeAddHits(a,24,2,filt=cheby2(3,10,0.05),filtshift=10,doFit=FALSE),
+                maybeAddHits(a,31,3,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=600,doFit=TRUE,satVal=-0.47284),
+                maybeAddHits(a,32,3,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=600,doFit=TRUE,satVal=-0.45884),
+                maybeAddHits(a,33,3,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=600,doFit=TRUE,satVal=-0.44584),
+                maybeAddHits(a,34,3,filt=cheby2(3,10,0.05),filtshift=10,pulseFitLength=600,doFit=TRUE,satVal=-0.043284));
+    #nhit <- sum(maybeAddHits(a,21,4,10),maybeAddHits(a,22,4,10),maybeAddHits(a,23,4,10));
+    print(c(shotID,nhit));
+  }
+  
+  # adds hits to all shots in database.
+  addAllHitsAuto <- function(dc,limit=""){
+    shots <- dbGetQuery(dc,sprintf("select * from shot %s",limit));
+    mapply(function(sid){addHitsAuto(dc,sid)},shots$shotID);
+  }
+#+end_src

@@ -3,6 +3,7 @@ Configuration local to the user's computer goes here, to avoid constant conflict
 """
 
 #for Brant's computer:
-dataDir = "/home/brant/lex/2013JanVisit/sparkData"
+dataDir = "/media/brant/FF0F-2818/sparkData/"
+
 #for Kyle's computer:
-kdataDir = "C:/Users/Kyle Weber/Documents/Carthage/SURE/sparkData_2013/lex/2013JanVisit/sparkData"
+kdataDir = "C:/Users/Kyle Weber/Documents/Carthage/SURE/sparkData_2013/lex/2013JanVisit/sparkData/"

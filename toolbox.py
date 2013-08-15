@@ -20,6 +20,8 @@ def precondition(amp):
   return -(amp-mean)
 
 def readData(filename):
+    """Reads data from given file (file as produced by oscilloscope)
+    returns pandas data frame with Ampl and Time columns (Time in sec, Ampl in volts)"""
     data = []
     with open(filename,'r') as f:
         for x in range(4):
@@ -29,142 +31,12 @@ def readData(filename):
         return data
 
 def findReadData(day,scope,chan,shot):
+  """Utility function to load data given shot info.  Uses conf.py to find data."""
   return readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scope, chan, scope, shot))
 
 def thresh(amp):
   """Returns variance of first fifth of data."""
   return np.sqrt(np.var(amp[:len(amp)/5]))
-
-def findSpikes(df,sigThresh=10,smoothingWindow=25,makePlot=False):
-  """Preconditions data, computes threshold, smooths, finds windows, ..."""
-
-  n = df.Ampl.shape[0]
-  thr = sigThresh*thresh(df.Ampl)/np.sqrt(smoothingWindow)
-
-  # rolling mean:
-  #sm = pd.rolling_mean(amp,smoothingWindow)
-  # butterworth low-pass:
-  b,a = sig.butter(5,2.0/smoothingWindow)
-  sm = sig.filtfilt(b,a,df.Ampl)
-
-  aboveThresh = np.where(sm>thr,1,0)
-  d = np.ediff1d(aboveThresh)
-  starts = (d>0).nonzero()[0] + 1
-  ends = (d<0).nonzero()[0] + 1 # +1 to mark point in data, not point in ediff1d.
-
-  d1tol = 0.0001 # deriv "nonzero" definition
-  sgWind = smoothingWindow/2 + ((smoothingWindow/2) % 2) + 1
-  d1 = savitzky_golay(df.Ampl.values,sgWind,2,1)
-  d1f = np.where(d1>d1tol,1,np.where(d1<-d1tol,-1,0)) # filter 1st derivative
-  d1fi = np.arange(d1f.shape[0]) # indices...
-  d1fi = d1fi[d1f != 0] # filter indices to remove spots where 1st deriv is "zero"
-  d1f = d1f[d1f != 0] # same for 1st deriv
-  # this is so I can look for transitions
-
-  d1fdTrans = np.where(np.ediff1d(d1f) == 2)[0] # find transitions
-  d1mask = np.zeros(n) # mask for alignment with aboveThresh
-  d1mask[(d1fi[d1fdTrans+1]+d1fi[d1fdTrans])/2] = 1 # mark 1st deriv transitions in mask
-  d1mask = np.logical_and(d1mask,aboveThresh) 
-  # i.e. throw out 1st deriv transitions where signal was below threshold
-
-  d1bds = d1mask.nonzero()[0] # indices in signal where 1st deriv sign change happens.
-
-  # add 1st derivative transitions to starts and ends
-  starts = np.concatenate((starts,d1bds+1)); starts.sort()
-  ends = np.concatenate((ends,d1bds)); ends.sort()
-
-  if makePlot:
-    plt.plot(df.Time,df.Ampl)
-    plt.plot(df.Time,sm)
-    plt.plot([df.Time.min(),df.Time.max()],[thr,thr])
-    plt.plot(df.Time,d1)
-    plt.scatter(df.Time[d1bds],np.repeat(0.1,d1bds.shape[0]))
-
-  # if there are hits...
-  if(starts.shape[0] > 0 or ends.shape[0] > 0):
-    # ensure starts and ends are logical
-    if starts.shape[0] == 0:
-      starts = np.zeros(1,dtype=np.int64)
-    if ends.shape[0] == 0:
-      ends = np.repeat(np.int64(n-1),1)
-    if ends[0]<starts[0]:
-      starts = np.concatenate((np.zeros(1,dtype=np.int64),starts))
-    if ends[-1]<starts[-1]:
-      ends = np.concatenate((ends,np.repeat(np.int64(n-1),1)))
-
-    assert len(starts)==len(ends),"something wrong with interval identification."
-
-    lengths = ends-starts
-
-    def findMax(st,en):
-      if(en>st):
-        return np.max(sm[st:en])
-      else:
-        return np.nan
-    vfindMax = np.vectorize(findMax)
-    maxs = vfindMax(starts,ends)
-
-    def findIMax(st,en):
-      if(en>st):
-        return np.argmax(sm[st:en])+st
-      else:
-        return 0
-    vfindIMax = np.vectorize(findIMax)
-    imaxs = vfindIMax(starts,ends)
-
-    dt = df.Time[1]-df.Time[0]
-    def integrate(st,en):
-      if en>st:
-        return np.trapz(sm[st:en],dx=dt)
-      else:
-        return np.nan
-    vintegrate = np.vectorize(integrate)
-    integrals = vintegrate(starts,ends)
-
-    def findSat(st,en):
-      if(en>st):
-        m = np.max(df.Ampl.values[st:en])
-        maxRun = np.sum(df.Ampl.values[st:en] == m)
-        return maxRun
-      return 0
-    vfindSat = np.vectorize(findSat)
-    satCts = vfindSat(starts,ends)
-
-    # cuts go here, if necessary
-
-    if makePlot:
-      segx = np.concatenate([np.array([df.Time[starts[i]],df.Time[ends[i]],None]) for i in xrange(starts.shape[0])])
-      segy = np.concatenate([np.array([maxs[i],maxs[i],None]) for i in xrange(starts.shape[0])])
-      plt.plot(segx,segy)
-
-    return pd.DataFrame({'iStart':starts,'iEnd':ends,'iMax':imaxs,
-      'tStart':df.Time[starts].values,'tEnd':df.Time[ends].values,
-      'tMax':df.Time[imaxs].values,
-      'amp':maxs,'len':lengths,'dur':lengths*dt,'int':integrals,
-      'sig':maxs/thr*sigThresh,'satCt':satCts},index=range(starts.shape[0]))
-  else:
-    return pd.DataFrame()
-
-def detStatsForShot(df):
-  """process a set of hits for a shot, return a data frame of statistics.
-  rejects hits that occur before 0.3us and after 1.4us."""
-
-  # time limits set emperically to avoid light leaks, initial portion.
-  sel = np.logical_and(df.tStart > 0.3e-6, df.tStart < 1.2e-6)
-
-  df = df.ix[sel]
-
-  if df.amp.count()>0:
-    return pd.DataFrame({'nHit':len(df.index),
-      'ampMax':df.amp.max(),
-      'ampSum':df.amp.sum(),
-      'intMax':df.int.max(),
-      'intSum':df.int.sum(),
-      'satMax':df.satCt.max(),
-      'satSum':df.satCt.sum(),
-      'tmax':df.start.values[df.amp.argmax()]},index=[1])
-  else:
-    return pd.DataFrame()
 
 def findCorrHits_BS(df):
   assert False, "crap.  this function doesn't work."
@@ -242,63 +114,13 @@ def findCorrHits_BS2(df):
 
   return pd.merge(df1,df2,on='pairID')
 
-def findCorrHits(df):
-  print df.day.values[0],df.scope.values[0],df.chan.values[0],df.shot.values[0]
-  df = df[df.sig > 15]
-
-  ii = np.arange(len(df.index))
-  df = df.set_index([ii]) # reset index so I can re-order later.
-
-  dets = df.det.unique()
-  dets.sort()
-  df['detID'] = np.searchsorted(dets,df.det)
-
-  ts = df.tMax.values
-  ds = df.detID.values
-
-  t1,t2 = np.meshgrid(ts,ts)
-  d1,d2 = np.meshgrid(ds,ds)
-  i1,i2 = np.meshgrid(ii,ii)
-  t1 = t1.flatten()
-  t2 = t2.flatten()
-  d1 = d1.flatten()
-  d2 = d2.flatten()
-  i1 = i1.flatten()
-  i2 = i2.flatten()
-
-  # remove detector matches with itself, order-redundant matches.
-  mask = (d1 < d2)
-  t1 = t1[mask]; t2 = t2[mask]
-  d1 = d1[mask]; d2 = d2[mask]
-  i1 = i1[mask]; i2 = i2[mask]
-
-  # remove everything that isn't a close pair
-  dtTol = 0.03e-6
-  pairMask = np.abs(t2-t1) < dtTol
-
-  #t1 = t1[pairMask]; t2 = t2[pairMask]
-  #d1 = d1[pairMask]; d2 = d2[pairMask]
-  i1 = i1[pairMask]; i2 = i2[pairMask]
-
-  pairID = np.arange(i1.shape[0])
-
-  unpairedHits = df.ix[np.logical_not(np.in1d(ii,i1))]
-
-  df1 = df.ix[i1];
-  df2 = df.ix[i2];
-  df1['pairID'] = pairID
-  df2['pairID'] = pairID
-  unpairedHits['pairID'] = np.arange(-1,-len(unpairedHits.index)-1,-1)
-
-  pairs = pd.concat([df1,df2,unpairedHits])
-  return pairs.set_index(['pairID','det']).unstack(1)
-
 def plotScope(day,scope,shot):
   for p in range(411,415):
     plt.subplot(p)
     x = findReadData(day,scope,p-410,shot)
     plt.plot(x.Time*1.0e6,x.Ampl)
     plt.ylabel("channel %d"%(p-410))
+    fudgePlotLimits(x.Time*1.0e6,x.Ampl)
   plt.xlabel("time ($\mu$s)")
 
 def plotScopeHits(day,scope,shot,df):
@@ -307,7 +129,18 @@ def plotScopeHits(day,scope,shot,df):
   for p in range(411,415):
     plt.subplot(p)
     xx = x[x.chan==p-410]
-    plt.scatter(xx.tStart*1.0e6,xx.amp,c='r',s=50)
+    plt.scatter(xx.tStart[np.logical_not(xx.APflag)]*1.0e6,
+        xx.amp[np.logical_not(xx.APflag)],c='r',s=50)
+    plt.scatter(xx.tStart[xx.APflag]*1.0e6,
+        xx.amp[xx.APflag],c='g',s=50)
+    print xx.APflag
+
+def fudgePlotLimits(x,y,marfrac=0.1):
+  xl = np.min(x); yl = np.min(y)
+  xh = np.max(x); yh = np.max(y)
+  dx = xh-xl; dy = yh-yl
+  plt.xlim(xl-dx*marfrac,xh+dx*marfrac)
+  plt.ylim(yl-dy*marfrac,yh+dy*marfrac)
 
 def plotsegs(x1,y1,x2,y2):
   x = np.repeat(np.nan,x1.shape[0]*3)

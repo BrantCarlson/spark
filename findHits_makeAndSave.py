@@ -1,4 +1,4 @@
-﻿import findSpikes as fs
+﻿import findHits as fh
 import os
 import time
 
@@ -6,7 +6,7 @@ import time
 
 #time.sleep(10) # wait for cluster to start up
 
-x = fs.readAndProcessAllShots()
+x = fh.readAndProcessAllShots()
 x.save('df_brant.pandas')
 
 #os.system('ipcluster stop')

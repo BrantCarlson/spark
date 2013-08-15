@@ -46,6 +46,3 @@ def readAndProcessAllShots():
   shotInfo = [(22,150),(23,200),(24,300),(25,300)]
   df = pd.concat([procDay(day,nshots) for (day,nshots) in shotInfo])
   return df
-
-badShots = [(22,105), #cabinet was open.
-    ]

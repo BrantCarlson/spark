@@ -13,32 +13,32 @@ import scipy.signal as sig
 import conf
 import matplotlib.pyplot as plt
 
-def readData(filename):
-    data = []
-    with open(filename,'r') as f:
-        for x in range(4):
-            f.readline()
-        data = pd.read_csv(f) 
-        return data
-
-def findReadData(day,scope,chan,shot):
-  return readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scope, chan, scope, shot))
-
 def precondition(amp):
   """Subtracts mean of first fifth of data and flips voltage sign."""
   n = len(amp)
   mean = np.mean(amp[:n/5])
   return -(amp-mean)
 
+def readData(filename):
+    data = []
+    with open(filename,'r') as f:
+        for x in range(4):
+            f.readline()
+        data = pd.read_csv(f) 
+        data.Ampl = precondition(data.Ampl)
+        return data
+
+def findReadData(day,scope,chan,shot):
+  return readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scope, chan, scope, shot))
+
 def thresh(amp):
   """Returns variance of first fifth of data."""
   return np.sqrt(np.var(amp[:len(amp)/5]))
 
-def findSpikes(df,sigThresh=5,smoothingWindow=10,makePlot=False):
+def findSpikes(df,sigThresh=10,smoothingWindow=25,makePlot=False):
   """Preconditions data, computes threshold, smooths, finds windows, ..."""
 
   n = df.Ampl.shape[0]
-  df.Ampl = precondition(df.Ampl)
   thr = sigThresh*thresh(df.Ampl)/np.sqrt(smoothingWindow)
 
   # rolling mean:
@@ -47,12 +47,46 @@ def findSpikes(df,sigThresh=5,smoothingWindow=10,makePlot=False):
   b,a = sig.butter(5,2.0/smoothingWindow)
   sm = sig.filtfilt(b,a,df.Ampl)
 
-  d = np.ediff1d(np.where(sm>thr,1,0))
-  starts = (d>0).nonzero()[0]
-  ends = (d<0).nonzero()[0]
+  aboveThresh = np.where(sm>thr,1,0)
+  d = np.ediff1d(aboveThresh)
+  starts = (d>0).nonzero()[0] + 1
+  ends = (d<0).nonzero()[0] + 1 # +1 to mark point in data, not point in ediff1d.
 
-  # ensure starts and ends are logical
-  if(starts.shape[0] > 0  and  ends.shape[0] > 0):
+  d1tol = 0.0001 # deriv "nonzero" definition
+  sgWind = smoothingWindow/2 + ((smoothingWindow/2) % 2) + 1
+  d1 = savitzky_golay(df.Ampl.values,sgWind,2,1)
+  d1f = np.where(d1>d1tol,1,np.where(d1<-d1tol,-1,0)) # filter 1st derivative
+  d1fi = np.arange(d1f.shape[0]) # indices...
+  d1fi = d1fi[d1f != 0] # filter indices to remove spots where 1st deriv is "zero"
+  d1f = d1f[d1f != 0] # same for 1st deriv
+  # this is so I can look for transitions
+
+  d1fdTrans = np.where(np.ediff1d(d1f) == 2)[0] # find transitions
+  d1mask = np.zeros(n) # mask for alignment with aboveThresh
+  d1mask[(d1fi[d1fdTrans+1]+d1fi[d1fdTrans])/2] = 1 # mark 1st deriv transitions in mask
+  d1mask = np.logical_and(d1mask,aboveThresh) 
+  # i.e. throw out 1st deriv transitions where signal was below threshold
+
+  d1bds = d1mask.nonzero()[0] # indices in signal where 1st deriv sign change happens.
+
+  # add 1st derivative transitions to starts and ends
+  starts = np.concatenate((starts,d1bds+1)); starts.sort()
+  ends = np.concatenate((ends,d1bds)); ends.sort()
+
+  if makePlot:
+    plt.plot(df.Time,df.Ampl)
+    plt.plot(df.Time,sm)
+    plt.plot([df.Time.min(),df.Time.max()],[thr,thr])
+    plt.plot(df.Time,d1)
+    plt.scatter(df.Time[d1bds],np.repeat(0.1,d1bds.shape[0]))
+
+  # if there are hits...
+  if(starts.shape[0] > 0 or ends.shape[0] > 0):
+    # ensure starts and ends are logical
+    if starts.shape[0] == 0:
+      starts = np.zeros(1,dtype=np.int64)
+    if ends.shape[0] == 0:
+      ends = np.repeat(np.int64(n-1),1)
     if ends[0]<starts[0]:
       starts = np.concatenate((np.zeros(1,dtype=np.int64),starts))
     if ends[-1]<starts[-1]:
@@ -62,9 +96,6 @@ def findSpikes(df,sigThresh=5,smoothingWindow=10,makePlot=False):
 
     lengths = ends-starts
 
-    #d1 = np.ediff1d(sm)
-    #d2 = np.ediff1d(d1)
-
     def findMax(st,en):
       if(en>st):
         return np.max(sm[st:en])
@@ -72,6 +103,14 @@ def findSpikes(df,sigThresh=5,smoothingWindow=10,makePlot=False):
         return np.nan
     vfindMax = np.vectorize(findMax)
     maxs = vfindMax(starts,ends)
+
+    def findIMax(st,en):
+      if(en>st):
+        return np.argmax(sm[st:en])+st
+      else:
+        return 0
+    vfindIMax = np.vectorize(findIMax)
+    imaxs = vfindIMax(starts,ends)
 
     dt = df.Time[1]-df.Time[0]
     def integrate(st,en):
@@ -82,29 +121,36 @@ def findSpikes(df,sigThresh=5,smoothingWindow=10,makePlot=False):
     vintegrate = np.vectorize(integrate)
     integrals = vintegrate(starts,ends)
 
+    def findSat(st,en):
+      if(en>st):
+        m = np.max(df.Ampl.values[st:en])
+        maxRun = np.sum(df.Ampl.values[st:en] == m)
+        return maxRun
+      return 0
+    vfindSat = np.vectorize(findSat)
+    satCts = vfindSat(starts,ends)
+
     # cuts go here, if necessary
 
     if makePlot:
-      plt.plot(df.Time,df.Ampl)
-      plt.plot(df.Time,sm)
-      #plt.plot(df.Time[1:]-dt/2,d1)
-      #plt.plot(df.Time[2:]-dt,d2)
-      plt.plot([df.Time.min(),df.Time.max()],[thr,thr])
       segx = np.concatenate([np.array([df.Time[starts[i]],df.Time[ends[i]],None]) for i in xrange(starts.shape[0])])
       segy = np.concatenate([np.array([maxs[i],maxs[i],None]) for i in xrange(starts.shape[0])])
       plt.plot(segx,segy)
 
-    return pd.DataFrame({'sidx':starts,'eidx':ends,
-      'start':df.Time[starts].values,'end':df.Time[ends].values,
+    return pd.DataFrame({'iStart':starts,'iEnd':ends,'iMax':imaxs,
+      'tStart':df.Time[starts].values,'tEnd':df.Time[ends].values,
+      'tMax':df.Time[imaxs].values,
       'amp':maxs,'len':lengths,'dur':lengths*dt,'int':integrals,
-      'sig':maxs/thr*sigThresh},index=range(starts.shape[0]))
+      'sig':maxs/thr*sigThresh,'satCt':satCts},index=range(starts.shape[0]))
   else:
     return pd.DataFrame()
 
 def detStatsForShot(df):
-  """process a set of hits for a shot, return a data frame of statistics."""
+  """process a set of hits for a shot, return a data frame of statistics.
+  rejects hits that occur before 0.3us and after 1.4us."""
 
-  sel = np.logical_and(df.start > 0.3e-6, df.start < 1.4e-6)
+  # time limits set emperically to avoid light leaks, initial portion.
+  sel = np.logical_and(df.tStart > 0.3e-6, df.tStart < 1.2e-6)
 
   df = df.ix[sel]
 
@@ -114,17 +160,163 @@ def detStatsForShot(df):
       'ampSum':df.amp.sum(),
       'intMax':df.int.max(),
       'intSum':df.int.sum(),
-      'tmax':df.amp.argmax()},index=[1])
+      'satMax':df.satCt.max(),
+      'satSum':df.satCt.sum(),
+      'tmax':df.start.values[df.amp.argmax()]},index=[1])
   else:
     return pd.DataFrame()
 
+def findCorrHits_BS(df):
+  assert False, "crap.  this function doesn't work."
+
+  # pre-filter
+  df = df[df.sig > 15]
+
+  dets = df.det.unique()
+  tms = apply(np.meshgrid, [df.ix[df.det == det].start.values for det in dets])
+  tms = [tm.flatten() for tm in tms]
+  tm = np.matrix(tms)
+  print 'tm:',tm.shape
+
+  diag = np.repeat(1.0/np.sqrt(tm.shape[0]),tm.shape[0]*tm.shape[1])
+  diag = diag.reshape(tm.shape)
+
+  print 'diag:',diag.shape
+
+  dcomp = np.multiply(tm,diag).sum(0)
+  dcomp = np.multiply(diag,np.repeat(dcomp,7,axis=0))
+
+  dtsq = np.sum(np.power(tm-dcomp,2),axis=0)
+
+  dtTol = 0.05e-6 **2 #this is probably too big
+
+  return tm,dtsq<dtTol
+
+def findCorrHits_BS2(df):
+
+  assert False, "this version doesn't work either."
+
+  print df.day.values[0],df.scope.values[0],df.chan.values[0],df.shot.values[0]
+  df = df[df.sig > 15]
+
+  ii = np.arange(len(df.index))
+  df = df.set_index([ii]) # reset index so I can re-order later.
+
+  dets = df.det.unique()
+  dets.sort()
+  df['detID'] = np.searchsorted(dets,df.det)
+
+  ts = df.tMax.values
+  ds = df.detID.values
+  
+  t1,t2 = np.meshgrid(ts,ts)
+  d1,d2 = np.meshgrid(ds,ds)
+  i1,i2 = np.meshgrid(ii,ii)
+  t1 = t1.flatten()
+  t2 = t2.flatten()
+  d1 = d1.flatten()
+  d2 = d2.flatten()
+  i1 = i1.flatten()
+  i2 = i2.flatten()
+
+  # remove detector matches with itself
+  mask = np.logical_and(t1 != t2,d1 != d2)
+  t1 = t1[mask]; t2 = t2[mask]
+  d1 = d1[mask]; d2 = d2[mask]
+  i1 = i1[mask]; i2 = i2[mask]
+
+  # remove everything that isn't a close pair
+  dtTol = 0.03e-6
+  pairMask = np.abs(t2-t1) < dtTol
+
+  #t1 = t1[pairMask]; t2 = t2[pairMask]
+  #d1 = d1[pairMask]; d2 = d2[pairMask]
+  i1 = i1[pairMask]; i2 = i2[pairMask]
+
+  pairID = np.arange(i1.shape[0])
+
+  df1 = df.ix[i1]; df1.rename(columns=lambda x:"%s1"%x,inplace=True)
+  df2 = df.ix[i2]; df2.rename(columns=lambda x:"%s2"%x,inplace=True)
+  df1['pairID'] = pairID
+  df2['pairID'] = pairID
+
+  return pd.merge(df1,df2,on='pairID')
+
+def findCorrHits(df):
+  print df.day.values[0],df.scope.values[0],df.chan.values[0],df.shot.values[0]
+  df = df[df.sig > 15]
+
+  ii = np.arange(len(df.index))
+  df = df.set_index([ii]) # reset index so I can re-order later.
+
+  dets = df.det.unique()
+  dets.sort()
+  df['detID'] = np.searchsorted(dets,df.det)
+
+  ts = df.tMax.values
+  ds = df.detID.values
+
+  t1,t2 = np.meshgrid(ts,ts)
+  d1,d2 = np.meshgrid(ds,ds)
+  i1,i2 = np.meshgrid(ii,ii)
+  t1 = t1.flatten()
+  t2 = t2.flatten()
+  d1 = d1.flatten()
+  d2 = d2.flatten()
+  i1 = i1.flatten()
+  i2 = i2.flatten()
+
+  # remove detector matches with itself, order-redundant matches.
+  mask = (d1 < d2)
+  t1 = t1[mask]; t2 = t2[mask]
+  d1 = d1[mask]; d2 = d2[mask]
+  i1 = i1[mask]; i2 = i2[mask]
+
+  # remove everything that isn't a close pair
+  dtTol = 0.03e-6
+  pairMask = np.abs(t2-t1) < dtTol
+
+  #t1 = t1[pairMask]; t2 = t2[pairMask]
+  #d1 = d1[pairMask]; d2 = d2[pairMask]
+  i1 = i1[pairMask]; i2 = i2[pairMask]
+
+  pairID = np.arange(i1.shape[0])
+
+  unpairedHits = df.ix[np.logical_not(np.in1d(ii,i1))]
+
+  df1 = df.ix[i1];
+  df2 = df.ix[i2];
+  df1['pairID'] = pairID
+  df2['pairID'] = pairID
+  unpairedHits['pairID'] = np.arange(-1,-len(unpairedHits.index)-1,-1)
+
+  pairs = pd.concat([df1,df2,unpairedHits])
+  return pairs.set_index(['pairID','det']).unstack(1)
 
 def plotScope(day,scope,shot):
   for p in range(411,415):
     plt.subplot(p)
     x = findReadData(day,scope,p-410,shot)
     plt.plot(x.Time*1.0e6,x.Ampl)
+    plt.ylabel("channel %d"%(p-410))
+  plt.xlabel("time ($\mu$s)")
 
+def plotScopeHits(day,scope,shot,df):
+  plotScope(day,scope,shot)
+  x = df[np.logical_and(df.day==day,np.logical_and(df.scope==scope,df.shot==shot))]
+  for p in range(411,415):
+    plt.subplot(p)
+    xx = x[x.chan==p-410]
+    plt.scatter(xx.tStart*1.0e6,xx.amp,c='r',s=50)
+
+def plotsegs(x1,y1,x2,y2):
+  x = np.repeat(np.nan,x1.shape[0]*3)
+  y = np.repeat(np.nan,x1.shape[0]*3)
+  x[0::3] = x1
+  x[1::3] = x2
+  y[0::3] = y1
+  y[1::3] = y2
+  plt.plot(x,y)
 
 #Kevin's time_intervals function
 def time_intervals_Kevin(x,z):
@@ -352,4 +544,75 @@ def threshold(y, sig, smoothPts):
     deviation = y.Ampl.std()
     return 0.05*(smoothed < (-deviation * sig))
 
+# copypasted from http://wiki.scipy.org/Cookbook/SavitzkyGolay
+def savitzky_golay(y, window_size, order, deriv=0, rate=1):
+    r"""Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
+    The Savitzky-Golay filter removes high frequency noise from data.
+    It has the advantage of preserving the original shape and
+    features of the signal better than other types of filtering
+    approaches, such as moving averages techniques.
+    Parameters
+    ----------
+    y : array_like, shape (N,)
+        the values of the time history of the signal.
+    window_size : int
+        the length of the window. Must be an odd integer number.
+    order : int
+        the order of the polynomial used in the filtering.
+        Must be less then `window_size` - 1.
+    deriv: int
+        the order of the derivative to compute (default = 0 means only smoothing)
+    Returns
+    -------
+    ys : ndarray, shape (N)
+        the smoothed signal (or it's n-th derivative).
+    Notes
+    -----
+    The Savitzky-Golay is a type of low-pass filter, particularly
+    suited for smoothing noisy data. The main idea behind this
+    approach is to make for each point a least-square fit with a
+    polynomial of high order over a odd-sized window centered at
+    the point.
+    Examples
+    --------
+    t = np.linspace(-4, 4, 500)
+    y = np.exp( -t**2 ) + np.random.normal(0, 0.05, t.shape)
+    ysg = savitzky_golay(y, window_size=31, order=4)
+    import matplotlib.pyplot as plt
+    plt.plot(t, y, label='Noisy signal')
+    plt.plot(t, np.exp(-t**2), 'k', lw=1.5, label='Original signal')
+    plt.plot(t, ysg, 'r', label='Filtered signal')
+    plt.legend()
+    plt.show()
+    References
+    ----------
+    .. [1] A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
+       Data by Simplified Least Squares Procedures. Analytical
+       Chemistry, 1964, 36 (8), pp 1627-1639.
+    .. [2] Numerical Recipes 3rd Edition: The Art of Scientific Computing
+       W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
+       Cambridge University Press ISBN-13: 9780521880688
+    """
+    import numpy as np
+    from math import factorial
 
+    try:
+        window_size = np.abs(np.int(window_size))
+        order = np.abs(np.int(order))
+    except ValueError, msg:
+        raise ValueError("window_size and order have to be of type int")
+    if window_size % 2 != 1 or window_size < 1:
+        raise TypeError("window_size size must be a positive odd number")
+    if window_size < order + 2:
+        raise TypeError("window_size is too small for the polynomials order")
+    order_range = range(order+1)
+    half_window = (window_size -1) // 2
+    # precompute coefficients
+    b = np.mat([[k**i for i in order_range] for k in range(-half_window, half_window+1)])
+    m = np.linalg.pinv(b).A[deriv] * rate**deriv * factorial(deriv)
+    # pad the signal at the extremes with
+    # values taken from the signal itself
+    firstvals = y[0] - np.abs( y[1:half_window+1][::-1] - y[0] )
+    lastvals = y[-1] + np.abs(y[-half_window-1:-1][::-1] - y[-1])
+    y = np.concatenate((firstvals, y, lastvals))
+    return np.convolve( m[::-1], y, mode='valid')

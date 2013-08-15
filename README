@@ -1,2 +1,9 @@
 This is a git repository for spark data analysis code.
 Contact Brant Carlson (bcarlson1@carthage.edu) with questions.
+
+## Overall structure
+- toolbox.py: utility functions, function to find spikes in a single channel.
+- findSpikes.py: functions to find spikes in a shot, on a day, and on all days.
+- findSpikes_makeAndSave.py: wrapper for findSpikes.py that saves result to a file.
+- cleanupData.py: process data frame from findSpikes.py, split up, unstack, etc.
+- plotStats.py: act on processed data frames from cleanupData.py, make plots.

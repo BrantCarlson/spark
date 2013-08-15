@@ -1,3 +1,4 @@
 * todo
 - [ ] rewrite / doublecheck spike finders
 - [ ] make some test plots
+  

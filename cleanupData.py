@@ -16,7 +16,7 @@ import pandas as pd
 # READ DATA # --> d0
 #############
 
-d0 = pd.load("df_brant.pandas")
+d0 = pd.read_pickle("hitData/df_brant.pandas")
 d0['hitID'] = np.arange(len(d0.index))
 d0.set_index('hitID',inplace=True)
 
@@ -50,7 +50,12 @@ d0['detBS'] = d0['det']
 d0.set_index(['day','shot','det','hitID'],inplace=True)
 
 def addAfterPulseFlag(df):
-  print df.dayBS.values[0],df.shotBS.values[0], df.detBS.values[0],df.shape
+  # I had far more trouble on this function than you'd think,
+  # but I'm too lazy to reduce it down to a form I could file as a bug report in Pandas.
+  # the ...BS stuff above and the using the MultiIndex for the groupby below is an
+  # attempt to work-around what I suspect are bugs (or at least unintelligible error messages).
+
+  #print df.dayBS.values[0],df.shotBS.values[0], df.detBS.values[0],df.shape
   satAmpFrac = 0.1
   satCtThr = 20 # anything saturated for more than 20 is deemed to produce afterpulses
   df.sort(columns='iStart',inplace=True)
@@ -77,7 +82,7 @@ badShots = [(22,range(27)+[105]), #0-27 had random issues, plus gain (sat level)
 
 def maskBadShots(d):
   badShotMasks = [np.logical_and(d.day==day,np.in1d(d.shot,bad)) for (day,bad) in badShots]
-  return np.logical_not(reduce(np.logical_and,badShotMasks))
+  return np.logical_not(reduce(np.logical_or,badShotMasks))
 
 
 d1 = d0[maskBadShots(d0)]
@@ -181,7 +186,14 @@ att3 = fri[np.logical_and(fri.shot>=250,fri.shot<300)]
 ###########################
 
 def findCorrHits(df):
-  df = df[df.sig > 15]
+  """Returns a data frame with correlated hit pairs identified by a pairID.
+  Hits with significance <15 and afterpulses are discarded.
+  Unpaired hits are included, but with negative pairIDs.
+  Each valid pair should appear exactly once in the output,
+  but keep in mind that there may be more valid pairs than hits since
+  a hit can be a part of more than one valid pair."""
+
+  #df = df[np.logical_and(df.sig > 15,np.logical_not(df.APflag))]
 
   ii = np.arange(len(df.index))
   df = df.set_index([ii]) # reset index so I can re-order later.
@@ -219,7 +231,7 @@ def findCorrHits(df):
 
   pairID = np.arange(i1.shape[0])
 
-  unpairedHits = df.ix[np.logical_not(np.in1d(ii,i1))]
+  unpairedHits = df.ix[np.logical_not(np.logical_or(np.in1d(ii,i1),np.in1d(ii,i2)))]
 
   df1 = df.ix[i1];
   df2 = df.ix[i2];
@@ -228,7 +240,13 @@ def findCorrHits(df):
   unpairedHits['pairID'] = np.arange(-1,-len(unpairedHits.index)-1,-1)
 
   pairs = pd.concat([df1,df2,unpairedHits])
-  return pairs.set_index(['pairID','det']).unstack(1)
+
+  pairs = pairs.set_index(['pairID','det']).unstack(1)
+
+  # can't blindly use fillna(0).  have to be smarter...
+  pairs.fillna(0,inplace=True)
+
+  return pairs
 
 dH = d2.groupby(['day','shot']).apply(findCorrHits)
 
@@ -258,11 +276,6 @@ def detStatsForShot(df):
   """process a set of hits for a shot, return a data frame of statistics.
   rejects hits that occur before 0.3us and after 1.4us."""
 
-  # time limits set emperically to avoid light leaks, initial portion.
-  #sel = np.logical_and(df.tStart > 0.3e-6, df.tStart < 1.2e-6)
-
-  df = df.ix[sel]
-
   if df.amp.count()>0:
     return pd.DataFrame({'nHit':len(df.index),
       'ampMax':df.amp.max(),
@@ -271,7 +284,7 @@ def detStatsForShot(df):
       'intSum':df.int.sum(),
       'satMax':df.satCt.max(),
       'satSum':df.satCt.sum(),
-      'tmax':df.start.values[df.amp.argmax()]},index=[1])
+      'tmax':df.tMax.values[df.amp.argmax()]},index=[1])
   else:
     return pd.DataFrame()
 

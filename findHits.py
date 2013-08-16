@@ -8,18 +8,19 @@ Created on August 12
 import toolbox as tb
 import pandas as pd
 import numpy as np
-from IPython.parallel import Client
+import scipy.signal as sig
+import matplotlib.pyplot as plt
 
 def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
   """Finds hits in data.  Preconditions data, computes threshold, smooths data, finds windows, ..."""
 
   n = df.Ampl.shape[0]
-  thr = sigThresh*thresh(df.Ampl)/np.sqrt(smoothingWindow)
+  thr = sigThresh*tb.thresh(df.Ampl)/np.sqrt(smoothingWindow)
 
   # rolling mean:
   #sm = pd.rolling_mean(amp,smoothingWindow)
   # butterworth low-pass:
-  b,a = sig.butter(5,2.0/smoothingWindow)
+  b,a = sig.butter(8,2.0/smoothingWindow)
   sm = sig.filtfilt(b,a,df.Ampl)
 
   aboveThresh = np.where(sm>thr,1,0)
@@ -29,7 +30,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
 
   d1tol = 0.0001 # deriv "nonzero" definition
   sgWind = smoothingWindow/2 + ((smoothingWindow/2) % 2) + 1
-  d1 = savitzky_golay(df.Ampl.values,sgWind,2,1)
+  d1 = tb.savitzky_golay(df.Ampl.values,sgWind,2,1)
   d1f = np.where(d1>d1tol,1,np.where(d1<-d1tol,-1,0)) # filter 1st derivative
   d1fi = np.arange(d1f.shape[0]) # indices...
   d1fi = d1fi[d1f != 0] # filter indices to remove spots where 1st deriv is "zero"
@@ -52,8 +53,10 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
     plt.plot(df.Time,df.Ampl)
     plt.plot(df.Time,sm)
     plt.plot([df.Time.min(),df.Time.max()],[thr,thr])
+    plt.plot([df.Time.min(),df.Time.max()],[d1tol,d1tol])
+    plt.plot([df.Time.min(),df.Time.max()],[-d1tol,-d1tol])
     plt.plot(df.Time,d1)
-    plt.scatter(df.Time[d1bds],np.repeat(0.1,d1bds.shape[0]))
+    plt.scatter(df.Time[d1bds],np.repeat(0.1,d1bds.shape[0]),c='r')
 
   # if there are hits...
   if(starts.shape[0] > 0 or ends.shape[0] > 0):
@@ -108,9 +111,10 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
     # cuts go here, if necessary
 
     if makePlot:
-      segx = np.concatenate([np.array([df.Time[starts[i]],df.Time[ends[i]],None]) for i in xrange(starts.shape[0])])
-      segy = np.concatenate([np.array([maxs[i],maxs[i],None]) for i in xrange(starts.shape[0])])
-      plt.plot(segx,segy)
+      tb.plotsegs(df.Time[starts],maxs,df.Time[ends],maxs)
+      plt.scatter(df.Time[starts],maxs)
+      plt.scatter(df.Time[imaxs],maxs)
+      tb.fudgePlotLimits(df.Time,df.Ampl)
 
     return pd.DataFrame({'iStart':starts,'iEnd':ends,'iMax':imaxs,
       'tStart':df.Time[starts].values,'tEnd':df.Time[ends].values,
@@ -128,10 +132,10 @@ searchSettings[2,2]={'st':10,'wnd':75,'name':'LaBr2'}
 searchSettings[2,3]={'st':10,'wnd':25,'name':'H1'}
 searchSettings[2,4]={'st':10,'wnd':25,'name':'H2'} # significance <15 suspect?
 
-searchSettings[3,1]={'st':10,'wnd':100,'name':'UB1'}
-searchSettings[3,2]={'st':10,'wnd':100,'name':'UB2'}
-searchSettings[3,3]={'st':10,'wnd':100,'name':'UB3'}
-searchSettings[3,4]={'st':10,'wnd':100,'name':'UB4'}
+searchSettings[3,1]={'st':10,'wnd':75,'name':'UB1'}  #UB1-3 also ok with 100 for filter window?
+searchSettings[3,2]={'st':10,'wnd':75,'name':'UB2'}
+searchSettings[3,3]={'st':10,'wnd':75,'name':'UB3'}
+searchSettings[3,4]={'st':10,'wnd':200,'name':'UB4'} # note aggressive filter on UB4.
 
 def procChan(day,scope,chan,shot):
   d = findHits(tb.findReadData(day,scope,chan,shot),

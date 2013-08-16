@@ -7,6 +7,6 @@ import time
 #time.sleep(10) # wait for cluster to start up
 
 x = fh.readAndProcessAllShots()
-x.save('df_brant.pandas')
+x.to_pickle('hitData/df_brant.pandas')
 
 #os.system('ipcluster stop')

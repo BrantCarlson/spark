@@ -4,13 +4,14 @@ Created on August 13, 2013
 
 This file both defines functions and does a fair bit of processing and categorization.  It will take a while to load.  The goal is that the data frames defined by this file can be used for analysis.
 
-This file assumes df_brant.pandas is a file containing a data frame of the type produced by findSpikes_makeAndSave.py.
+This file assumes hitData/df_brant.pandas is a file containing a data frame of the type produced by findSpikes_makeAndSave.py.
 
 @author: Brant
 """
 
 import numpy as np
 import pandas as pd
+import networkx as nx
 
 #############
 # READ DATA # --> d0
@@ -37,6 +38,7 @@ satAmp['UB2'] = 0.4  # satAmp[3,2] = 0.4
 satAmp['UB3'] = 0.4  # satAmp[3,3] = 0.4
 satAmp['UB4'] = 0.04 # satAmp[3,4] = 0.04
 
+# saturation threshold specific to detector, vectorized.
 def satThr(det):
   return satAmp[det]
 vsatThr = np.vectorize(satThr)
@@ -50,6 +52,7 @@ d0['detBS'] = d0['det']
 d0.set_index(['day','shot','det','hitID'],inplace=True)
 
 def addAfterPulseFlag(df):
+  """function for pandas groupby(...).apply to add an afterpulse flag."""
   # I had far more trouble on this function than you'd think,
   # but I'm too lazy to reduce it down to a form I could file as a bug report in Pandas.
   # the ...BS stuff above and the using the MultiIndex for the groupby below is an
@@ -91,7 +94,7 @@ d1 = d0[maskBadShots(d0)]
 # REMOVE EARLY (noise) AND LATE (LIGHT LEAK) HITS # --> d2
 ###################################################
 
-d2 = d1[np.logical_and(d0.tStart > 0.3e-6, d0.tStart<1.2e-6)]
+d2 = d1[np.logical_and(d0.tStart > 0.3, d0.tStart<1.2)]
 
 ####################
 # SLICE AND DICE
@@ -174,29 +177,49 @@ fri = d2[d2.day == 25]
 # | all | 112        | 88   | 80  |
 
 cal2 = fri[np.logical_and(fri.shot>=0,fri.shot<50)]
-
 att1 = fri[np.logical_and(fri.shot>=50,fri.shot<150)]
-
 att2 = fri[np.logical_and(fri.shot>=150,fri.shot<250)]
-
 att3 = fri[np.logical_and(fri.shot>=250,fri.shot<300)]
 
 ###########################
 # HIT BY HIT CORRELATIONS
 ###########################
 
-def findCorrHits(df):
-  """Returns a data frame with correlated hit pairs identified by a pairID.
-  Hits with significance <15 and afterpulses are discarded.
-  Unpaired hits are included, but with negative pairIDs.
-  Each valid pair should appear exactly once in the output,
-  but keep in mind that there may be more valid pairs than hits since
-  a hit can be a part of more than one valid pair."""
+def detStats(df):
+  """process a set of hits for a detector within a shot, return a data frame of statistics."""
 
-  #df = df[np.logical_and(df.sig > 15,np.logical_not(df.APflag))]
+  print df.dayBS.values[0],df.shotBS.values[0], df.detBS.values[0],df.shape
+
+  if df.amp.count()>0:
+    d = pd.DataFrame({'nHit':len(df.index),
+      'ampMax':df.amp.max(),
+      'ampSum':df.amp.sum(),
+      'intMax':df.int.max(),
+      'intSum':df.int.sum(),
+      'satMax':df.satCt.max(),
+      'satSum':df.satCt.sum(),
+      'tMax':df.tMax.values[df.amp.argmax()],
+      'tMaxA':df.tMax.min(),
+      'tMaxB':df.tMax.max()},index=[1])
+    if 'pairID' in df.columns:
+      d['pairID'] = df.pairID.values[0]
+    return d
+  else:
+    return pd.DataFrame()
+
+def findCorrHits(df):
+  """
+  Returns a data frame with correlated hit pairs unstacked by a pairID.
+  Unpaired hits are included, but with zeros for all other hit intensities.
+  Each valid hit should appear exactly once in the output.
+  """
+
+  #print df.dayBS.values[0],df.shotBS.values[0], df.detBS.values[0],df.shape
 
   ii = np.arange(len(df.index))
   df = df.set_index([ii]) # reset index so I can re-order later.
+  g = nx.Graph()
+  g.add_nodes_from(ii) # add hit index to graph as nodes
 
   dets = df.det.unique()
   dets.sort()
@@ -218,80 +241,81 @@ def findCorrHits(df):
   # remove detector matches with itself, order-redundant matches.
   mask = (d1 < d2)
   t1 = t1[mask]; t2 = t2[mask]
-  d1 = d1[mask]; d2 = d2[mask]
+  #d1 = d1[mask]; d2 = d2[mask] # done with d1?
   i1 = i1[mask]; i2 = i2[mask]
 
   # remove everything that isn't a close pair
-  dtTol = 0.03e-6
+  dtTol = 0.03
   pairMask = np.abs(t2-t1) < dtTol
 
-  #t1 = t1[pairMask]; t2 = t2[pairMask]
+  #t1 = t1[pairMask]; t2 = t2[pairMask] # done with t1 now, also
   #d1 = d1[pairMask]; d2 = d2[pairMask]
   i1 = i1[pairMask]; i2 = i2[pairMask]
+  g.add_edges_from(zip(i1,i2))
 
-  pairID = np.arange(i1.shape[0])
+  groups = nx.connected_components(g)
 
-  unpairedHits = df.ix[np.logical_not(np.logical_or(np.in1d(ii,i1),np.in1d(ii,i2)))]
+  def pairID(hitidx):
+    return np.where([hitidx in grp for grp in groups])[0][0]
+  vpairID = np.vectorize(pairID)
 
-  df1 = df.ix[i1];
-  df2 = df.ix[i2];
-  df1['pairID'] = pairID
-  df2['pairID'] = pairID
-  unpairedHits['pairID'] = np.arange(-1,-len(unpairedHits.index)-1,-1)
+  df['pairID'] = vpairID(ii)
 
-  pairs = pd.concat([df1,df2,unpairedHits])
+  df.set_index(['pairID','det'],inplace=True)
 
-  pairs = pairs.set_index(['pairID','det']).unstack(1)
+  df = df.groupby(level=[0,1]).apply(detStats)
 
-  # can't blindly use fillna(0).  have to be smarter...
-  pairs.fillna(0,inplace=True)
+  df = df.unstack(1) # unstack detector ID
 
-  return pairs
+  return df
 
-dH = d2.groupby(['day','shot']).apply(findCorrHits)
+def fillStatNAs(df):
+  """replace NAs in relevant statistics data frame columns with zeros, i.e. leave time columns as NA."""
+  for col in df.columns:
+    if not (col[0] in ['tMax','tMaxA','tMaxB']):
+      df[col].fillna(0,inplace=True)
+
+## # Calculate stats by hit group for everything.  This is redundant with the subsets calculated below,
+## # so it should be commented out.
+## # throw out less-significant hits and afterpulses, find stats by hit.
+## dH = d2.ix[np.logical_or(d2.sig>15,np.logical_not(d2.APflag))].groupby(['day','shot']).apply(findCorrHits)
+## fillStatNAs(dH)
 
 def statsByHit(df):
-  return df.groupby(['shot']).apply(findCorrHits)
+  tmp = df.ix[np.logical_and(df.sig>15,np.logical_not(df.APflag))].groupby(['shot']).apply(findCorrHits)
+  fillStatNAs(tmp)
+  return tmp
 
-tueH  = statsByHit(tue)
-cal1H = statsByHit(cal1)
-wedH = statsByHit(wed)
-radH = statsByHit(rad)
-azim1H = statsByHit(azim1)
-thuH = statsByHit(thu)
-azim2H = statsByHit(azim2)
-azim3H = statsByHit(azim3)
-polH = statsByHit(pol)
-friH = statsByHit(fri)
-cal2H = statsByHit(cal2)
-att1H = statsByHit(att1)
-att2H = statsByHit(att2)
-att3H = statsByHit(att3)
+tueH  = statsByHit(tue); fillStatNAs(tueH)
+cal1H = statsByHit(cal1); fillStatNAs(cal1H)
+wedH = statsByHit(wed); fillStatNAs(wedH)
+radH = statsByHit(rad); fillStatNAs(radH)
+azim1H = statsByHit(azim1); fillStatNAs(azim1H)
+thuH = statsByHit(thu); fillStatNAs(thuH)
+azim2H = statsByHit(azim2); fillStatNAs(azim2H)
+azim3H = statsByHit(azim3); fillStatNAs(azim3H)
+polH = statsByHit(pol); fillStatNAs(polH)
+friH = statsByHit(fri); fillStatNAs(friH)
+cal2H = statsByHit(cal2); fillStatNAs(cal2H)
+att1H = statsByHit(att1); fillStatNAs(att1H)
+att2H = statsByHit(att2); fillStatNAs(att2H)
+att3H = statsByHit(att3); fillStatNAs(att3H)
 
 ##########################
 # WHOLE SHOT CORRELATIONS
 ##########################
 
-def detStatsForShot(df):
-  """process a set of hits for a shot, return a data frame of statistics.
-  rejects hits that occur before 0.3us and after 1.4us."""
-
-  if df.amp.count()>0:
-    return pd.DataFrame({'nHit':len(df.index),
-      'ampMax':df.amp.max(),
-      'ampSum':df.amp.sum(),
-      'intMax':df.int.max(),
-      'intSum':df.int.sum(),
-      'satMax':df.satCt.max(),
-      'satSum':df.satCt.sum(),
-      'tmax':df.tMax.values[df.amp.argmax()]},index=[1])
-  else:
-    return pd.DataFrame()
-
-dS = d2.groupby(['day','shot','det']).apply(detStatsForShot).unstack(2).fillna(0)
+## # Calculate stats by shot for everything.  This is redundant with the subsets calculated below,
+## # so it should be commented out.
+## # less-significant hits and afterpulses are not removed here since they won't bias the shot
+## # statistics as badly as they would bias individual hit group statistics.
+## dS = d2.groupby(['day','shot','det']).apply(detStats).unstack(2)
+## fillStatNAs(dS)
 
 def statsByShot(df):
-  return df.groupby(['shot','det']).apply(detStatsForShot).unstack(1).fillna(0)
+  tmp = df.groupby(['shot','det']).apply(detStats).unstack(1) # unstack detector id
+  fillStatNAs(tmp)
+  return tmp
 
 tueS  = statsByShot(tue)
 cal1S = statsByShot(cal1)

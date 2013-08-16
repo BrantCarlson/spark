@@ -1,12 +1,11 @@
-﻿import findHits as fh
+﻿"""
+This is a script to find hits in all shots (see findHits.py) and save the results in a file.
+"""
+
+import findHits as fh
 import os
 import time
-
-#os.system('ipcluster start -n 4&')
-
-#time.sleep(10) # wait for cluster to start up
+import conf
 
 x = fh.readAndProcessAllShots()
-x.to_pickle('hitData/df_brant.pandas')
-
-#os.system('ipcluster stop')
+x.to_pickle(conf.hitDataFilePath)

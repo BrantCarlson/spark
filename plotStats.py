@@ -2,6 +2,8 @@
 """
 Created on August 13, 2013
 
+Statistics and plotting code.
+
 @author: Brant
 """
 
@@ -11,6 +13,9 @@ from scipy import stats
 import scipy.optimize as op
 
 def fitWithZeroIntercept(x,y):
+  """
+  Fits y = m*x to the given x,y data.
+  """
   def fit(x,m):
     return x*m
   def err(p):
@@ -19,6 +24,11 @@ def fitWithZeroIntercept(x,y):
   return p1
 
 def plotCorr(df,var,det1,det2,title='correlation plot'):
+  """
+  Takes a data frame of correlation info (the cleanupData.(...)S or (...)H data frames),
+  a variable (e.g. 'ampMax'), and two detectors (e.g. 'UB1' and 'UB2') and makes a
+  plot with regression lines and correlation coefficients labeled.
+  """
   x = df[(var,det1)]
   y = df[(var,det2)]
 
@@ -51,13 +61,13 @@ def plotCorr(df,var,det1,det2,title='correlation plot'):
   plt.ylabel(det2)
 
   plt.text(np.min(x)+xhigh*margin,np.max(y),
-      """y=mx+b: m=%.4f, b=%.4f
-y=mx: m=%.4f
-Pearson r=%.3f (p=%.2g)
-Spearman r=%.3f (p=%.2g)"""
-      %(slope,intercept,slope2,rp,pp,rs,ps), verticalalignment='top')
+      plt.dedent("""
+      y=mx+b: m=%.4f, b=%.4f
+      y=mx: m=%.4f
+      Pearson r=%.3f (p=%.2g)
+      Spearman r=%.3f (p=%.2g)"""
+      %(slope,intercept,slope2,rp,pp,rs,ps)), verticalalignment='top')
 
-  print var
   plt.title("%s for %s, shots %d to %d"%(title, var,
       reduce(lambda x,y: min(x,y[0]), df.index, 1000),
       reduce(lambda x,y: max(x,y[0]), df.index, 0)))

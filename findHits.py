@@ -12,22 +12,29 @@ import scipy.signal as sig
 import matplotlib.pyplot as plt
 
 def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
-  """Finds hits in data.  Preconditions data, computes threshold, smooths data, finds windows, ..."""
+  """
+  Finds hits in data.  Preconditions data, computes threshold, 
+  smooths data, finds above-thresh windows, splits windows 
+  according to smoothed derivative (Savitzky-Golay filter).
+  """
 
+  # THRESHOLD DETERMINATION
   n = df.Ampl.shape[0]
   thr = sigThresh*tb.thresh(df.Ampl)/np.sqrt(smoothingWindow)
 
-  # rolling mean:
+  # SMOOTHING: rolling mean:
   #sm = pd.rolling_mean(amp,smoothingWindow)
   # butterworth low-pass:
   b,a = sig.butter(8,2.0/smoothingWindow)
   sm = sig.filtfilt(b,a,df.Ampl)
 
+  # WINDOWING
   aboveThresh = np.where(sm>thr,1,0)
   d = np.ediff1d(aboveThresh)
   starts = (d>0).nonzero()[0] + 1
   ends = (d<0).nonzero()[0] + 1 # +1 to mark point in data, not point in ediff1d.
 
+  # DERIVATIVE CALCULATIONS
   d1tol = 0.0001 # deriv "nonzero" definition
   sgWind = smoothingWindow/2 + ((smoothingWindow/2) % 2) + 1
   d1 = tb.savitzky_golay(df.Ampl.values,sgWind,2,1)
@@ -49,6 +56,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
   starts = np.concatenate((starts,d1bds+1)); starts.sort()
   ends = np.concatenate((ends,d1bds)); ends.sort()
 
+  # DIAGNOSTIC PLOTTING
   if makePlot:
     plt.plot(df.Time,df.Ampl)
     plt.plot(df.Time,sm)
@@ -74,7 +82,8 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
 
     lengths = ends-starts
 
-    def findMax(st,en):
+    # PROPERTIES OF PEAKS
+    def findMax(st,en): # maximum of _smoothed_ signal
       if(en>st):
         return np.max(sm[st:en])
       else:
@@ -82,7 +91,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
     vfindMax = np.vectorize(findMax)
     maxs = vfindMax(starts,ends)
 
-    def findIMax(st,en):
+    def findIMax(st,en): # index of maximum of smoothed signal
       if(en>st):
         return np.argmax(sm[st:en])+st
       else:
@@ -91,7 +100,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
     imaxs = vfindIMax(starts,ends)
 
     dt = df.Time[1]-df.Time[0]
-    def integrate(st,en):
+    def integrate(st,en): # integral of smoothed signal
       if en>st:
         return np.trapz(sm[st:en],dx=dt)
       else:
@@ -99,7 +108,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
     vintegrate = np.vectorize(integrate)
     integrals = vintegrate(starts,ends)
 
-    def findSat(st,en):
+    def findSat(st,en): # number of saturated points
       if(en>st):
         m = np.max(df.Ampl.values[st:en])
         maxRun = np.sum(df.Ampl.values[st:en] == m)
@@ -110,7 +119,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
 
     # cuts go here, if necessary
 
-    if makePlot:
+    if makePlot: # MORE DIAGNOSTIC PLOTTING
       tb.plotsegs(df.Time[starts],maxs,df.Time[ends],maxs)
       plt.scatter(df.Time[starts],maxs)
       plt.scatter(df.Time[imaxs],maxs)
@@ -121,9 +130,13 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
       'tMax':df.Time[imaxs].values,
       'amp':maxs,'len':lengths,'dur':lengths*dt,'int':integrals,
       'sig':maxs/thr*sigThresh,'satCt':satCts},index=range(starts.shape[0]))
-  else:
+  else: # no hits, return empty data frame.
     return pd.DataFrame()
 
+
+############################
+# SEARCH UTILITY FUNCTIONS #
+############################
 
 # searchSettings[scope,chan] --> (sigThresh,smoothingWindow,detName)
 searchSettings = {}
@@ -138,6 +151,11 @@ searchSettings[3,3]={'st':10,'wnd':75,'name':'UB3'}
 searchSettings[3,4]={'st':10,'wnd':200,'name':'UB4'} # note aggressive filter on UB4.
 
 def procChan(day,scope,chan,shot):
+  """
+  Process the data from the given channel.
+  Adds day, scope, channel, shot, and detector info to data frame.
+  """
+
   d = findHits(tb.findReadData(day,scope,chan,shot),
       searchSettings[scope,chan]['st'],
       searchSettings[scope,chan]['wnd'])
@@ -151,13 +169,16 @@ def procChan(day,scope,chan,shot):
   return d
 
 def procShot(day,shot):
+  """Process all data for a given shot."""
   print day,shot
   return pd.concat([procChan(day,scope,chan,shot) for scope in [2,3] for chan in [1,2,3,4]])
 
 def procDay(day,nshots):
+  """Process all data for a given day.  Needs to know how many shots there were on that day"""
   return pd.concat([procShot(day,i) for i in xrange(nshots)])
 
 def readAndProcessAllShots():
+  """Process all data from all days."""
   shotInfo = [(22,150),(23,200),(24,300),(25,300)]
   df = pd.concat([procDay(day,nshots) for (day,nshots) in shotInfo])
   return df

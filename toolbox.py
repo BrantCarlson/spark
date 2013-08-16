@@ -27,6 +27,7 @@ def readData(filename):
             f.readline()
         data = pd.read_csv(f) 
         data.Ampl = precondition(data.Ampl)
+        data.Time = data.Time*1.0e6 # convert to microseconds
         return data
 
 def findReadData(day,scope,chan,shot):
@@ -38,27 +39,49 @@ def thresh(amp):
   return np.sqrt(np.var(amp[:len(amp)/5]))
 
 def plotScope(day,scope,shot):
+  """Plots a given shot as seen on the given scope."""
   for p in range(411,415):
     plt.subplot(p)
     x = findReadData(day,scope,p-410,shot)
-    plt.plot(x.Time*1.0e6,x.Ampl)
+    plt.plot(x.Time,x.Ampl)
     plt.ylabel("channel %d"%(p-410))
-    fudgePlotLimits(x.Time*1.0e6,x.Ampl)
+    fudgePlotLimits(x.Time,x.Ampl)
   plt.xlabel("time ($\mu$s)")
 
 def plotScopeHits(day,scope,shot,df):
+  """plotScope, but adds hits to it as well, marking afterpulses in green."""
   plotScope(day,scope,shot)
   x = df[np.logical_and(df.day==day,np.logical_and(df.scope==scope,df.shot==shot))]
   for p in range(411,415):
     plt.subplot(p)
     xx = x[x.chan==p-410]
-    plt.scatter(xx.tStart[np.logical_not(xx.APflag)]*1.0e6,
+    plt.scatter(xx.tStart[np.logical_not(xx.APflag)],
         xx.amp[np.logical_not(xx.APflag)],c='r',s=50)
-    plt.scatter(xx.tStart[xx.APflag]*1.0e6,
+    plt.scatter(xx.tStart[xx.APflag],
         xx.amp[xx.APflag],c='g',s=50)
-    print xx.APflag
+
+def plotScopeHitGroups(day,scope,shot,df):
+  """
+  plotScope, but adds hit groups (i.e. the ...H data frame from cleanupData),
+  shown in boxes.  All hits and all boxes are shown on all plots.
+  """
+
+  plotScope(day,scope,shot)
+  #x = df.ix[day].ix[shot]
+  x = df.ix[shot]
+  for p in range(411,415):
+    plt.subplot(p)
+    for id in x.index:
+      row = x.ix[id]
+      xx = row[[('tMax',det) for det in ['H1','H2','LaBr1','LaBr2','UB1','UB2','UB3','UB4']]]
+      yy = row[[('ampMax',det) for det in ['H1','H2','LaBr1','LaBr2','UB1','UB2','UB3','UB4']]]
+      plt.scatter(xx,yy)
+      x1 = np.nanmin(xx); x2 = np.nanmax(xx)
+      y1 = np.nanmin(yy); y2 = np.nanmax(yy)
+      plt.plot([x1,x2,x2,x1,x1],[y1,y1,y2,y2,y1])
 
 def fudgePlotLimits(x,y,marfrac=0.1):
+  """Expand limits to just beyond the given x and y arrays."""
   xl = np.min(x); yl = np.min(y)
   xh = np.max(x); yh = np.max(y)
   dx = xh-xl; dy = yh-yl
@@ -66,6 +89,7 @@ def fudgePlotLimits(x,y,marfrac=0.1):
   plt.ylim(yl-dy*marfrac,yh+dy*marfrac)
 
 def plotsegs(x1,y1,x2,y2):
+  """plot segments from x1,y1 to x2,y2."""
   x = np.repeat(np.nan,x1.shape[0]*3)
   y = np.repeat(np.nan,x1.shape[0]*3)
   x[0::3] = x1
@@ -74,7 +98,6 @@ def plotsegs(x1,y1,x2,y2):
   y[1::3] = y2
   plt.plot(x,y)
 
-# copypasted from http://wiki.scipy.org/Cookbook/SavitzkyGolay
 def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     r"""Smooth (and optionally differentiate) data with a Savitzky-Golay filter.
     The Savitzky-Golay filter removes high frequency noise from data.
@@ -122,6 +145,8 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     .. [2] Numerical Recipes 3rd Edition: The Art of Scientific Computing
        W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
        Cambridge University Press ISBN-13: 9780521880688
+
+    # copypasted from http://wiki.scipy.org/Cookbook/SavitzkyGolay
     """
     import numpy as np
     from math import factorial

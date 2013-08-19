@@ -11,6 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 import scipy.optimize as op
+import pandas as pd
+import cleanupData as cd
 
 def fitWithZeroIntercept(x,y):
   """
@@ -23,16 +25,14 @@ def fitWithZeroIntercept(x,y):
   p1,success = op.leastsq(err,1.0)
   return p1
 
-def plotCorr(df,var,det1,det2,title='correlation plot'):
+def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot'):
   """
   Takes a data frame of correlation info (the cleanupData.(...)S or (...)H data frames),
-  a variable (e.g. 'ampMax'), and two detectors (e.g. 'UB1' and 'UB2') and makes a
-  plot with regression lines and correlation coefficients labeled.
+  a variable (e.g. 'ampMax'), and two detectors (e.g. 'UB1' and 'UB2') and finds
+  regression lines and correlation coefficients,  optionally plotting.
   """
   x = df[(var,det1)]
   y = df[(var,det2)]
-
-  plt.scatter(x,y)
 
   xl = np.min(x); xu = np.max(x)
   yl = np.min(y); yu = np.max(y)
@@ -42,32 +42,69 @@ def plotCorr(df,var,det1,det2,title='correlation plot'):
   ylow = yl-(yu-yl)*margin
   yhigh = yu+(yu-yl)*margin
 
-  plt.xlim(xlow,xhigh)
-  plt.ylim(ylow,yhigh)
-
   slope,intercept,rp,pp,err = stats.linregress(x,y)
   xx = np.array([xlow,xhigh])
-  plt.plot(xx,slope*xx+intercept)
 
   rs,ps = stats.spearmanr(x,y)
   
   slope2 = fitWithZeroIntercept(x,y)
-  plt.plot(xx,slope2*xx)
+  
+  p1 = df[('pos',det1)].max()
+  p2 = df[('pos',det2)].max()
 
-  plt.hlines(0,xlow,xhigh)
-  plt.vlines(0,ylow,yhigh)
+  if makePlot:
+    plt.scatter(x,y)
 
-  plt.xlabel(det1)
-  plt.ylabel(det2)
+    plt.xlim(xlow,xhigh)
+    plt.ylim(ylow,yhigh)
 
-  plt.text(np.min(x)+xhigh*margin,np.max(y),
-      plt.dedent("""
-      y=mx+b: m=%.4f, b=%.4f
-      y=mx: m=%.4f
-      Pearson r=%.3f (p=%.2g)
-      Spearman r=%.3f (p=%.2g)"""
-      %(slope,intercept,slope2,rp,pp,rs,ps)), verticalalignment='top')
+    plt.plot(xx,slope*xx+intercept)
+    plt.plot(xx,slope2*xx)
 
-  plt.title("%s for %s, shots %d to %d"%(title, var,
-      reduce(lambda x,y: min(x,y[0]), df.index, 1000),
-      reduce(lambda x,y: max(x,y[0]), df.index, 0)))
+    plt.hlines(0,xlow,xhigh)
+    plt.vlines(0,ylow,yhigh)
+
+    plt.xlabel(det1)
+    plt.ylabel(det2)
+
+    plt.text(np.min(x)+xhigh*margin,np.max(y),
+        plt.dedent("""
+        y=mx+b: m=%.4f, b=%.4f
+        y=mx: m=%.4f
+        Pearson r=%.3f (p=%.2g)
+        Spearman r=%.3f (p=%.2g)"""
+        %(slope,intercept,slope2,rp,pp,rs,ps)), verticalalignment='top')
+
+    plt.title("%s for %s, shots %d to %d"%(title, var,
+        reduce(lambda x,y: min(x,y[0]), df.index, 1000),
+        reduce(lambda x,y: max(x,y[0]), df.index, 0)))
+
+  return pd.DataFrame({
+    'slp':slope, 'intcpt':intercept, 'slp0':slope2,
+    'rPearson':rp, 'pPearson':pp,
+    'rSpearman':rs, 'pSpearman':ps,
+    'var':var, 'det1':det1, 'det2':det2,
+    'dPos':np.abs(p2-p1)},
+    index=[0])
+
+def findCrossCorrs(df,makePlots=False):
+  vars = np.unique([x[0] for x in df.columns])
+  dets = np.unique([x[1] for x in df.columns])
+  dfs = [] # accumulator for data frames
+  for var in vars:
+    #for d1,d2 in [(det1,det2) for det1 in dets for det2 in dets if det1<det2]:
+    for d1,d2 in [(det1,det2) for det1 in dets for det2 in dets if det1!=det2]:
+      print var,d1,d2
+      dfs.append(findCorr(df,var,d1,d2,makePlot=makePlots))
+
+  return pd.concat(dfs).set_index(['var','det1','det2'])
+
+
+def makeCorrAzimDepPlot():
+  dfs = [cd.cal1S,cd.azim1S,cd.azim2S,cd.azim3S]
+  acc = []
+  for df in dfs:
+    ac.append(findCrossCorrs(df))
+    # df = df.ix[[(a[2] in ['UB1','UB2','UB3','UB4']) and (a[1] in ['UB1','UB2','UB3','UB4']) for a in df.index]].ix['intSum']
+  d = pd.concat(acc)
+  plt.plot(d.dPos,d.rSpearman)

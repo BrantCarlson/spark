@@ -96,16 +96,35 @@ d1 = d0[maskBadShots(d0)]
 
 d2 = d1[np.logical_and(d0.tStart > 0.3, d0.tStart<1.2)]
 
-####################
-# SLICE AND DICE
-####################
+#####################################
+# SLICE AND DICE, ADD POSITION INFO #
+#####################################
 
+def addPos(df,map):
+  """
+  Adds a 'pos' column to the given data frame according as given by
+  the map passed in.  df['pos'] = map[df.det], essentially, but vectorized.
+  LaBr1 and LaBr2 are assumed to have position NA.
+  """
+  map['LaBr1'] = np.nan
+  map['LaBr2'] = np.nan
+
+  vMap = np.vectorize(lambda det: float(map[det]))
+  df['pos'] = vMap(df.det)
+
+def centralAngle(opp,adj1,adj2):
+  """For a triangle with sides opp, adj1, and adj2, returns the angle opposite side opp."""
+  return np.arccos((opp**2-adj1**2-adj2**2)/(-2*adj1*adj2))
+def rCyl(rHV,rGnd,gap):
+  """Returns the radius of a cylinder """
+  return rGnd*np.sin(centralAngle(rHV,gap,rGnd))
 
 #################### TUESDAY
 
 tue = d2[d2.day == 22]
 cal1 = tue #all shots on tuesday were calibration with same geom.
 # positioning: 110cm up, 84cm from gnd, 80cm from HV.
+addPos(cal1,{'H2':1,'H1':1,'UB1':1,'UB2':1,'UB3':1,'UB4':1}) # 1 = dummy position, all same
 
 #################### WEDNESDAY
 
@@ -118,7 +137,11 @@ rad = wed[np.logical_and(wed.shot>=0,wed.shot<100)]
 # | UB4   |  40 |  100 |  146 |   39 |
 # | UB3   |  60 |  104 |  140 |   59 |
 # | UB2   |  80 |  104 |  128 |   74 |
-# | UB1   | 100 |  109 |  117 |   93 |
+# | UB1   | 100 |  109 |  117 |   93 | 
+# | H1/H3 | 120 |  116 |  106 |  110 |
+addPos(rad,{'UB4':39.0,'UB3':59.0,'UB2':74.0,'UB1':93.0,'H1':110.0,'H2':110.0}) # cm
+# NOTE: substitution of H2 for H3 in map...
+# "H2" is whatever was connected to scope 2 channel 4
 
 azim1 = wed[np.logical_and(wed.shot>=100,wed.shot<200)]
 # detector positions (all numbers in cm)
@@ -130,6 +153,13 @@ azim1 = wed[np.logical_and(wed.shot>=100,wed.shot<200)]
 #| UB1 |  84 |  106 |  125 |
 #| UB2 |  84 |  106 |  125 |
 #| UB3 |  84 |  108 |  126 |
+#| UB4 |  84 |  110 |  127 |
+# detector separation 20.0...
+rc = rCyl(84.0,107.0,107.0)
+dAngle = centralAngle(20.0,rc,rc)*180/np.pi
+addPos(azim1,{'H2':dAngle*0,'H1':dAngle*1,'UB1':dAngle*2,'UB2':dAngle*3,
+              'UB3':dAngle*4,'UB4':dAngle*5}) # degrees of azimuth
+# 19 degrees is what I get by doing the geometry rCyl(84,107,107.0) (gap length is 107cm)
 
 #################### THURSDAY
 
@@ -145,6 +175,11 @@ azim2 = thu[np.logical_and(thu.shot>=0,thu.shot<100)]
 # | H1  |  79 |  105 |        131 |
 # | UB2 |  80 |  106 |        130 |
 # | UB3 |  84 |  108 |        128 |
+# | UB4 |  88 |  111 |        129 |
+rc = rCyl(84.0,107.0,106.5)
+dAngle = centralAngle(50.0,rc,rc)*180/np.pi
+addPos(azim2,{'H2':dAngle*0,'UB1':dAngle*1,'H1':dAngle*2,'UB2':dAngle*3,
+              'UB3':dAngle*4,'UB4':dAngle*5}) # degrees of azimuth
 
 azim3 = thu[np.logical_and(thu.shot>=100,thu.shot<200)]
 # lowered down
@@ -156,7 +191,11 @@ azim3 = thu[np.logical_and(thu.shot>=100,thu.shot<200)]
 # | H1  |         98 |  90 |   80 |
 # | UB2 |         99 |  90 |   80 |
 # | UB3 |        101 |  90 |   86 |
-
+# | UB4 |         97 |  88 |   81 |
+rc = rCyl(92.0,107.0,80.3)
+dAngle = centralAngle(50.0,rc,rc)*180/np.pi
+addPos(azim3,{'H2':dAngle*0,'UB1':dAngle*1,'H1':dAngle*2,'UB2':dAngle*3,
+              'UB3':dAngle*4,'UB4':dAngle*5}) # degrees of azimuth
 
 pol = thu[np.logical_and(thu.shot>=200,thu.shot<300)]
 # | det | vert floor | rHV | rgnd |
@@ -166,7 +205,12 @@ pol = thu[np.logical_and(thu.shot>=200,thu.shot<300)]
 # | UB3 |        121 | 79  | 96   |
 # | UB4 |        108 | 84  | 84   |
 # | H1  |         94 | 86  | 70   |
-
+# | H3  |         86 | 88  | 59   |
+rgnd = np.array([121,109,96,84,70,59.0])
+rhv = np.array([76,77,79,84,86,88.0])
+th = centralAngle(rgnd,rhv,107.0)*180/np.pi
+addPos(pol,{'UB1':th[0],'UB2':th[1],'UB3':th[2],'UB4':th[3],
+            'H1':th[4],'H2':th[5]}) # degrees from HV-gnd axis
 
 #################### FRIDAY
 
@@ -175,6 +219,7 @@ fri = d2[d2.day == 25]
 # | det | vert floor | rgnd | rhv |
 # |-----+------------+------+-----|
 # | all | 112        | 88   | 80  |
+addPos(fri,{'UB1':2,'UB2':2,'UB3':2,'UB4':2,'H1':2,'H2':2}) # dummy position again
 
 cal2 = fri[np.logical_and(fri.shot>=0,fri.shot<50)]
 att1 = fri[np.logical_and(fri.shot>=50,fri.shot<150)]
@@ -200,7 +245,8 @@ def detStats(df):
       'satSum':df.satCt.sum(),
       'tMax':df.tMax.values[df.amp.argmax()],
       'tMaxA':df.tMax.min(),
-      'tMaxB':df.tMax.max()},index=[1])
+      'tMaxB':df.tMax.max(),
+      'pos':df.pos.values[0]},index=[1])
     if 'pairID' in df.columns:
       d['pairID'] = df.pairID.values[0]
     return d
@@ -272,7 +318,7 @@ def findCorrHits(df):
 def fillStatNAs(df):
   """replace NAs in relevant statistics data frame columns with zeros, i.e. leave time columns as NA."""
   for col in df.columns:
-    if not (col[0] in ['tMax','tMaxA','tMaxB']):
+    if not (col[0] in ['tMax','tMaxA','tMaxB','pos']):
       df[col].fillna(0,inplace=True)
 
 ## # Calculate stats by hit group for everything.  This is redundant with the subsets calculated below,
@@ -286,20 +332,23 @@ def statsByHit(df):
   fillStatNAs(tmp)
   return tmp
 
-tueH  = statsByHit(tue); fillStatNAs(tueH)
-cal1H = statsByHit(cal1); fillStatNAs(cal1H)
-wedH = statsByHit(wed); fillStatNAs(wedH)
-radH = statsByHit(rad); fillStatNAs(radH)
-azim1H = statsByHit(azim1); fillStatNAs(azim1H)
-thuH = statsByHit(thu); fillStatNAs(thuH)
-azim2H = statsByHit(azim2); fillStatNAs(azim2H)
-azim3H = statsByHit(azim3); fillStatNAs(azim3H)
-polH = statsByHit(pol); fillStatNAs(polH)
-friH = statsByHit(fri); fillStatNAs(friH)
-cal2H = statsByHit(cal2); fillStatNAs(cal2H)
-att1H = statsByHit(att1); fillStatNAs(att1H)
-att2H = statsByHit(att2); fillStatNAs(att2H)
-att3H = statsByHit(att3); fillStatNAs(att3H)
+cal1H = statsByHit(cal1);
+tueH  = cal1H
+
+radH = statsByHit(rad);
+azim1H = statsByHit(azim1);
+wedH = pd.concat([radH,azim1H])
+
+azim2H = statsByHit(azim2);
+azim3H = statsByHit(azim3);
+polH = statsByHit(pol);
+thuH = pd.concat([azim2H,azim3H,polH])
+
+cal2H = statsByHit(cal2);
+att1H = statsByHit(att1);
+att2H = statsByHit(att2);
+att3H = statsByHit(att3);
+friH = pd.concat([cal2H,att1H,att2H,att3H])
 
 ##########################
 # WHOLE SHOT CORRELATIONS
@@ -317,17 +366,37 @@ def statsByShot(df):
   fillStatNAs(tmp)
   return tmp
 
-tueS  = statsByShot(tue)
-cal1S = statsByShot(cal1)
-wedS = statsByShot(wed)
-radS = statsByShot(rad)
-azim1S = statsByShot(azim1)
-thuS = statsByShot(thu)
-azim2S = statsByShot(azim2)
-azim3S = statsByShot(azim3)
-polS = statsByShot(pol)
-friS = statsByShot(fri)
-cal2S = statsByShot(cal2)
-att1S = statsByShot(att1)
-att2S = statsByShot(att2)
-att3S = statsByShot(att3)
+cal1S = statsByShot(cal1);
+tueS  = cal1S
+
+radS = statsByShot(rad);
+azim1S = statsByShot(azim1);
+wedS = pd.concat([radS,azim1S])
+
+azim2S = statsByShot(azim2);
+azim3S = statsByShot(azim3);
+polS = statsByShot(pol);
+thuS = pd.concat([azim2S,azim3S,polS])
+
+cal2S = statsByShot(cal2);
+att1S = statsByShot(att1);
+att2S = statsByShot(att2);
+att3S = statsByShot(att3);
+friS = pd.concat([cal2S,att1S,att2S,att3S])
+
+
+#####################
+# UTILITY FUNCTIONS #
+#####################
+
+satCtThr = 20
+def noSat(df):
+  return df.ix[df.satCt < satCtThr]
+
+def noSatS(df,dets=None):
+  if not dets:
+    dets = np.unique([x[1] for x in df.columns])
+  for det in dets:
+    df = df.ix[df[('satMax',det)] < satCtThr]
+  return df
+

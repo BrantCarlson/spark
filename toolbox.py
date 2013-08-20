@@ -171,3 +171,6 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     lastvals = y[-1] + np.abs(y[-half_window-1:-1][::-1] - y[-1])
     y = np.concatenate((firstvals, y, lastvals))
     return np.convolve( m[::-1], y, mode='valid')
+
+cbColMap = [(0.0,0.0,0.0), (0.90,0.60,0.0), (0.35,0.70,0.90), (0.0,0.60,0.50),
+    (0.95,0.90,0.25), (0.0,0.45,0.70), (0.80,0.40,0.0), (0.80,0.60,0.70)]

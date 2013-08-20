@@ -321,13 +321,10 @@ def fillStatNAs(df):
     if not (col[0] in ['tMax','tMaxA','tMaxB','pos']):
       df[col].fillna(0,inplace=True)
 
-## # Calculate stats by hit group for everything.  This is redundant with the subsets calculated below,
-## # so it should be commented out.
-## # throw out less-significant hits and afterpulses, find stats by hit.
-## dH = d2.ix[np.logical_or(d2.sig>15,np.logical_not(d2.APflag))].groupby(['day','shot']).apply(findCorrHits)
-## fillStatNAs(dH)
-
 def statsByHit(df):
+  """
+  Find properties of correlated hits, grouped by hit time.  sig<15 and afterpulses are dropped.
+  """
   tmp = df.ix[np.logical_and(df.sig>15,np.logical_not(df.APflag))].groupby(['shot']).apply(findCorrHits)
   fillStatNAs(tmp)
   return tmp
@@ -350,18 +347,16 @@ att2H = statsByHit(att2);
 att3H = statsByHit(att3);
 friH = pd.concat([cal2H,att1H,att2H,att3H])
 
+dH = pd.concat([tueH,wedH,thuH,friH])
+
 ##########################
 # WHOLE SHOT CORRELATIONS
 ##########################
 
-## # Calculate stats by shot for everything.  This is redundant with the subsets calculated below,
-## # so it should be commented out.
-## # less-significant hits and afterpulses are not removed here since they won't bias the shot
-## # statistics as badly as they would bias individual hit group statistics.
-## dS = d2.groupby(['day','shot','det']).apply(detStats).unstack(2)
-## fillStatNAs(dS)
-
 def statsByShot(df):
+  """
+  Find properties of correlated hits, grouped by shot.  sig<15 and afterpulses are NOT dropped.
+  """
   tmp = df.groupby(['shot','det']).apply(detStats).unstack(1) # unstack detector id
   fillStatNAs(tmp)
   return tmp
@@ -383,6 +378,8 @@ att1S = statsByShot(att1);
 att2S = statsByShot(att2);
 att3S = statsByShot(att3);
 friS = pd.concat([cal2S,att1S,att2S,att3S])
+
+dS = pd.concat([tueS,wedS,thuS,friS])
 
 
 #####################

@@ -7,8 +7,6 @@ Created on Mon Jul 08 12:34:36 2013
 
 import numpy as np
 import pandas as pd
-import scipy as si
-import matplotlib as plt
 import conf
 import matplotlib.pyplot as plt
 

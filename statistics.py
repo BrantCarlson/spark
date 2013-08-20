@@ -12,8 +12,6 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import scipy.optimize as op
 import pandas as pd
-import cleanupData as cd
-import toolbox as tb
 
 def fitWithZeroIntercept(x,y):
   """

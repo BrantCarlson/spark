@@ -3,8 +3,6 @@ This is a script to find hits in all shots (see findHits.py) and save the result
 """
 
 import findHits as fh
-import os
-import time
 import conf
 
 x = fh.readAndProcessAllShots()

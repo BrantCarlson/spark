@@ -20,28 +20,32 @@ def makePosPlot(d,var,xlab="position",ylim=None,divMean=False):
   symbols = ['o','*','s','v','p']
   varcol = 'cs_%s'%var
 
-  ydf = d[varcol].copy
-  #if divMean:
-  #  ydf = ydf / ydf.mean(1)
+  ## pruning turns out to not be useful either.
+  #d = d.ix[d[varcol].mean(1) > 0.001]
+
+  # dividing by the mean turns out to not be useful.
+  ydf = d[varcol].copy()
+  if divMean:
+    ydf = ydf.div(ydf.mean(1),axis=0)
 
   #plt.yscale('log')
-  ps = [plt.scatter(d[('pos',det)],d[(varcol,det)],marker='o',s=30)
+  ps = [plt.scatter(d[('pos',det)],ydf[det],marker='o',s=30)
           for det in c.index]
           #for (det,sym,col) in zip(c.index,symbols,tb.cbColMap[1:])]
   #plt.legend(ps,list(c.index.values))
 
   for det in c.index:
-    plt.text(d[('pos',det)].max(),d[(varcol,det)].min(),"\n%s"%det,
+    plt.text(d[('pos',det)].max(),ydf[det].min(),"\n%s"%det,
         horizontalalignment='center',verticalalignment='top')
 
   x = d.pos.max()[c.index]
   order = np.argsort(x)
   x = x[order]
   for i in d.index:
-    plt.plot(x,d[varcol].ix[i][c.index][order],c='grey')
+    plt.plot(x,ydf.ix[i][c.index][order],c='grey')
 
-  plt.plot(x,d[varcol].mean(0)[c.index][order],c='black',linewidth=4)
-  #plt.plot(x,d[varcol].median(0)[c.index][order],c='blue',linewidth=4)
+  plt.plot(x,ydf.mean(0)[c.index][order],c='black',linewidth=4)
+  #plt.plot(x,ydf.median(0)[c.index][order],c='blue',linewidth=4)
 
   plt.xlabel(xlab)
   plt.ylabel("intensity estimate for %s"%var)

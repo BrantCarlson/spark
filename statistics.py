@@ -31,20 +31,20 @@ def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot',sigGrpThres
   regression lines and correlation coefficients,  optionally plotting.
   """
 
-  # filter out insignificant lines:
-  df = df.ix[df.sigGrp.max(1) > sigGrpThresh]
-
   # this if statement allows you to abuse notation a bit...
   # i.e. findCorr(cd.cal1S,'ampMax','UB1','UB2',...)
   # and findCorr(customDFwithMean,None,'UB1','mean',...)
   # are both ok.
-  # only other variable this affects is pos?
+  # only other variables this affects are pos and sigGrp?
   if var==None:
     x = df[det1]
     y = df[det2]
     p1 = 0
     p2 = 0
   else:
+    # filter out insignificant lines:
+    df = df.ix[df.sigGrp.max(1) > sigGrpThresh]
+
     x = df[(var,det1)]
     y = df[(var,det2)]
     p1 = df[('pos',det1)].max()
@@ -62,6 +62,7 @@ def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot',sigGrpThres
   xx = np.array([xlow,xhigh])
 
   rs,ps = stats.spearmanr(x,y)
+  rk,pk = stats.kendalltau(x,y)
   
   slope2 = fitWithZeroIntercept(x,y)
 
@@ -85,8 +86,9 @@ def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot',sigGrpThres
         y=mx+b: m=%.4f, b=%.4f
         y=mx: m=%.4f
         Pearson r=%.3f (p=%.2g)
-        Spearman r=%.3f (p=%.2g)"""
-        %(slope,intercept,slope2,rp,pp,rs,ps)), verticalalignment='top')
+        Spearman r=%.3f (p=%.2g)
+        Kendall tau=%.3f (p=%.2g)"""
+        %(slope,intercept,slope2,rp,pp,rs,ps,rk,pk)), verticalalignment='top')
 
     plt.title("%s for %s, shots %d to %d"%(title, var,
         reduce(lambda x,y: min(x,y[0]), df.index, 1000),
@@ -96,6 +98,7 @@ def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot',sigGrpThres
     'slp':slope, 'intcpt':intercept, 'slp0':slope2,
     'rPearson':rp, 'pPearson':pp,
     'rSpearman':rs, 'pSpearman':ps,
+    'rKendall':rk, 'pKendall':pk,
     'var':var, 'det1':det1, 'det2':det2,
     'dPos':np.abs(p2-p1)},
     index=[0])

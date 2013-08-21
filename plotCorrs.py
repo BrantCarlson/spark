@@ -17,6 +17,7 @@ def makeCorrPlot(var,dfs,captions,xlab="separation",ticks=None,xlim=(-5,185),yli
     stats = stats.ix[[(x[1] in allowedDets) and (x[2] in allowedDets) for x in stats.index]]
     #return plt.scatter(stats.dPos,stats.rPearson,c=color,marker=symbol,edgecolor=color)
     return plt.scatter(stats.dPos,stats.rSpearman,c=color,marker=symbol,edgecolor=color)
+    #return plt.scatter(stats.dPos,stats.rKendall,c=color,marker=symbol,edgecolor=color)
 
   colors = tb.cbColMap[1:] #skip black
   symbols = ['o','*','s','v','p']
@@ -36,7 +37,7 @@ def makeCorrDepPlot_azim(var):
   """
   Using cleaned azimuthal data frames, find cross correlations and plot as function of detector separation.
   """
-  return makeCorrPlot(var,[cd.cal1H,cd.azim1H,cd.azim2H,cd.azim3H,cd.cal2H],
+  return makeCorrPlot(var,[cd.cal1S,cd.azim1S,cd.azim2S,cd.azim3S,cd.cal2S],
       ["calibration",'$15^\circ$ separation','$40^\circ$ separation','$40^\circ$ separation, lower','recalibration'],
       xlab=r'separation ($^\circ$)',
       ticks=[0,30,60,90,120,150,180],
@@ -47,7 +48,7 @@ def makeCorrDepPlot_pol(var):
   """
   Using cleaned polar data frames, find cross correlations and plot as function of detector separation.
   """
-  return makeCorrPlot(var,[cd.cal1H,cd.polH,cd.cal2H],
+  return makeCorrPlot(var,[cd.cal1S,cd.polS,cd.cal2S],
       ["calibration",'polar separation','recalibration'],
       xlab=r'separation ($^\circ$)',
       ticks=[0,10,20,30,40],
@@ -58,7 +59,7 @@ def makeCorrDepPlot_rad(var):
   """
   Using cleaned radial data frames, find cross correlations and plot as function of detector separation.
   """
-  return makeCorrPlot(var,[cd.cal1H,cd.radH,cd.cal2H],
+  return makeCorrPlot(var,[cd.cal1S,cd.radS,cd.cal2S],
       ["calibration",'radial separation','recalibration'],
       xlab=r'separation (cm)',
       ticks=None,

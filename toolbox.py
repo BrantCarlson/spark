@@ -16,7 +16,7 @@ def precondition(amp):
   mean = np.mean(amp[:n/5])
   return -(amp-mean)
 
-def readData(filename):
+def readData(filename,timeDelay=0.0, ampMult=1.0):
     """Reads data from given file (file as produced by oscilloscope)
     returns pandas data frame with Ampl and Time columns (Time in sec, Ampl in volts)"""
     data = []
@@ -24,38 +24,78 @@ def readData(filename):
         for x in range(4):
             f.readline()
         data = pd.read_csv(f) 
-        data.Ampl = precondition(data.Ampl)
-        data.Time = data.Time*1.0e6 # convert to microseconds
+        data.Ampl = precondition(data.Ampl)*ampMult # convert amplitudes, possibly.
+        data.Time = data.Time*1.0e6 - timeDelay # convert to microseconds, offset by delay in signals.
         return data
 
 def findReadData(day,scope,chan,shot):
-  """Utility function to load data given shot info.  Uses conf.py to find data."""
-  return readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scope, chan, scope, shot))
-
-def thresh(amp):
-  """Returns variance of first fifth of data."""
-  return np.sqrt(np.var(amp[:len(amp)/5]))
+  """Utility function to load data given shot info.  Uses conf.py to find data, offset timing."""
+  return readData(conf.dataDir + "%d_01_2013_osc%d/C%dosc%d-%05d.txt" % (day, scope, chan, scope, shot),
+                  conf.timeDelay[scope,chan],
+                  conf.ampMult[scope,chan])
 
 def plotScope(day,scope,shot):
   """Plots a given shot as seen on the given scope."""
+  axs = []
   for p in range(411,415):
-    plt.subplot(p)
-    if p==411:
+    if p == 411:
+      ax = plt.subplot(p)
       plt.title("day %d, shot %d, scope %d"%(day,shot,scope))
+    else:
+      plt.subplot(p,sharex=ax)
+
     x = findReadData(day,scope,p-410,shot)
     plt.plot(x.Time,x.Ampl)
     plt.ylabel("channel %d"%(p-410))
     fudgePlotLimits(x.Time,x.Ampl)
   plt.xlabel("time ($\mu$s)")
 
+def plotScopes12p(day,shot):
+  """Plots a given shot in eight panels."""
+  axs = []
+  for p in range(4):
+    if p == 0:
+      ax = plt.subplot(4,3,3*p+1)
+      plt.title("day %d, shot %d, scope 1"%(day,shot))
+    else:
+      plt.subplot(4,3,3*p+1,sharex=ax)
+
+    x = findReadData(day,1,p+1,shot)
+    plt.plot(x.Time,x.Ampl)
+    plt.ylabel("channel %d"%(p+1))
+    fudgePlotLimits(x.Time,x.Ampl)
+    if p==3:
+      plt.xlabel("time ($\mu$s)")
+
+    plt.subplot(4,3,3*p+2,sharex=ax)
+    if p == 0:
+      plt.title("day %d, shot %d, scope 2"%(day,shot))
+    x = findReadData(day,2,p+1,shot)
+    plt.plot(x.Time,x.Ampl)
+    plt.ylabel("channel %d"%(p+1))
+    fudgePlotLimits(x.Time,x.Ampl)
+    if p==3:
+      plt.xlabel("time ($\mu$s)")
+
+    plt.subplot(4,3,3*p+3,sharex=ax)
+    if p == 0:
+      plt.title("day %d, shot %d, scope 3"%(day,shot))
+    x = findReadData(day,3,p+1,shot)
+    plt.plot(x.Time,x.Ampl)
+    plt.ylabel("channel %d"%(p+1))
+    fudgePlotLimits(x.Time,x.Ampl)
+    if p==3:
+      plt.xlabel("time ($\mu$s)")
+
 def plotScopeHits(day,scope,shot,df):
   """plotScope, but adds hits to it as well, marking afterpulses in green."""
   plotScope(day,scope,shot)
   x = df[np.logical_and(df.day==day,np.logical_and(df.scope==scope,df.shot==shot))]
   for p in range(411,415):
-    plt.subplot(p)
     if p==411:
-      plt.title("day %d, shot %d, scope %d"%(day,shot,scope))
+      ax = plt.subplot(p)
+    else:
+      plt.subplot(p,sharex=ax)
     xx = x[x.chan==p-410]
     plt.scatter(xx.tStart[np.logical_not(xx.APflag)],
         xx.amp[np.logical_not(xx.APflag)],c='r',s=50)
@@ -72,9 +112,10 @@ def plotScopeHitGroups(day,scope,shot,df):
   #x = df.ix[day].ix[shot]
   x = df.ix[shot]
   for p in range(411,415):
-    plt.subplot(p)
     if p==411:
-      plt.title("day %d, shot %d, scope %d"%(day,shot,scope))
+      ax = plt.subplot(p)
+    else:
+      plt.subplot(p,sharex=ax)
     for id in x.index:
       row = x.ix[id]
       xx = row[[('tMax',det) for det in ['H1','H2','LaBr1','LaBr2','UB1','UB2','UB3','UB4']]]

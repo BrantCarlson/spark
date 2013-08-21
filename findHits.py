@@ -27,7 +27,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,satThr=1.0,makePlot=False):
 
   # THRESHOLD DETERMINATION
   # by standard deviation of first 5th of data:
-  thr = sigThresh*tb.thresh(df.Ampl)/np.sqrt(smoothingWindow)
+  thr = sigThresh*np.sqrt(np.var(df.Ampl[:len(df.Ampl.index)/5]))/np.sqrt(smoothingWindow)
 
   # by wiggle outside what low-pass filter can track?
   #thr = sigThresh*np.sqrt(np.var(df.Ampl-sm))/np.sqrt(smoothingWindow)

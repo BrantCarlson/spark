@@ -1596,10 +1596,12 @@ detectors in order from marx generator side: UB1, UB2(small atten), UB3(medium a
 |  12 | Ignd    |     0.8 | 500 A    | 0.0336                     |
 |  13 | IHV     |     9.8 | 500 A    | 0.220                      |
 |  14 | cam     |       1 | TTL      | 0.0463                     |
+|-----+---------+---------+----------+----------------------------|
 |  21 | LaBr1   |   13.90 | 1 MeV    | 0.053 + 30 ns (see below)  |
 |  22 | LaBr2   |     9.6 | 1 MeV    | 0.053 + 30 ns (see below)  |
 |  23 | H1      |     ??? | ???      | 0.0645 + 30 ns (see below) |
 |  24 | H3      |     ??? | ???      | 0.0505 + 30 ns (see below) |
+|-----+---------+---------+----------+----------------------------|
 |  31 | UB1     |         |          | X                          |
 |  32 | UB2     |         |          | X                          |
 |  33 | UB3     |         |          | X                          |
@@ -1608,6 +1610,8 @@ detectors in order from marx generator side: UB1, UB2(small atten), UB3(medium a
 - add 40 ns to scope 3 to get it to line up with scope 1.
 - add 30 ns to scope 2 to get it to line up with scope 1.
 - X = 1.5 m of cable + [PMT electron transit time] + 3 m of fiber + 40 ns (scope delay).
+  
+Note: UB1-4 PMTs: http://www.hamamatsu.com/jp/en/R6231-01.html
 
 ** calibration analysis 
 #+begin_src R :session s1 :results silent :exports none

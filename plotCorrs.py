@@ -71,6 +71,6 @@ def saveAllCorrPlots():
   Saves all three correlation variation plots.
   You can resize the resulting plots by opening a new window and resizing it first.
   """
-  plt.clf(); pcrs.makeCorrDepPlot_pol('intSum'); plt.savefig('plots/corrPol.pdf');
-  plt.clf(); pcrs.makeCorrDepPlot_azim('intSum'); plt.savefig('plots/corrAzim.pdf');
-  plt.clf(); pcrs.makeCorrDepPlot_rad('intSum'); plt.savefig('plots/corrRad.pdf');
+  plt.clf(); makeCorrDepPlot_pol('intSum'); plt.savefig('plots/corrPol.pdf');
+  plt.clf(); makeCorrDepPlot_azim('intSum'); plt.savefig('plots/corrAzim.pdf');
+  plt.clf(); makeCorrDepPlot_rad('intSum'); plt.savefig('plots/corrRad.pdf');

@@ -24,14 +24,31 @@ def fitWithZeroIntercept(x,y):
   p1,success = op.leastsq(err,1.0)
   return p1
 
-def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot'):
+def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot',sigGrpThresh=30):
   """
   Takes a data frame of correlation info (the cleanupData.(...)S or (...)H data frames),
   a variable (e.g. 'ampMax'), and two detectors (e.g. 'UB1' and 'UB2') and finds
   regression lines and correlation coefficients,  optionally plotting.
   """
-  x = df[(var,det1)]
-  y = df[(var,det2)]
+
+  # filter out insignificant lines:
+  df = df.ix[df.sigGrp.max(1) > sigGrpThresh]
+
+  # this if statement allows you to abuse notation a bit...
+  # i.e. findCorr(cd.cal1S,'ampMax','UB1','UB2',...)
+  # and findCorr(customDFwithMean,None,'UB1','mean',...)
+  # are both ok.
+  # only other variable this affects is pos?
+  if var==None:
+    x = df[det1]
+    y = df[det2]
+    p1 = 0
+    p2 = 0
+  else:
+    x = df[(var,det1)]
+    y = df[(var,det2)]
+    p1 = df[('pos',det1)].max()
+    p2 = df[('pos',det2)].max()
 
   xl = np.min(x); xu = np.max(x)
   yl = np.min(y); yu = np.max(y)
@@ -47,9 +64,6 @@ def findCorr(df,var,det1,det2,makePlot=True,title='correlation plot'):
   rs,ps = stats.spearmanr(x,y)
   
   slope2 = fitWithZeroIntercept(x,y)
-  
-  p1 = df[('pos',det1)].max()
-  p2 = df[('pos',det2)].max()
 
   if makePlot:
     plt.scatter(x,y)

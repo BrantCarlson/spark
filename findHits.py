@@ -11,22 +11,26 @@ import numpy as np
 import scipy.signal as sig
 import matplotlib.pyplot as plt
 
-def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
+def findHits(df,sigThresh=10,smoothingWindow=25,satThr=1.0,makePlot=False):
   """
   Finds hits in data.  Preconditions data, computes threshold, 
   smooths data, finds above-thresh windows, splits windows 
   according to smoothed derivative (Savitzky-Golay filter).
   """
-
-  # THRESHOLD DETERMINATION
   n = df.Ampl.shape[0]
-  thr = sigThresh*tb.thresh(df.Ampl)/np.sqrt(smoothingWindow)
 
   # SMOOTHING: rolling mean:
   #sm = pd.rolling_mean(amp,smoothingWindow)
   # butterworth low-pass:
   b,a = sig.butter(8,2.0/smoothingWindow)
   sm = sig.filtfilt(b,a,df.Ampl)
+
+  # THRESHOLD DETERMINATION
+  # by standard deviation of first 5th of data:
+  thr = sigThresh*tb.thresh(df.Ampl)/np.sqrt(smoothingWindow)
+
+  # by wiggle outside what low-pass filter can track?
+  #thr = sigThresh*np.sqrt(np.var(df.Ampl-sm))/np.sqrt(smoothingWindow)
 
   # WINDOWING
   aboveThresh = np.where(sm>thr,1,0)
@@ -110,9 +114,7 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
 
     def findSat(st,en): # number of saturated points
       if(en>st):
-        m = np.max(df.Ampl.values[st:en])
-        maxRun = np.sum(df.Ampl.values[st:en] == m)
-        return maxRun
+        return np.sum(df.Ampl.values[st:en]>satThr)
       return 0
     vfindSat = np.vectorize(findSat)
     satCts = vfindSat(starts,ends)
@@ -140,17 +142,17 @@ def findHits(df,sigThresh=10,smoothingWindow=25,makePlot=False):
 
 # searchSettings[scope,chan] --> (sigThresh,smoothingWindow,detName)
 searchSettings = {}
-searchSettings[2,1]={'st':10,'wnd':75,'name':'LaBr1'}
-searchSettings[2,2]={'st':10,'wnd':75,'name':'LaBr2'}
-searchSettings[2,3]={'st':10,'wnd':25,'name':'H1'}
-searchSettings[2,4]={'st':10,'wnd':25,'name':'H2'} # significance <15 suspect?
+searchSettings[2,1]={'st':10,'wnd':75,'sat':0.35,'name':'LaBr1'}
+searchSettings[2,2]={'st':10,'wnd':75,'sat':0.35,'name':'LaBr2'}
+searchSettings[2,3]={'st':10,'wnd':25,'sat':0.6,'name':'H1'}
+searchSettings[2,4]={'st':10,'wnd':25,'sat':0.14,'name':'H2'} # significance <15 suspect?
 
-searchSettings[3,1]={'st':10,'wnd':75,'name':'UB1'}  #UB1-3 also ok with 100 for filter window?
-searchSettings[3,2]={'st':10,'wnd':75,'name':'UB2'}
-searchSettings[3,3]={'st':10,'wnd':75,'name':'UB3'}
-searchSettings[3,4]={'st':10,'wnd':200,'name':'UB4'} # note aggressive filter on UB4.
+searchSettings[3,1]={'st':10,'wnd':75,'sat':0.4,'name':'UB1'}  #UB1-3 also ok with 100 for filter window?
+searchSettings[3,2]={'st':10,'wnd':75,'sat':0.4,'name':'UB2'}
+searchSettings[3,3]={'st':10,'wnd':75,'sat':0.4,'name':'UB3'}
+searchSettings[3,4]={'st':10,'wnd':200,'sat':0.03,'name':'UB4'} # note aggressive filter, saturation threshold below saturation on UB4.
 
-def procChan(day,scope,chan,shot):
+def procChan(day,scope,chan,shot,makePlot=False):
   """
   Process the data from the given channel.
   Adds day, scope, channel, shot, and detector info to data frame.
@@ -158,7 +160,9 @@ def procChan(day,scope,chan,shot):
 
   d = findHits(tb.findReadData(day,scope,chan,shot),
       searchSettings[scope,chan]['st'],
-      searchSettings[scope,chan]['wnd'])
+      searchSettings[scope,chan]['wnd'],
+      searchSettings[scope,chan]['sat'],
+      makePlot)
   d['day'] = day
   d['scope'] = scope
   d['chan'] = chan

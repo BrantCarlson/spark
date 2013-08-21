@@ -12,6 +12,7 @@ This file assumes hitData/df_brant.pandas is a file containing a data frame of t
 import numpy as np
 import pandas as pd
 import networkx as nx
+import findHits as fh
 
 #############
 # READ DATA # --> d0
@@ -24,26 +25,6 @@ d0.set_index('hitID',inplace=True)
 #######################################
 # ADD SATURATION AND AFTERPULSE FLAGS # --> d0 (still)
 #######################################
-
-# satAmp[scope,chan] = threshold above which saturation is possible, in volts.
-# these are determined by examining data from later in the week, to avoid issues
-# with the gain fluctuations earlier in the week.
-satAmp = {}
-satAmp['LaBr1'] = 0.35 # satAmp[2,1] = 0.35
-satAmp['LaBr2'] = 0.35 # satAmp[2,2] = 0.35
-satAmp['H1'] = 0.6  # satAmp[2,3] = 0.6
-satAmp['H2'] = 0.14 # satAmp[2,4] = 0.14
-satAmp['UB1'] = 0.4  # satAmp[3,1] = 0.4
-satAmp['UB2'] = 0.4  # satAmp[3,2] = 0.4
-satAmp['UB3'] = 0.4  # satAmp[3,3] = 0.4
-satAmp['UB4'] = 0.04 # satAmp[3,4] = 0.04
-
-# saturation threshold specific to detector, vectorized.
-def satThr(det):
-  return satAmp[det]
-vsatThr = np.vectorize(satThr)
-d0['satThr'] = vsatThr(d0.det)
-d0['satPoss'] = d0.amp > vsatThr(d0.det)
 
 d0.reset_index(inplace=True)
 d0['dayBS'] = d0['day']  # the bullshit suffix is because I'm annoyed at pandas
@@ -59,12 +40,14 @@ def addAfterPulseFlag(df):
   # attempt to work-around what I suspect are bugs (or at least unintelligible error messages).
 
   #print df.dayBS.values[0],df.shotBS.values[0], df.detBS.values[0],df.shape
-  satAmpFrac = 0.1
-  satCtThr = 20 # anything saturated for more than 20 is deemed to produce afterpulses
+  satAmpFrac = 0.5
+  satCtThr = 40 # anything saturated for more than 50 is deemed to produce afterpulses
   df.sort(columns='iStart',inplace=True)
   apf = np.zeros(len(df.index),dtype=np.int64)
-  apf[1:] = np.cumsum(np.where(np.logical_and(df.satPoss,df.satCt > satCtThr)[:-1],1,0))
-  apf = np.logical_and(apf,df.amp < satAmpFrac*vsatThr(df.detBS))
+  apf[1:] = np.cumsum(np.where((df.satCt > satCtThr)[:-1],1,0))
+  apf = np.logical_and(apf,df.amp < satAmpFrac*np.max(df.amp))
+  # note: using max(df.amp) as a proxy for saturation level.  Wrong...
+  # but won't affect anything since if it doesn't reach saturation, apf will be all false.
   df['APflag'] = apf
 
   return df
@@ -176,8 +159,15 @@ azim2 = thu[np.logical_and(thu.shot>=0,thu.shot<100)]
 # | UB2 |  80 |  106 |        130 |
 # | UB3 |  84 |  108 |        128 |
 # | UB4 |  88 |  111 |        129 |
-rc = rCyl(84.0,107.0,106.5)
-dAngle = centralAngle(50.0,rc,rc)*180/np.pi
+
+# azim2 and azim3 had roughly same angular spacing, which is not borne out in the calculations.
+# I'm going to assume those measurements were inaccurate, and just use the average of both sets for both sets.
+rc = rCyl(84.0,106.5,107.0)
+dAngle1 = centralAngle(50.0,rc,rc)*180/np.pi
+rc = rCyl(92.0,80.3,107.0)
+dAngle2 = centralAngle(50.0,rc,rc)*180/np.pi
+dAngle = (dAngle1+dAngle2)/2.0
+
 addPos(azim2,{'H2':dAngle*0,'UB1':dAngle*1,'H1':dAngle*2,'UB2':dAngle*3,
               'UB3':dAngle*4,'UB4':dAngle*5}) # degrees of azimuth
 
@@ -192,8 +182,6 @@ azim3 = thu[np.logical_and(thu.shot>=100,thu.shot<200)]
 # | UB2 |         99 |  90 |   80 |
 # | UB3 |        101 |  90 |   86 |
 # | UB4 |         97 |  88 |   81 |
-rc = rCyl(92.0,107.0,80.3)
-dAngle = centralAngle(50.0,rc,rc)*180/np.pi
 addPos(azim3,{'H2':dAngle*0,'UB1':dAngle*1,'H1':dAngle*2,'UB2':dAngle*3,
               'UB3':dAngle*4,'UB4':dAngle*5}) # degrees of azimuth
 
@@ -235,6 +223,12 @@ def detStats(df):
 
   print df.dayBS.values[0],df.shotBS.values[0], df.detBS.values[0],df.shape
 
+  if 'sigGrp' not in df.columns:
+    sigGrp = 10000.0
+  else:
+    sigGrp = df.sigGrp.max()
+
+
   if df.amp.count()>0:
     d = pd.DataFrame({'nHit':len(df.index),
       'ampMax':df.amp.max(),
@@ -246,6 +240,7 @@ def detStats(df):
       'tMax':df.tMax.values[df.amp.argmax()],
       'tMaxA':df.tMax.min(),
       'tMaxB':df.tMax.max(),
+      'sigGrp':sigGrp,
       'pos':df.pos.values[0]},index=[1])
     if 'pairID' in df.columns:
       d['pairID'] = df.pairID.values[0]
@@ -301,11 +296,15 @@ def findCorrHits(df):
 
   groups = nx.connected_components(g)
 
+  sigGrp = np.array([np.max(df.ix[grp].sig) for grp in groups])
+
   def pairID(hitidx):
     return np.where([hitidx in grp for grp in groups])[0][0]
   vpairID = np.vectorize(pairID)
 
   df['pairID'] = vpairID(ii)
+
+  df['sigGrp'] = sigGrp[df['pairID']]
 
   df.set_index(['pairID','det'],inplace=True)
 
@@ -318,7 +317,7 @@ def findCorrHits(df):
 def fillStatNAs(df):
   """replace NAs in relevant statistics data frame columns with zeros, i.e. leave time columns as NA."""
   for col in df.columns:
-    if not (col[0] in ['tMax','tMaxA','tMaxB','pos']):
+    if not (col[0] in ['tMax','tMaxA','tMaxB','pos','sigGrp']):
       df[col].fillna(0,inplace=True)
 
 def statsByHit(df):

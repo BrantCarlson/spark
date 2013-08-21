@@ -40,6 +40,8 @@ def plotScope(day,scope,shot):
   """Plots a given shot as seen on the given scope."""
   for p in range(411,415):
     plt.subplot(p)
+    if p==411:
+      plt.title("day %d, shot %d, scope %d"%(day,shot,scope))
     x = findReadData(day,scope,p-410,shot)
     plt.plot(x.Time,x.Ampl)
     plt.ylabel("channel %d"%(p-410))
@@ -52,6 +54,8 @@ def plotScopeHits(day,scope,shot,df):
   x = df[np.logical_and(df.day==day,np.logical_and(df.scope==scope,df.shot==shot))]
   for p in range(411,415):
     plt.subplot(p)
+    if p==411:
+      plt.title("day %d, shot %d, scope %d"%(day,shot,scope))
     xx = x[x.chan==p-410]
     plt.scatter(xx.tStart[np.logical_not(xx.APflag)],
         xx.amp[np.logical_not(xx.APflag)],c='r',s=50)
@@ -69,6 +73,8 @@ def plotScopeHitGroups(day,scope,shot,df):
   x = df.ix[shot]
   for p in range(411,415):
     plt.subplot(p)
+    if p==411:
+      plt.title("day %d, shot %d, scope %d"%(day,shot,scope))
     for id in x.index:
       row = x.ix[id]
       xx = row[[('tMax',det) for det in ['H1','H2','LaBr1','LaBr2','UB1','UB2','UB3','UB4']]]
@@ -170,5 +176,16 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     y = np.concatenate((firstvals, y, lastvals))
     return np.convolve( m[::-1], y, mode='valid')
 
+# coloblind-compatible color map.
 cbColMap = [(0.0,0.0,0.0), (0.90,0.60,0.0), (0.35,0.70,0.90), (0.0,0.60,0.50),
     (0.95,0.90,0.25), (0.0,0.45,0.70), (0.80,0.40,0.0), (0.80,0.60,0.70)]
+
+def plotAllShots():
+  shotInfo = [(22,150),(23,200),(24,300),(25,300)]
+  for day,nshot in shotInfo:
+    for shot in xrange(nshot):
+      print day,shot
+      for scope in [2,3]:
+        plt.clf()
+        plotScope(day,scope,shot)
+        plt.savefig(conf.dataPlotDir+"d%dsc%dsh%03d.png"%(day,scope,shot))

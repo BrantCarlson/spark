@@ -23,7 +23,9 @@ def makeCorrPlot(var,dfs,captions,xlab="separation",ticks=None,xlim=(-5,185),yli
   symbols = ['o','*','s','v','p']
   plts = [plotDF(df,col,smb) for (df,col,smb) in zip(dfs,colors,symbols)]
 
-  plt.legend(plts,captions)
+  l = plt.legend(plts,captions,loc='lower left',title='Set of shots')
+  #l.get_title().set_position((-65,0))
+  l.get_title().set_ha('center')
     
   plt.xlabel(xlab)
   plt.ylabel("Spearman rank correlation for %s"%var)
@@ -39,7 +41,7 @@ def makeCorrDepPlot_azim(var):
   """
   return makeCorrPlot(var,[cd.cal1S,cd.azim1S,cd.azim2S,cd.azim3S,cd.cal2S],
       ["calibration",'$15^\circ$ separation','$40^\circ$ separation','$40^\circ$ separation, lower','recalibration'],
-      xlab=r'separation ($^\circ$)',
+      xlab=r'Azimuthal separation ($^\circ$)',
       ticks=[0,30,60,90,120,150,180],
       xlim=(-5,185),
       ylim=(0,1))
@@ -50,9 +52,9 @@ def makeCorrDepPlot_pol(var):
   """
   return makeCorrPlot(var,[cd.cal1S,cd.polS,cd.cal2S],
       ["calibration",'polar separation','recalibration'],
-      xlab=r'separation ($^\circ$)',
-      ticks=[0,10,20,30,40],
-      xlim=(-5,40),
+      xlab=r'Polar separation ($^\circ$)',
+      ticks=[0,10,20,30,40,50],
+      xlim=(-5,50),
       ylim=(0,1))
 
 def makeCorrDepPlot_rad(var):
@@ -61,7 +63,7 @@ def makeCorrDepPlot_rad(var):
   """
   return makeCorrPlot(var,[cd.cal1S,cd.radS,cd.cal2S],
       ["calibration",'radial separation','recalibration'],
-      xlab=r'separation (cm)',
+      xlab=r'Radial separation (cm)',
       ticks=None,
       xlim=None,
       ylim=(0,1))

@@ -1,5 +1,4 @@
 * todo
 ** AGU poster
-- resurrect plotCorrs.py, plotStats.py, plotPosStats.py.
-the .pyc files are still around, they used to be tracked...  I don't know if I deleted them on purpose, or what.
-  
+- come up with good way to explain calibration / correlation as applied to position intensity dependence (did I screw something up?)
+

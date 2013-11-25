@@ -32,7 +32,7 @@ def meanCrossCal(df,var,allowedDets=goodDets):
   calData.calVar = var # note: not Pandas, just using the object to store extra info.
   return calData
 
-def ub1CrossCal(df,var,allowedDets=goodDets):
+def detCrossCal(df,var,baseDet='UB1',allowedDets=goodDets):
   """
   Cross correlate each detector to the signal from UB1.
   Takes a ...H or ...S data frame, returns a data frame with calibration fit
@@ -41,10 +41,13 @@ def ub1CrossCal(df,var,allowedDets=goodDets):
   df = df[var] # subset now only has all detector data for this variable.
   dets = [x for x in np.unique(df.columns.values) if x in allowedDets]
 
-  calData = pd.concat([st.findCorr(df,None,det,'UB1',False) for det in dets])
+  calData = pd.concat([st.findCorr(df,None,det,baseDet,False) for det in dets])
   calData = calData.set_index('det1')
   calData.calVar = var # note: not Pandas, just using the object to store extra info.
   return calData
+
+def ub1CrossCal(df,var,allowedDets=goodDets):
+  return detCrossCal(df,var,baseDet='UB1',allowedDets=allowedDets)
 
 def applyCrossCal(df,caldf):
   """

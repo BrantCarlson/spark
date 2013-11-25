@@ -1,4 +1,5 @@
 * todo
-- [ ] rewrite / doublecheck spike finders
-- [ ] make some test plots
+** AGU poster
+- resurrect plotCorrs.py, plotStats.py, plotPosStats.py.
+the .pyc files are still around, they used to be tracked...  I don't know if I deleted them on purpose, or what.
   

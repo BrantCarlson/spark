@@ -24,8 +24,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.27363626"
-     inkscape:cx="2160.2424"
-     inkscape:cy="1619.9165"
+     inkscape:cx="2226.0232"
+     inkscape:cy="1097.3249"
      inkscape:document-units="in"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -9471,7 +9471,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -25147,6 +25147,6 @@
              height="246.67783"
              width="1606.1467"
              id="rect54355" /></flowRegion><flowPara
-           id="flowPara54357">Special thanks to prof Lex van Deursen for valuable discussions, and the Atmosphere-Space Interactions Monitor group for loaned equipment.  This work was supported by the Birkeland Center for Space Science, the Norwegian Research Council, and the TEA-IS program.</flowPara></flowRoot>    </g>
+           id="flowPara54357">Special thanks to prof Lex van Deursen for valuable discussions, and the Atmosphere-Space Interactions Monitor group for loaned equipment.  This work was supported by the Birkeland Center for Space Science, the Carthage Summer Undergraduate Research Experience, and the TEA-IS program.</flowPara></flowRoot>    </g>
   </g>
 </svg>

@@ -23,16 +23,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.27363626"
-     inkscape:cx="2226.0232"
-     inkscape:cy="1097.3249"
+     inkscape:zoom="0.77396022"
+     inkscape:cx="3427.1164"
+     inkscape:cy="173.72772"
      inkscape:document-units="in"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1012"
+     inkscape:window-height="1044"
      inkscape:window-x="0"
-     inkscape:window-y="44"
+     inkscape:window-y="36"
      inkscape:window-maximized="0"
      units="in"
      showguides="true"
@@ -10098,7 +10098,7 @@
              id="tspan15693-4"
              x="44.6917"
              y="-668.80249"
-             style="font-size:108px">1. Experiment</tspan></text>
+             style="font-size:108px">2. Experiment</tspan></text>
         <g
            id="g44143"
            transform="translate(-97.053248,2.7339969)">
@@ -10184,13 +10184,13 @@
              sodipodi:linespacing="125%"
              id="text19608"
              y="-283.61932"
-             x="184.7233"
+             x="148.17844"
              style="font-size:72px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
              xml:space="preserve"><tspan
                y="-283.61932"
-               x="184.7233"
+               x="148.17844"
                id="tspan19610"
-               sodipodi:role="line">HV</tspan></text>
+               sodipodi:role="line">−HV</tspan></text>
           <text
              sodipodi:linespacing="125%"
              id="text19612"
@@ -10976,7 +10976,7 @@
              id="tspan15693-9-2"
              x="2605.5869"
              y="-1506.4828"
-             style="font-size:108px">5. Correlations</tspan></text>
+             style="font-size:108px">6. Correlations</tspan></text>
         <g
            id="g44393"
            transform="translate(0,-22.552204)">
@@ -22752,7 +22752,7 @@
            y="98.243805"
            x="2606.3779"
            id="tspan15693-9-5"
-           sodipodi:role="line">6. Conclusions</tspan></text>
+           sodipodi:role="line">7. Conclusions</tspan></text>
       <text
          sodipodi:linespacing="125%"
          id="text43718"
@@ -22819,7 +22819,7 @@
            y="-1506.4828"
            x="1548.6199"
            id="tspan15693-9"
-           sodipodi:role="line">2. Sample data</tspan></text>
+           sodipodi:role="line">3. Sample data</tspan></text>
       <g
          transform="translate(-105.71667,-346.98926)"
          id="g23548">
@@ -23064,7 +23064,7 @@
            y="-341.9895"
            x="1588.3804"
            id="tspan15693-9-4"
-           sodipodi:role="line">3. Experiments</tspan></text>
+           sodipodi:role="line">4. Experiments</tspan></text>
       <g
          transform="translate(40.076905,-9.5314979)"
          id="g46696">
@@ -23379,7 +23379,7 @@
            y="475.74323"
            x="1591.3335"
            id="tspan15693-9-8"
-           sodipodi:role="line">4. Distributions</tspan></text>
+           sodipodi:role="line">5. Distributions</tspan></text>
       <g
          transform="translate(40.076905,-9.4357015)"
          id="g46408">
@@ -23391,7 +23391,7 @@
              id="g25932">
             <path
                inkscape:connector-curvature="0"
-               style="fill:none;stroke:#0000ff;stroke-width:3.14108634;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+               style="fill:none;stroke:#009b00;stroke-width:3.14108634000000020;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
                d="m 1768.6087,609.69328 92.6694,146.6739 69.5,16.9859 88.034,-1.0547"
                id="path34512" />
             <path
@@ -24152,7 +24152,7 @@
              id="g25750">
             <path
                inkscape:connector-curvature="0"
-               style="fill:none;stroke:#0000ff;stroke-width:3.14108634;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
+               style="fill:none;stroke:#0000ff;stroke-width:3.14108634000000020;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1;stroke-dasharray:none"
                d="m 2195.0403,752.75348 76.8615,-142.1835 85.9079,6.30951 83.8833,-9.37242"
                id="path32843" />
             <path
@@ -25123,7 +25123,7 @@
        sodipodi:nodetypes="cc" />
     <g
        id="g54361"
-       transform="translate(0,49.910155)">
+       transform="translate(0,20.192865)">
       <text
          sodipodi:linespacing="125%"
          id="text15691-9-78"
@@ -25131,7 +25131,7 @@
          x="2650.6521"
          style="font-size:72px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
          xml:space="preserve"><tspan
-           style="font-size:56px"
+           style="font-size:40px"
            y="741.80334"
            x="2650.6521"
            id="tspan15693-9-59"
@@ -25144,9 +25144,12 @@
            id="flowRegion54353"><rect
              y="2938.5049"
              x="2651.3298"
-             height="246.67783"
-             width="1606.1467"
+             height="237.13164"
+             width="1614.8492"
              id="rect54355" /></flowRegion><flowPara
-           id="flowPara54357">Special thanks to prof Lex van Deursen for valuable discussions, and the Atmosphere-Space Interactions Monitor group for loaned equipment.  This work was supported by the Birkeland Center for Space Science, the Carthage Summer Undergraduate Research Experience, and the TEA-IS program.</flowPara></flowRoot>    </g>
+           id="flowPara54357"
+           style="font-size:32px">Special thanks to prof. Lex van Deursen for valuable discussions, and the ASIM group for loaned equipment.  This study was supported by the European Research Council under the European Union’s Seventh Framework Programme (FP7/2007-2013)/ERC grant agreement 320839 the Research Council of Norway under contracts 208028/F50, 216872/F50 and 223252/F50 (CoE), the Carthage Summer Undergraduate Research Experience, and the TEA-IS program.</flowPara><flowPara
+           id="flowPara8717"
+           style="font-size:32px" /></flowRoot>    </g>
   </g>
 </svg>

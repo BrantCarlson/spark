@@ -13,6 +13,9 @@ import matplotlib.pyplot as plt
 import toolbox as tb
 import numpy as np
 
+# NOTE: calibration.py was corrupted in the repository at some point
+# this file makes reference to it, so commits since calibration.py were lost
+# and may be needed here.
 def makePosPlot(d,var,xlab="position",ylim=None,divMean=False):
   c = cal.ub1CrossCal(cd.cal1S,var,['UB1','UB2','UB3','UB4'])
   cal.applyCrossCal(d,c)

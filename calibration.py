@@ -7,6 +7,11 @@ Calibration functions
 @author: Brant
 """
 
+# NOTE: calibration.py was corrupted in the repository at some point
+# so some commits were lost.  Those charge should be made, but other
+# than a vague reference to switching the order of x and y, I don't
+# know what happened.
+
 import statistics as st
 import cleanupData as cd
 import numpy as np
